@@ -3,28 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SensiPro FF</title>
+<title>SensiPro FF Avançado</title>
 
 <style>
 body{
   margin:0;
   font-family:Arial;
-  background:linear-gradient(135deg,#0f0f0f,#1c1c1c);
+  background:#0f0f0f;
   color:white;
   text-align:center;
 }
 
 h1{
-  padding:15px;
   background:black;
-  box-shadow:0 0 15px red;
+  padding:15px;
   color:#ff0033;
+  box-shadow:0 0 15px red;
+}
+
+.painel{
+  width:95%;
+  max-width:500px;
+  margin:auto;
 }
 
 .controle{
-  margin:15px auto;
-  width:90%;
-  max-width:400px;
+  margin:10px 0;
+  text-align:left;
+}
+
+label{
+  font-size:14px;
 }
 
 input[type=range]{
@@ -34,136 +43,166 @@ input[type=range]{
 
 #area{
   width:95%;
-  height:400px;
+  height:350px;
   margin:20px auto;
   background:#111;
-  border:2px solid #ff0033;
-  border-radius:15px;
+  border:2px solid red;
+  border-radius:10px;
   position:relative;
   overflow:hidden;
   touch-action:none;
 }
 
 #mira{
-  width:40px;
-  height:40px;
+  width:30px;
+  height:30px;
   border:3px solid #ff0033;
   border-radius:50%;
   position:absolute;
-  top:180px;
-  left:180px;
+  top:150px;
+  left:150px;
 }
 
 button{
-  padding:10px 20px;
-  margin:10px;
-  border:none;
+  padding:10px;
+  margin:5px;
   background:#ff0033;
+  border:none;
   color:white;
-  border-radius:8px;
   font-weight:bold;
+  border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 SensiPro FF</h1>
+<h1>🔥 SensiPro FF PRO</h1>
+
+<div class="painel">
 
 <div class="controle">
-<label>Geral <span id="valor">100</span></label>
-<input type="range" min="1" max="200" value="100" id="slider">
+<label>Geral Horizontal <span id="ghv">100</span></label>
+<input type="range" min="1" max="200" value="100" id="geralH">
+</div>
+
+<div class="controle">
+<label>Geral Vertical <span id="gvv">100</span></label>
+<input type="range" min="1" max="200" value="100" id="geralV">
+</div>
+
+<div class="controle">
+<label>Red Dot Horizontal <span id="rdhv">90</span></label>
+<input type="range" min="1" max="200" value="90" id="redH">
+</div>
+
+<div class="controle">
+<label>Red Dot Vertical <span id="rdvv">90</span></label>
+<input type="range" min="1" max="200" value="90" id="redV">
+</div>
+
+<div class="controle">
+<label>2x Horizontal <span id="2xhv">80</span></label>
+<input type="range" min="1" max="200" value="80" id="doisH">
+</div>
+
+<div class="controle">
+<label>2x Vertical <span id="2xvv">80</span></label>
+<input type="range" min="1" max="200" value="80" id="doisV">
+</div>
+
+<div class="controle">
+<label>4x Horizontal <span id="4xhv">70</span></label>
+<input type="range" min="1" max="200" value="70" id="quatroH">
+</div>
+
+<div class="controle">
+<label>4x Vertical <span id="4xvv">70</span></label>
+<input type="range" min="1" max="200" value="70" id="quatroV">
+</div>
+
 </div>
 
 <div id="area">
 <div id="mira"></div>
 </div>
 
-<button onclick="calcularSensiIdeal()">Calcular Sensi Ideal</button>
-<button onclick="salvar()">Salvar</button>
+<button onclick="calcularAuto()">Calcular Automático</button>
 <button onclick="resetar()">Resetar</button>
 
 <script>
-const slider=document.getElementById("slider");
-const valor=document.getElementById("valor");
-const mira=document.getElementById("mira");
-const area=document.getElementById("area");
 
-valor.innerText=slider.value;
-
-slider.oninput=()=>valor.innerText=slider.value;
-
-let posX=180;
-let posY=180;
-
-area.addEventListener("touchmove",(e)=>{
-e.preventDefault();
-let sensi=slider.value/60;
-posX+=(Math.random()*6-3)*sensi;
-posY+=(Math.random()*6-3)*sensi;
-limitar();
+const sliders = document.querySelectorAll("input[type=range]");
+sliders.forEach(slider=>{
+  const span = slider.previousElementSibling.querySelector("span");
+  span.innerText = slider.value;
+  slider.oninput = ()=> span.innerText = slider.value;
 });
 
-area.addEventListener("mousemove",(e)=>{
-let sensi=slider.value/40;
-posX+=e.movementX*sensi;
-posY+=e.movementY*sensi;
+let mira = document.getElementById("mira");
+let area = document.getElementById("area");
+
+let posX=150;
+let posY=150;
+
+area.addEventListener("touchmove",function(e){
+e.preventDefault();
+
+let sensiH = document.getElementById("geralH").value/50;
+let sensiV = document.getElementById("geralV").value/50;
+
+posX += (Math.random()*4-2)*sensiH;
+posY += (Math.random()*4-2)*sensiV;
+
 limitar();
 });
 
 function limitar(){
-posX=Math.max(0,Math.min(posX,area.clientWidth-40));
-posY=Math.max(0,Math.min(posY,area.clientHeight-40));
+posX=Math.max(0,Math.min(posX,area.clientWidth-30));
+posY=Math.max(0,Math.min(posY,area.clientHeight-30));
 mira.style.left=posX+"px";
 mira.style.top=posY+"px";
 }
 
-function salvar(){
-localStorage.setItem("sensi",slider.value);
-alert("Salvo 🔥");
+function calcularAuto(){
+
+let largura = window.screen.width;
+let altura = window.screen.height;
+let dpi = window.devicePixelRatio;
+
+let base = 100;
+
+if(largura*altura > 2000000){
+base -= 10;
+}
+
+if(dpi >= 3){
+base -= 5;
+}
+
+document.getElementById("geralH").value = base;
+document.getElementById("geralV").value = base-5;
+
+document.getElementById("redH").value = base-10;
+document.getElementById("redV").value = base-15;
+
+document.getElementById("doisH").value = base-20;
+document.getElementById("doisV").value = base-25;
+
+document.getElementById("quatroH").value = base-30;
+document.getElementById("quatroV").value = base-35;
+
+sliders.forEach(slider=>{
+  slider.dispatchEvent(new Event("input"));
+});
+
+alert("Sensibilidade calculada 🔥");
 }
 
 function resetar(){
-localStorage.clear();
 location.reload();
 }
 
-window.onload=()=>{
-let salvo=localStorage.getItem("sensi");
-if(salvo){
-slider.value=salvo;
-valor.innerText=salvo;
-}
-}
-
-function calcularSensiIdeal(){
-let largura = window.screen.width;
-let altura = window.screen.height;
-let pixelRatio = window.devicePixelRatio;
-
-let base = 100;
-let resolucao = largura * altura;
-
-if(resolucao > 2000000){
-base -= 10;
-}else{
-base += 10;
-}
-
-if(pixelRatio >= 3){
-base -= 5;
-}else{
-base += 5;
-}
-
-if(base < 50) base = 50;
-if(base > 200) base = 200;
-
-slider.value = base;
-valor.innerText = base;
-
-alert("Sensibilidade ideal calculada 🔥");
-}
 </script>
 
 </body>
