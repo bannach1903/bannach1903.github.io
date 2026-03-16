@@ -79,6 +79,7 @@ button{
 <div id="mira"></div>
 </div>
 
+<button onclick="calcularSensiIdeal()">Calcular Sensi Ideal</button>
 <button onclick="salvar()">Salvar</button>
 <button onclick="resetar()">Resetar</button>
 
@@ -133,6 +134,35 @@ if(salvo){
 slider.value=salvo;
 valor.innerText=salvo;
 }
+}
+
+function calcularSensiIdeal(){
+let largura = window.screen.width;
+let altura = window.screen.height;
+let pixelRatio = window.devicePixelRatio;
+
+let base = 100;
+let resolucao = largura * altura;
+
+if(resolucao > 2000000){
+base -= 10;
+}else{
+base += 10;
+}
+
+if(pixelRatio >= 3){
+base -= 5;
+}else{
+base += 5;
+}
+
+if(base < 50) base = 50;
+if(base > 200) base = 200;
+
+slider.value = base;
+valor.innerText = base;
+
+alert("Sensibilidade ideal calculada 🔥");
 }
 </script>
 
