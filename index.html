@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SensiPro FF Avançado</title>
+<title>SensiPro FF</title>
 
 <style>
 body{
@@ -28,7 +28,7 @@ h1{
 }
 
 .controle{
-  margin:10px 0;
+  margin:15px 0;
   text-align:left;
 }
 
@@ -77,48 +77,28 @@ button{
 
 <body>
 
-<h1>🔥 SensiPro FF PRO</h1>
+<h1>🔥 SensiPro FF</h1>
 
 <div class="painel">
 
 <div class="controle">
-<label>Geral Horizontal <span id="ghv">100</span></label>
-<input type="range" min="1" max="200" value="100" id="geralH">
+<label>Geral <span id="gValor">100</span></label>
+<input type="range" min="1" max="200" value="100" id="geral">
 </div>
 
 <div class="controle">
-<label>Geral Vertical <span id="gvv">100</span></label>
-<input type="range" min="1" max="200" value="100" id="geralV">
+<label>Red Dot <span id="rValor">90</span></label>
+<input type="range" min="1" max="200" value="90" id="red">
 </div>
 
 <div class="controle">
-<label>Red Dot Horizontal <span id="rdhv">90</span></label>
-<input type="range" min="1" max="200" value="90" id="redH">
+<label>2x <span id="2Valor">80</span></label>
+<input type="range" min="1" max="200" value="80" id="dois">
 </div>
 
 <div class="controle">
-<label>Red Dot Vertical <span id="rdvv">90</span></label>
-<input type="range" min="1" max="200" value="90" id="redV">
-</div>
-
-<div class="controle">
-<label>2x Horizontal <span id="2xhv">80</span></label>
-<input type="range" min="1" max="200" value="80" id="doisH">
-</div>
-
-<div class="controle">
-<label>2x Vertical <span id="2xvv">80</span></label>
-<input type="range" min="1" max="200" value="80" id="doisV">
-</div>
-
-<div class="controle">
-<label>4x Horizontal <span id="4xhv">70</span></label>
-<input type="range" min="1" max="200" value="70" id="quatroH">
-</div>
-
-<div class="controle">
-<label>4x Vertical <span id="4xvv">70</span></label>
-<input type="range" min="1" max="200" value="70" id="quatroV">
+<label>4x <span id="4Valor">70</span></label>
+<input type="range" min="1" max="200" value="70" id="quatro">
 </div>
 
 </div>
@@ -132,12 +112,25 @@ button{
 
 <script>
 
-const sliders = document.querySelectorAll("input[type=range]");
-sliders.forEach(slider=>{
-  const span = slider.previousElementSibling.querySelector("span");
-  span.innerText = slider.value;
-  slider.oninput = ()=> span.innerText = slider.value;
-});
+const geral = document.getElementById("geral");
+const red = document.getElementById("red");
+const dois = document.getElementById("dois");
+const quatro = document.getElementById("quatro");
+
+const gValor = document.getElementById("gValor");
+const rValor = document.getElementById("rValor");
+const doisValor = document.getElementById("2Valor");
+const quatroValor = document.getElementById("4Valor");
+
+gValor.innerText = geral.value;
+rValor.innerText = red.value;
+doisValor.innerText = dois.value;
+quatroValor.innerText = quatro.value;
+
+geral.oninput = ()=> gValor.innerText = geral.value;
+red.oninput = ()=> rValor.innerText = red.value;
+dois.oninput = ()=> doisValor.innerText = dois.value;
+quatro.oninput = ()=> quatroValor.innerText = quatro.value;
 
 let mira = document.getElementById("mira");
 let area = document.getElementById("area");
@@ -145,16 +138,32 @@ let area = document.getElementById("area");
 let posX=150;
 let posY=150;
 
+let ultimoX=0;
+let ultimoY=0;
+
+area.addEventListener("touchstart",function(e){
+ultimoX = e.touches[0].clientX;
+ultimoY = e.touches[0].clientY;
+});
+
 area.addEventListener("touchmove",function(e){
 e.preventDefault();
 
-let sensiH = document.getElementById("geralH").value/50;
-let sensiV = document.getElementById("geralV").value/50;
+let toqueX = e.touches[0].clientX;
+let toqueY = e.touches[0].clientY;
 
-posX += (Math.random()*4-2)*sensiH;
-posY += (Math.random()*4-2)*sensiV;
+let movX = toqueX - ultimoX;
+let movY = toqueY - ultimoY;
+
+let sensi = geral.value / 50;
+
+posX += movX * sensi;
+posY += movY * sensi;
 
 limitar();
+
+ultimoX = toqueX;
+ultimoY = toqueY;
 });
 
 function limitar(){
@@ -180,23 +189,17 @@ if(dpi >= 3){
 base -= 5;
 }
 
-document.getElementById("geralH").value = base;
-document.getElementById("geralV").value = base-5;
+geral.value = base;
+red.value = base - 10;
+dois.value = base - 20;
+quatro.value = base - 30;
 
-document.getElementById("redH").value = base-10;
-document.getElementById("redV").value = base-15;
+gValor.innerText = geral.value;
+rValor.innerText = red.value;
+doisValor.innerText = dois.value;
+quatroValor.innerText = quatro.value;
 
-document.getElementById("doisH").value = base-20;
-document.getElementById("doisV").value = base-25;
-
-document.getElementById("quatroH").value = base-30;
-document.getElementById("quatroV").value = base-35;
-
-sliders.forEach(slider=>{
-  slider.dispatchEvent(new Event("input"));
-});
-
-alert("Sensibilidade calculada 🔥");
+alert("Sensibilidade ajustada 🔥");
 }
 
 function resetar(){
