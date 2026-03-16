@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SensiPro FF</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f0f0f,#1c1c1c);
+  color:white;
+  text-align:center;
+}
+
+h1{
+  padding:15px;
+  background:black;
+  box-shadow:0 0 15px red;
+  color:#ff0033;
+}
+
+.controle{
+  margin:15px auto;
+  width:90%;
+  max-width:400px;
+}
+
+input[type=range]{
+  width:100%;
+  accent-color:#ff0033;
+}
+
+#area{
+  width:95%;
+  height:400px;
+  margin:20px auto;
+  background:#111;
+  border:2px solid #ff0033;
+  border-radius:15px;
+  position:relative;
+  overflow:hidden;
+  touch-action:none;
+}
+
+#mira{
+  width:40px;
+  height:40px;
+  border:3px solid #ff0033;
+  border-radius:50%;
+  position:absolute;
+  top:180px;
+  left:180px;
+}
+
+button{
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  background:#ff0033;
+  color:white;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔥 SensiPro FF</h1>
+
+<div class="controle">
+<label>Geral <span id="valor">100</span></label>
+<input type="range" min="1" max="200" value="100" id="slider">
+</div>
+
+<div id="area">
+<div id="mira"></div>
+</div>
+
+<button onclick="salvar()">Salvar</button>
+<button onclick="resetar()">Resetar</button>
+
+<script>
+const slider=document.getElementById("slider");
+const valor=document.getElementById("valor");
+const mira=document.getElementById("mira");
+const area=document.getElementById("area");
+
+valor.innerText=slider.value;
+
+slider.oninput=()=>valor.innerText=slider.value;
+
+let posX=180;
+let posY=180;
+
+area.addEventListener("touchmove",(e)=>{
+e.preventDefault();
+let sensi=slider.value/60;
+posX+=(Math.random()*6-3)*sensi;
+posY+=(Math.random()*6-3)*sensi;
+limitar();
+});
+
+area.addEventListener("mousemove",(e)=>{
+let sensi=slider.value/40;
+posX+=e.movementX*sensi;
+posY+=e.movementY*sensi;
+limitar();
+});
+
+function limitar(){
+posX=Math.max(0,Math.min(posX,area.clientWidth-40));
+posY=Math.max(0,Math.min(posY,area.clientHeight-40));
+mira.style.left=posX+"px";
+mira.style.top=posY+"px";
+}
+
+function salvar(){
+localStorage.setItem("sensi",slider.value);
+alert("Salvo 🔥");
+}
+
+function resetar(){
+localStorage.clear();
+location.reload();
+}
+
+window.onload=()=>{
+let salvo=localStorage.getItem("sensi");
+if(salvo){
+slider.value=salvo;
+valor.innerText=salvo;
+}
+}
+</script>
+
+</body>
+</html>
