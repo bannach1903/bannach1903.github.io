@@ -1,16 +1,48 @@
-{
-  "game": "Free Fire",
-  "device": "Xiaomi Redmi Note 13 4G",
-  "dpi": 700,
-  "fire_button": "56%",
-  "sensitivity": {
-    "geral": 135,
-    "red_dot": 120,
-    "mira_2x": 110,
-    "mira_4x": 98,
-    "awm": 65,
-    "olhadinha": 88
+[const sensiDatabase = {
+  "Samsung Galaxy S23": {
+    geral: 95,
+    redDot: 90,
+    scope2x: 85,
+    scope4x: 75,
+    awm: 60,
+    dpi: 600
   },
-  "hud": "4 dedos",
-  "style": "SMG / AR / 12"
-}
+
+  "Samsung Galaxy A51": {
+    geral: 100,
+    redDot: 95,
+    scope2x: 90,
+    scope4x: 80,
+    awm: 65,
+    dpi: 520
+  },
+
+  "Xiaomi Redmi Note 12": {
+    geral: 98,
+    redDot: 92,
+    scope2x: 88,
+    scope4x: 80,
+    awm: 62,
+    dpi: 610
+  },
+
+  "iPhone 13": {
+    geral: 90,
+    redDot: 85,
+    scope2x: 80,
+    scope4x: 70,
+    awm: 55,
+    dpi: 480
+  },
+
+  "Motorola G60": {
+    geral: 100,
+    redDot: 95,
+    scope2x: 90,
+    scope4x: 85,
+    awm: 70,
+    dpi: 640
+  }
+};
+
+module.exports = sensiDatabase;
