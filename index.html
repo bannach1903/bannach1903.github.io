@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador Sensi FF PRO</title>
+<title>Gerador Sensi Free Fire</title>
 
 <style>
 body{
@@ -58,11 +58,109 @@ button{
 
 <body>
 
-<h1>🔥 GERADOR DE SENSI FF 🔥</h1>
+<h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>
 
 <div class="container">
 
 <label>📱 Escolha seu Celular</label>
 <select id="celular">
-  <option>Samsung</option>
-  <option>Xiaomi
+<option>Samsung Galaxy A14</option>
+<option>Samsung Galaxy A34</option>
+<option>Samsung Galaxy S20</option>
+<option>Samsung Galaxy S21</option>
+<option>Xiaomi Redmi Note 10</option>
+<option>Xiaomi Redmi Note 11</option>
+<option>Xiaomi Redmi Note 12</option>
+<option>Xiaomi Poco X3</option>
+<option>Motorola G22</option>
+<option>Motorola G32</option>
+<option>Motorola G53</option>
+<option>iPhone 11</option>
+<option>iPhone 12</option>
+<option>iPhone 13</option>
+<option>iPhone 14</option>
+<option>Realme C55</option>
+<option>Realme 11</option>
+<option>Outro Android</option>
+</select>
+
+<label>📊 DPI</label>
+<select id="dpi">
+<option value="baixa">Baixa</option>
+<option value="media">Média</option>
+<option value="alta">Alta</option>
+</select>
+
+<label>🎮 Estilo de Jogo</label>
+<select id="estilo">
+<option value="rush">Rushador</option>
+<option value="capa">Só Capa</option>
+<option value="equilibrado">Equilibrado</option>
+<option value="sniper">Sniper</option>
+</select>
+
+<button onclick="gerarSensi()">GERAR SENSIBILIDADE</button>
+
+<div id="resultado" class="resultado" style="display:none;"></div>
+
+</div>
+
+<script>
+
+function gerarSensi(){
+
+let celular = document.getElementById("celular").value;
+let dpi = document.getElementById("dpi").value;
+let estilo = document.getElementById("estilo").value;
+
+let base = 110;
+
+/* AJUSTE POR CELULAR */
+if(celular.includes("Samsung Galaxy S")) base += 5;
+if(celular.includes("Poco")) base += 5;
+if(celular.includes("iPhone")) base += 8;
+if(celular.includes("Motorola G22")) base -= 5;
+
+/* AJUSTE POR DPI */
+if(dpi == "baixa") base += 15;
+if(dpi == "media") base += 5;
+if(dpi == "alta") base -= 10;
+
+/* AJUSTE POR ESTILO */
+if(estilo == "rush") base += 10;
+if(estilo == "capa") base -= 5;
+if(estilo == "sniper") base -= 15;
+
+/* LIMITES */
+if(base > 200) base = 200;
+if(base < 60) base = 60;
+
+/* GERAR VALORES */
+let geral = base;
+let redDot = base - 5;
+let doisX = base - 15;
+let quatroX = base - 25;
+let awm = base - 35;
+let olhadinha = base + 10;
+
+document.getElementById("resultado").style.display="block";
+document.getElementById("resultado").innerHTML = `
+🔥 RESULTADO IDEAL 🔥<br><br>
+📱 Celular: ${celular}<br>
+📊 DPI: ${dpi}<br>
+🎮 Estilo: ${estilo}<br><br>
+
+🎯 Geral: ${geral}<br>
+🔴 Red Dot: ${redDot}<br>
+🔭 2x: ${doisX}<br>
+🔬 4x: ${quatroX}<br>
+🎯 AWM: ${awm}<br>
+👀 Olhadinha: ${olhadinha}
+`;
+
+}
+
+</script>
+
+</body>
+</html>
