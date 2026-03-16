@@ -1,21 +1,5 @@
-# Sensibilidade Pro - Redmi Note 13 4G Optimizer
-# Um script simples para calcular ajustes de DPI e Sensibilidade In-Game
+<h1>Sensibilidade por Celular</h1>
 
-def calcular_sensibilidade(dpi_atual, sensibilidade_base):
-    print(f"--- Otimizador para Redmi Note 13 4G ---")
-    
-    # Fator de conversão sugerido para telas de 120Hz
-    ajuste = 1.05
-    
-    nova_sensi = sensibilidade_base * ajuste
-    novo_dpi = dpi_atual + 20 # Sugestão de incremento leve
-    
-    print(f"Sua nova Sensibilidade Geral sugerida: {min(nova_sensi, 100):.0f}")
-    print(f"Sugestão de DPI para teste: {novo_dpi}")
-    print("-----------------------------------------")
+<div id="listaCelulares"></div>
 
-# Exemplo de uso
-meu_dpi = 392
-minha_sensi_atual = 90
-
-calcular_sensibilidade(meu_dpi, minha_sensi_atual)
+<script src="script.js"></script>
