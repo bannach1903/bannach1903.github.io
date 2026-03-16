@@ -1,62 +1,166 @@
-#!/bin/bash
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador Sensi Free Fire</title>
 
-# ==========================================
-# GERADOR DE SENSIBILIDADE - FREE FIRE
-# Autor: Você 😎
-# ==========================================
+<style>
+body{
+  margin:0;
+  background:#0f0f0f;
+  font-family:Arial;
+  color:white;
+  text-align:center;
+}
 
-echo "=== GERADOR DE SENSIBILIDADE FF ==="
+h1{
+  background:black;
+  padding:15px;
+  color:#ff0033;
+  box-shadow:0 0 15px red;
+}
 
-# ===== CONFIG DO USUARIO =====
-DPI=700
-DESEMPENHO="medio"   # baixo / medio / alto
+.container{
+  width:95%;
+  max-width:500px;
+  margin:auto;
+  margin-top:20px;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 10px #ff0033;
+}
 
-# ===== AJUSTES DE DESEMPENHO =====
-if [ "$DESEMPENHO" = "baixo" ]; then
-  AJUSTE=-10
-  ANIM=0.5
-elif [ "$DESEMPENHO" = "medio" ]; then
-  AJUSTE=0
-  ANIM=0.5
-else
-  AJUSTE=10
-  ANIM=0.0
-fi
+select, button{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
+}
 
-# ===== CALCULO =====
-BASE=$((DPI / 5))
+button{
+  background:#ff0033;
+  color:white;
+  font-weight:bold;
+}
 
-GERAL=$((BASE + 35 + AJUSTE))
-RED_DOT=$((BASE + 20 + AJUSTE))
-MIRA_2X=$((BASE + 10 + AJUSTE))
-MIRA_4X=$((BASE + AJUSTE))
-AWM=$((BASE - 25))
-OLHADINHA=$((BASE - 5 + AJUSTE))
+.resultado{
+  margin-top:15px;
+  text-align:left;
+  background:#111;
+  padding:15px;
+  border-radius:8px;
+}
+</style>
+</head>
 
-CURSOR=$((DPI / 10))
+<body>
 
-# ===== SAIDA =====
-echo ""
-echo "===== SENSIBILIDADE ====="
-echo "Geral: $GERAL"
-echo "Red Dot: $RED_DOT"
-echo "2x: $MIRA_2X"
-echo "4x: $MIRA_4X"
-echo "AWM: $AWM"
-echo "Olhadinha: $OLHADINHA"
+<h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>
 
-echo ""
-echo "===== CONFIGURACOES ====="
-echo "DPI: $DPI"
-echo "Botao de disparo: 56% - 60%"
-echo "Velocidade do cursor: $CURSOR"
+<div class="container">
 
-echo ""
-echo "===== OTIMIZACAO ANDROID ====="
-echo "Escala animacao janela: $ANIM"
-echo "Escala animacao transicao: $ANIM"
-echo "Duracao do animator: $ANIM"
+<label>📱 Escolha seu Celular</label>
+<select id="celular">
+<option>Samsung Galaxy A14</option>
+<option>Samsung Galaxy A34</option>
+<option>Samsung Galaxy S20</option>
+<option>Samsung Galaxy S21</option>
+<option>Xiaomi Redmi Note 10</option>
+<option>Xiaomi Redmi Note 11</option>
+<option>Xiaomi Redmi Note 12</option>
+<option>Xiaomi Poco X3</option>
+<option>Motorola G22</option>
+<option>Motorola G32</option>
+<option>Motorola G53</option>
+<option>iPhone 11</option>
+<option>iPhone 12</option>
+<option>iPhone 13</option>
+<option>iPhone 14</option>
+<option>Realme C55</option>
+<option>Realme 11</option>
+<option>Outro Android</option>
+</select>
 
-echo ""
-echo "===== STATUS ====="
-echo "Config gerada com sucesso ✅"
+<label>📊 DPI</label>
+<select id="dpi">
+<option value="baixa">Baixa</option>
+<option value="media">Média</option>
+<option value="alta">Alta</option>
+</select>
+
+<label>🎮 Estilo de Jogo</label>
+<select id="estilo">
+<option value="rush">Rushador</option>
+<option value="capa">Só Capa</option>
+<option value="equilibrado">Equilibrado</option>
+<option value="sniper">Sniper</option>
+</select>
+
+<button onclick="gerarSensi()">GERAR SENSIBILIDADE</button>
+
+<div id="resultado" class="resultado" style="display:none;"></div>
+
+</div>
+
+<script>
+
+function gerarSensi(){
+
+let celular = document.getElementById("celular").value;
+let dpi = document.getElementById("dpi").value;
+let estilo = document.getElementById("estilo").value;
+
+let base = 110;
+
+/* AJUSTE POR CELULAR */
+if(celular.includes("Samsung Galaxy S")) base += 5;
+if(celular.includes("Poco")) base += 5;
+if(celular.includes("iPhone")) base += 8;
+if(celular.includes("Motorola G22")) base -= 5;
+
+/* AJUSTE POR DPI */
+if(dpi == "baixa") base += 15;
+if(dpi == "media") base += 5;
+if(dpi == "alta") base -= 10;
+
+/* AJUSTE POR ESTILO */
+if(estilo == "rush") base += 10;
+if(estilo == "capa") base -= 5;
+if(estilo == "sniper") base -= 15;
+
+/* LIMITES */
+if(base > 200) base = 200;
+if(base < 60) base = 60;
+
+/* GERAR VALORES */
+let geral = base;
+let redDot = base - 5;
+let doisX = base - 15;
+let quatroX = base - 25;
+let awm = base - 35;
+let olhadinha = base + 10;
+
+document.getElementById("resultado").style.display="block";
+document.getElementById("resultado").innerHTML = `
+🔥 RESULTADO IDEAL 🔥<br><br>
+📱 Celular: ${celular}<br>
+📊 DPI: ${dpi}<br>
+🎮 Estilo: ${estilo}<br><br>
+
+🎯 Geral: ${geral}<br>
+🔴 Red Dot: ${redDot}<br>
+🔭 2x: ${doisX}<br>
+🔬 4x: ${quatroX}<br>
+🎯 AWM: ${awm}<br>
+👀 Olhadinha: ${olhadinha}
+`;
+
+}
+
+</script>
+
+</body>
+</html>
