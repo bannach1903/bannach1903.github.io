@@ -1,16 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador Profissional de Sensi</title>
+
+<style>
+body{
+  margin:0;
+  background:#0f0f0f;
+  font-family:Arial;
+  color:white;
+  text-align:center;
+}
+
+h1{
+  background:black;
+  padding:15px;
+  color:#ff0033;
+  box-shadow:0 0 15px red;
+}
+
+.container{
+  width:95%;
+  max-width:500px;
+  margin:auto;
+  margin-top:20px;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 10px #ff0033;
+}
+
+select, button{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  background:#ff0033;
+  color:white;
+  font-weight:bold;
+}
+
+.resultado{
+  margin-top:15px;
+  text-align:left;
+  background:#111;
+  padding:15px;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔥 GERADOR AVANÇADO DE SENSI 🔥</h1>
+
+<div class="container">
+
+<label>📱 Celular</label>
+<select id="celular">
+<option value="a14">Samsung Galaxy A14</option>
+<option value="s21">Samsung Galaxy S21</option>
+<option value="note12">Redmi Note 12</option>
+<option value="pocox3">Poco X3</option>
+<option value="g53">Motorola G53</option>
+<option value="iphone13">iPhone 13</option>
+</select>
+
+<label>📊 DPI</label>
+<select id="dpi">
+<option value="baixa">Baixa</option>
+<option value="media">Média</option>
+<option value="alta">Alta</option>
+</select>
+
+<label>🎮 Estilo</label>
+<select id="estilo">
+<option value="rush">Rushador</option>
+<option value="capa">Só Capa</option>
+<option value="sniper">Sniper</option>
+<option value="equilibrado">Equilibrado</option>
+</select>
+
+<button onclick="gerar()">GERAR SENSI</button>
+
+<div id="resultado" class="resultado" style="display:none;"></div>
+
+</div>
+
 <script>
 
-function gerarSensi(){
+/* ===============================
+   DPI NUMÉRICA BASE POR CELULAR
+================================ */
 
-let celular = document.getElementById("celular").value;
-let dpi = document.getElementById("dpi").value;
-let estilo = document.getElementById("estilo").value;
+const celulares = {
 
-/* ==========================
-   BASE POR DPI
-========================== */
+a14:     {baixa:411, media:520, alta:640},
+s21:     {baixa:480, media:720, alta:960},
+note12:  {baixa:430, media:650, alta:900},
+pocox3:  {baixa:450, media:700, alta:920},
+g53:     {baixa:400, media:600, alta:850},
+iphone13:{baixa:500, media:750, alta:1000}
 
-let config = {
+};
 
-baixa: {
-  rush:      {geral:170, red:165, dois:150, quatro
+/* =================
