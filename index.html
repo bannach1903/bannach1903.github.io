@@ -1,16 +1,62 @@
-{
-  "game": "Free Fire",
-  "device": "Xiaomi Redmi Note 13 4G",
-  "dpi": 700,
-  "fire_button": "56%",
-  "sensitivity": {
-    "geral": 135,
-    "red_dot": 120,
-    "mira_2x": 110,
-    "mira_4x": 98,
-    "awm": 65,
-    "olhadinha": 88
-  },
-  "hud": "4 dedos",
-  "style": "SMG / AR / 12"
-}
+#!/bin/bash
+
+# ==========================================
+# GERADOR DE SENSIBILIDADE - FREE FIRE
+# Autor: Você 😎
+# ==========================================
+
+echo "=== GERADOR DE SENSIBILIDADE FF ==="
+
+# ===== CONFIG DO USUARIO =====
+DPI=700
+DESEMPENHO="medio"   # baixo / medio / alto
+
+# ===== AJUSTES DE DESEMPENHO =====
+if [ "$DESEMPENHO" = "baixo" ]; then
+  AJUSTE=-10
+  ANIM=0.5
+elif [ "$DESEMPENHO" = "medio" ]; then
+  AJUSTE=0
+  ANIM=0.5
+else
+  AJUSTE=10
+  ANIM=0.0
+fi
+
+# ===== CALCULO =====
+BASE=$((DPI / 5))
+
+GERAL=$((BASE + 35 + AJUSTE))
+RED_DOT=$((BASE + 20 + AJUSTE))
+MIRA_2X=$((BASE + 10 + AJUSTE))
+MIRA_4X=$((BASE + AJUSTE))
+AWM=$((BASE - 25))
+OLHADINHA=$((BASE - 5 + AJUSTE))
+
+CURSOR=$((DPI / 10))
+
+# ===== SAIDA =====
+echo ""
+echo "===== SENSIBILIDADE ====="
+echo "Geral: $GERAL"
+echo "Red Dot: $RED_DOT"
+echo "2x: $MIRA_2X"
+echo "4x: $MIRA_4X"
+echo "AWM: $AWM"
+echo "Olhadinha: $OLHADINHA"
+
+echo ""
+echo "===== CONFIGURACOES ====="
+echo "DPI: $DPI"
+echo "Botao de disparo: 56% - 60%"
+echo "Velocidade do cursor: $CURSOR"
+
+echo ""
+echo "===== OTIMIZACAO ANDROID ====="
+echo "Escala animacao janela: $ANIM"
+echo "Escala animacao transicao: $ANIM"
+echo "Duracao do animator: $ANIM"
+
+echo ""
+echo "===== STATUS ====="
+echo "Config gerada com sucesso ✅"
