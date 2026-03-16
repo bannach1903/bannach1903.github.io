@@ -1,181 +1,21 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Gerador de Sensibilidade por Celular</title>
-
-<style>
-
-body{
-font-family: Arial;
-background:#0f172a;
-color:white;
-text-align:center;
-padding:40px;
-}
-
-h1{
-color:#22c55e;
-}
-
-select,input{
-padding:10px;
-font-size:16px;
-margin:10px;
-border-radius:8px;
-border:none;
-}
-
-button{
-padding:12px 25px;
-background:#22c55e;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-}
-
-.card{
-background:#1e293b;
-margin-top:30px;
-padding:20px;
-border-radius:12px;
-display:inline-block;
-}
-
-.valor{
-color:#22c55e;
-font-size:20px;
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>📱 Sensibilidade Ideal por Celular</h1>
-
-<input type="text" id="search" placeholder="Pesquisar celular...">
-
-<br>
-
-<select id="phoneSelect"></select>
-
-<br>
-
-<button onclick="mostrarSensi()">Mostrar Sensibilidade</button>
-
-<div id="resultado"></div>
-
-<script>
-
-const celulares = {
-
-"Samsung Galaxy S23":{geral:95,redDot:90,x2:85,x4:75,awm:60,dpi:600},
-
-"Samsung Galaxy S21":{geral:96,redDot:91,x2:86,x4:76,awm:62,dpi:610},
-
-"Samsung Galaxy A51":{geral:100,redDot:95,x2:90,x4:80,awm:65,dpi:520},
-
-"Samsung Galaxy A71":{geral:99,redDot:94,x2:89,x4:79,awm:64,dpi:530},
-
-"Xiaomi Redmi Note 12":{geral:98,redDot:92,x2:88,x4:80,awm:62,dpi:610},
-
-"Xiaomi Redmi Note 11":{geral:99,redDot:93,x2:87,x4:78,awm:63,dpi:600},
-
-"Xiaomi Poco X3":{geral:100,redDot:95,x2:90,x4:85,awm:70,dpi:640},
-
-"Xiaomi Poco F4":{geral:96,redDot:91,x2:86,x4:75,awm:60,dpi:620},
-
-"iPhone 13":{geral:90,redDot:85,x2:80,x4:70,awm:55,dpi:480},
-
-"iPhone 14":{geral:88,redDot:83,x2:78,x4:68,awm:54,dpi:470},
-
-"iPhone 15":{geral:87,redDot:82,x2:77,x4:67,awm:53,dpi:460},
-
-"Motorola G60":{geral:100,redDot:95,x2:90,x4:85,awm:70,dpi:640},
-
-"Motorola G52":{geral:100,redDot:94,x2:88,x4:82,awm:68,dpi:630},
-
-"Motorola Edge 30":{geral:96,redDot:90,x2:86,x4:78,awm:62,dpi:600},
-
-"Realme 9":{geral:98,redDot:93,x2:88,x4:79,awm:64,dpi:610},
-
-"Realme GT":{geral:97,redDot:92,x2:87,x4:77,awm:63,dpi:620}
-
-};
-
-const select=document.getElementById("phoneSelect");
-
-function carregar(){
-
-for(let phone in celulares){
-
-let option=document.createElement("option");
-option.value=phone;
-option.textContent=phone;
-
-select.appendChild(option);
-
-}
-
-}
-
-function mostrarSensi(){
-
-let modelo=select.value;
-let s=celulares[modelo];
-
-document.getElementById("resultado").innerHTML=`
-
-<div class="card">
-
-<h2>${modelo}</h2>
-
-<p>Geral: <span class="valor">${s.geral}</span></p>
-
-<p>Red Dot: <span class="valor">${s.redDot}</span></p>
-
-<p>2x Scope: <span class="valor">${s.x2}</span></p>
-
-<p>4x Scope: <span class="valor">${s.x4}</span></p>
-
-<p>AWM: <span class="valor">${s.awm}</span></p>
-
-<p>DPI: <span class="valor">${s.dpi}</span></p>
-
-</div>
-
-`;
-
-}
-
-document.getElementById("search").addEventListener("input",function(){
-
-let filtro=this.value.toLowerCase();
-
-select.innerHTML="";
-
-for(let phone in celulares){
-
-if(phone.toLowerCase().includes(filtro)){
-
-let option=document.createElement("option");
-
-option.value=phone;
-option.textContent=phone;
-
-select.appendChild(option);
-
-}
-
-}
-
-});
-
-carregar();
-
-</script>
-
-</body>
-</html>
+# Sensibilidade Pro - Redmi Note 13 4G Optimizer
+# Um script simples para calcular ajustes de DPI e Sensibilidade In-Game
+
+def calcular_sensibilidade(dpi_atual, sensibilidade_base):
+    print(f"--- Otimizador para Redmi Note 13 4G ---")
+    
+    # Fator de conversão sugerido para telas de 120Hz
+    ajuste = 1.05
+    
+    nova_sensi = sensibilidade_base * ajuste
+    novo_dpi = dpi_atual + 20 # Sugestão de incremento leve
+    
+    print(f"Sua nova Sensibilidade Geral sugerida: {min(nova_sensi, 100):.0f}")
+    print(f"Sugestão de DPI para teste: {novo_dpi}")
+    print("-----------------------------------------")
+
+# Exemplo de uso
+meu_dpi = 392
+minha_sensi_atual = 90
+
+calcular_sensibilidade(meu_dpi, minha_sensi_atual)
