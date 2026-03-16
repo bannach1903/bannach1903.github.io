@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SensiPro FF</title>
+<title>Gerador de Sensi FF PRO</title>
 
 <style>
 body{
   margin:0;
-  font-family:Arial;
   background:#0f0f0f;
+  font-family:Arial;
   color:white;
   text-align:center;
 }
@@ -21,189 +21,120 @@ h1{
   box-shadow:0 0 15px red;
 }
 
-.painel{
+.container{
   width:95%;
   max-width:500px;
   margin:auto;
-}
-
-.controle{
-  margin:15px 0;
-  text-align:left;
-}
-
-label{
-  font-size:14px;
-}
-
-input[type=range]{
-  width:100%;
-  accent-color:#ff0033;
-}
-
-#area{
-  width:95%;
-  height:350px;
-  margin:20px auto;
-  background:#111;
-  border:2px solid red;
+  margin-top:20px;
+  background:#1a1a1a;
+  padding:20px;
   border-radius:10px;
-  position:relative;
-  overflow:hidden;
-  touch-action:none;
-}
-
-#mira{
-  width:30px;
-  height:30px;
-  border:3px solid #ff0033;
-  border-radius:50%;
-  position:absolute;
-  top:150px;
-  left:150px;
+  box-shadow:0 0 10px #ff0033;
 }
 
 button{
-  padding:10px;
-  margin:5px;
+  padding:10px 20px;
+  margin:10px;
   background:#ff0033;
   border:none;
   color:white;
   font-weight:bold;
-  border-radius:6px;
+  border-radius:8px;
+}
+
+.resultado{
+  margin-top:20px;
+  text-align:left;
+  background:#111;
+  padding:15px;
+  border-radius:8px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🔥 SensiPro FF</h1>
+<h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>
 
-<div class="painel">
+<div class="container">
 
-<div class="controle">
-<label>Geral <span id="gValor">100</span></label>
-<input type="range" min="1" max="200" value="100" id="geral">
-</div>
+<p><b>Celular Detectado:</b> <span id="celular"></span></p>
 
-<div class="controle">
-<label>Red Dot <span id="rValor">90</span></label>
-<input type="range" min="1" max="200" value="90" id="red">
-</div>
+<button onclick="gerarSensi()">GERAR SENSIBILIDADE</button>
 
-<div class="controle">
-<label>2x <span id="2Valor">80</span></label>
-<input type="range" min="1" max="200" value="80" id="dois">
-</div>
-
-<div class="controle">
-<label>4x <span id="4Valor">70</span></label>
-<input type="range" min="1" max="200" value="70" id="quatro">
-</div>
+<div class="resultado" id="resultado" style="display:none;"></div>
 
 </div>
-
-<div id="area">
-<div id="mira"></div>
-</div>
-
-<button onclick="calcularAuto()">Calcular Automático</button>
-<button onclick="resetar()">Resetar</button>
 
 <script>
 
-const geral = document.getElementById("geral");
-const red = document.getElementById("red");
-const dois = document.getElementById("dois");
-const quatro = document.getElementById("quatro");
-
-const gValor = document.getElementById("gValor");
-const rValor = document.getElementById("rValor");
-const doisValor = document.getElementById("2Valor");
-const quatroValor = document.getElementById("4Valor");
-
-gValor.innerText = geral.value;
-rValor.innerText = red.value;
-doisValor.innerText = dois.value;
-quatroValor.innerText = quatro.value;
-
-geral.oninput = ()=> gValor.innerText = geral.value;
-red.oninput = ()=> rValor.innerText = red.value;
-dois.oninput = ()=> doisValor.innerText = dois.value;
-quatro.oninput = ()=> quatroValor.innerText = quatro.value;
-
-let mira = document.getElementById("mira");
-let area = document.getElementById("area");
-
-let posX=150;
-let posY=150;
-
-let ultimoX=0;
-let ultimoY=0;
-
-area.addEventListener("touchstart",function(e){
-ultimoX = e.touches[0].clientX;
-ultimoY = e.touches[0].clientY;
-});
-
-area.addEventListener("touchmove",function(e){
-e.preventDefault();
-
-let toqueX = e.touches[0].clientX;
-let toqueY = e.touches[0].clientY;
-
-let movX = toqueX - ultimoX;
-let movY = toqueY - ultimoY;
-
-let sensi = geral.value / 50;
-
-posX += movX * sensi;
-posY += movY * sensi;
-
-limitar();
-
-ultimoX = toqueX;
-ultimoY = toqueY;
-});
-
-function limitar(){
-posX=Math.max(0,Math.min(posX,area.clientWidth-30));
-posY=Math.max(0,Math.min(posY,area.clientHeight-30));
-mira.style.left=posX+"px";
-mira.style.top=posY+"px";
+function detectarCelular(){
+let userAgent = navigator.userAgent;
+return userAgent;
 }
 
-function calcularAuto(){
+document.getElementById("celular").innerText = detectarCelular();
+
+function gerarSensi(){
 
 let largura = window.screen.width;
 let altura = window.screen.height;
 let dpi = window.devicePixelRatio;
+let memoria = navigator.deviceMemory || 4;
 
+let resolucao = largura * altura;
 let base = 100;
 
-if(largura*altura > 2000000){
+/* AJUSTE POR RESOLUÇÃO */
+if(resolucao > 2500000){
 base -= 10;
+}else if(resolucao < 1500000){
+base += 10;
 }
 
+/* AJUSTE POR DPI */
 if(dpi >= 3){
+base -= 5;
+}else{
+base += 5;
+}
+
+/* AJUSTE POR MEMÓRIA */
+if(memoria >= 8){
+base += 5;
+}else if(memoria <= 3){
 base -= 5;
 }
 
-geral.value = base;
-red.value = base - 10;
-dois.value = base - 20;
-quatro.value = base - 30;
+/* LIMITES */
+if(base > 200) base = 200;
+if(base < 50) base = 50;
 
-gValor.innerText = geral.value;
-rValor.innerText = red.value;
-doisValor.innerText = dois.value;
-quatroValor.innerText = quatro.value;
+/* ESCALONAMENTO DAS MIRAS */
+let geral = base;
+let redDot = base - 5;
+let doisX = base - 15;
+let quatroX = base - 25;
+let awm = base - 35;
+let olhadinha = base + 10;
 
-alert("Sensibilidade ajustada 🔥");
-}
+let resultadoHTML = `
+🔥 RESULTADO IDEAL 🔥 <br><br>
+🎯 Geral: ${geral}<br>
+🔴 Red Dot: ${redDot}<br>
+🔭 2x: ${doisX}<br>
+🔬 4x: ${quatroX}<br>
+🎯 AWM: ${awm}<br>
+👀 Olhadinha: ${olhadinha}<br><br>
 
-function resetar(){
-location.reload();
+📱 Resolução: ${largura}x${altura}<br>
+📊 DPI: ${dpi}<br>
+💾 Memória estimada: ${memoria}GB
+`;
+
+document.getElementById("resultado").style.display="block";
+document.getElementById("resultado").innerHTML = resultadoHTML;
+
 }
 
 </script>
