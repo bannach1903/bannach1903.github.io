@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de Sensi FF PRO</title>
+<title>Gerador Sensi FF PRO</title>
 
 <style>
 body{
@@ -32,18 +32,22 @@ h1{
   box-shadow:0 0 10px #ff0033;
 }
 
-button{
-  padding:10px 20px;
-  margin:10px;
-  background:#ff0033;
+select, button{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
   border:none;
+}
+
+button{
+  background:#ff0033;
   color:white;
   font-weight:bold;
-  border-radius:8px;
 }
 
 .resultado{
-  margin-top:20px;
+  margin-top:15px;
   text-align:left;
   background:#111;
   padding:15px;
@@ -54,90 +58,11 @@ button{
 
 <body>
 
-<h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>
+<h1>🔥 GERADOR DE SENSI FF 🔥</h1>
 
 <div class="container">
 
-<p><b>Celular Detectado:</b> <span id="celular"></span></p>
-
-<button onclick="gerarSensi()">GERAR SENSIBILIDADE</button>
-
-<div class="resultado" id="resultado" style="display:none;"></div>
-
-</div>
-
-<script>
-
-function detectarCelular(){
-let userAgent = navigator.userAgent;
-return userAgent;
-}
-
-document.getElementById("celular").innerText = detectarCelular();
-
-function gerarSensi(){
-
-let largura = window.screen.width;
-let altura = window.screen.height;
-let dpi = window.devicePixelRatio;
-let memoria = navigator.deviceMemory || 4;
-
-let resolucao = largura * altura;
-let base = 100;
-
-/* AJUSTE POR RESOLUÇÃO */
-if(resolucao > 2500000){
-base -= 10;
-}else if(resolucao < 1500000){
-base += 10;
-}
-
-/* AJUSTE POR DPI */
-if(dpi >= 3){
-base -= 5;
-}else{
-base += 5;
-}
-
-/* AJUSTE POR MEMÓRIA */
-if(memoria >= 8){
-base += 5;
-}else if(memoria <= 3){
-base -= 5;
-}
-
-/* LIMITES */
-if(base > 200) base = 200;
-if(base < 50) base = 50;
-
-/* ESCALONAMENTO DAS MIRAS */
-let geral = base;
-let redDot = base - 5;
-let doisX = base - 15;
-let quatroX = base - 25;
-let awm = base - 35;
-let olhadinha = base + 10;
-
-let resultadoHTML = `
-🔥 RESULTADO IDEAL 🔥 <br><br>
-🎯 Geral: ${geral}<br>
-🔴 Red Dot: ${redDot}<br>
-🔭 2x: ${doisX}<br>
-🔬 4x: ${quatroX}<br>
-🎯 AWM: ${awm}<br>
-👀 Olhadinha: ${olhadinha}<br><br>
-
-📱 Resolução: ${largura}x${altura}<br>
-📊 DPI: ${dpi}<br>
-💾 Memória estimada: ${memoria}GB
-`;
-
-document.getElementById("resultado").style.display="block";
-document.getElementById("resultado").innerHTML = resultadoHTML;
-
-}
-
-</script>
-
-</body>
-</html>
+<label>📱 Escolha seu Celular</label>
+<select id="celular">
+  <option>Samsung</option>
+  <option>Xiaomi
