@@ -1,0 +1,24 @@
+{
+  "device": "Xiaomi Redmi Note 13 4G",
+  "processor": "Snapdragon 685",
+  "refresh_rate": "120Hz",
+  "sensitivity_settings": {
+    "geral": 97,
+    "ponto_vermelho": 92,
+    "mira_2x": 95,
+    "mira_4x": 89,
+    "awm": 45,
+    "olhadinha": 50
+  },
+  "system_optimizations": {
+    "dpi_standard": 392,
+    "dpi_optimized": 449,
+    "pointer_speed": "max_minus_2",
+    "touch_response": "high",
+    "game_turbo": "performance_mode"
+  },
+  "button_layout": {
+    "fire_button_size": "48%",
+    "transparency": "60%"
+  }
+}
