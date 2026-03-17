@@ -54,14 +54,7 @@ button{
 
 <h2>🔥 GERADOR DE SENSI FF 🔥</h2>
 
-<select id="celular">
-  <option value="medio">Selecione seu celular</option>
-  <option value="fraco">Samsung A10</option>
-  <option value="medio">Motorola G23</option>
-  <option value="medio">Redmi Note 13 4G</option>
-  <option value="forte">iPhone 11</option>
-  <option value="forte">POCO X5</option>
-</select>
+<select id="celular"></select>
 
 <p>DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
@@ -83,7 +76,53 @@ Seu resultado aparecerá aqui...
 
 <script>
 
-// atualizar valores na tela
+// LISTA DE CELULARES
+const celulares = [
+
+  // FRACOS
+  {nome: "Samsung A10", tipo: "fraco"},
+  {nome: "Samsung A20", tipo: "fraco"},
+  {nome: "Moto E7", tipo: "fraco"},
+  {nome: "Moto G8 Play", tipo: "fraco"},
+
+  // MÉDIOS
+  {nome: "Motorola G23", tipo: "medio"},
+  {nome: "Moto G52", tipo: "medio"},
+  {nome: "Moto G60", tipo: "medio"},
+  {nome: "Samsung A32", tipo: "medio"},
+  {nome: "Samsung A51", tipo: "medio"},
+  {nome: "Redmi Note 10", tipo: "medio"},
+  {nome: "Redmi Note 11", tipo: "medio"},
+  {nome: "Redmi Note 13 4G", tipo: "medio"},
+  {nome: "POCO M3", tipo: "medio"},
+
+  // FORTES
+  {nome: "POCO X3 Pro", tipo: "forte"},
+  {nome: "POCO X5", tipo: "forte"},
+  {nome: "POCO F4", tipo: "forte"},
+  {nome: "Samsung S21", tipo: "forte"},
+  {nome: "Samsung S22", tipo: "forte"},
+  {nome: "iPhone XR", tipo: "forte"},
+  {nome: "iPhone 11", tipo: "forte"},
+  {nome: "iPhone 12", tipo: "forte"}
+
+]
+
+// CARREGAR SELECT
+const select = document.getElementById("celular")
+
+celulares.forEach(cel => {
+  let option = document.createElement("option")
+  option.value = cel.tipo
+
+  if(cel.tipo === "fraco") option.textContent = "🔻 " + cel.nome
+  if(cel.tipo === "medio") option.textContent = "⚖️ " + cel.nome
+  if(cel.tipo === "forte") option.textContent = "🚀 " + cel.nome
+
+  select.appendChild(option)
+})
+
+// ATUALIZAR VALORES
 dpi.oninput = () => dpiValor.innerText = dpi.value
 botao.oninput = () => botaoValor.innerText = botao.value
 cursor.oninput = () => cursorValor.innerText = cursor.value
@@ -95,7 +134,6 @@ function gerar(){
   let botaoVal = parseInt(botao.value)
   let cursorVal = parseInt(cursor.value)
 
-  // BASE POR APARELHO
   let base
 
   if(tipo === "fraco"){
@@ -106,7 +144,6 @@ function gerar(){
     base = 160
   }
 
-  // CALCULO INTELIGENTE
   let geral = base + (dpiVal/10) + (cursorVal/5)
   let redDot = geral - 5
   let x2 = geral - 15
@@ -114,11 +151,9 @@ function gerar(){
   let awm = geral - 35
   let olhadinha = geral + 10
 
-  // AJUSTE PELO BOTÃO
   geral -= botaoVal/10
   redDot -= botaoVal/12
 
-  // ARREDONDAR
   geral = Math.round(geral)
   redDot = Math.round(redDot)
   x2 = Math.round(x2)
