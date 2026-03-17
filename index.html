@@ -42,31 +42,30 @@ button{
   font-weight:bold;
 }
 
-/* BOTÕES DE CELULAR */
+/* BOTÕES */
 #botoesCelular{
   display:flex;
   flex-wrap:wrap;
   gap:5px;
-  margin-bottom:10px;
 }
 #botoesCelular button{
   flex:1 1 30%;
   background:#222;
 }
 
-/* SLIDER TEXTO */
-#valorBotao{
-  margin:0;
-  font-size:14px;
-  color:#ccc;
-}
-
+/* ANIMAÇÃO */
 .resultado{
   margin-top:15px;
   text-align:left;
   background:#111;
   padding:15px;
   border-radius:8px;
+  animation: fade 0.5s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
 }
 </style>
 </head>
@@ -79,10 +78,8 @@ button{
 
 <input type="text" id="buscarCelular" placeholder="🔍 Pesquisar celular...">
 
-<!-- BOTÕES -->
 <div id="botoesCelular"></div>
 
-<label>📱 Escolha seu Celular</label>
 <select id="celular">
 <option value="a14">Samsung Galaxy A14</option>
 <option value="a34">Samsung Galaxy A34</option>
@@ -95,38 +92,37 @@ button{
 <option value="realmeC55">Realme C55</option>
 </select>
 
-<label>📊 DPI</label>
 <select id="dpi">
 <option value="baixa">Baixa</option>
 <option value="media">Média</option>
 <option value="alta">Alta</option>
 </select>
 
-<label>🎮 Estilo de Jogo</label>
 <select id="estilo">
-<option value="rush">Rushador</option>
-<option value="capa">Só Capa</option>
+<option value="rush">Rush</option>
+<option value="capa">Capa</option>
 <option value="equilibrado">Equilibrado</option>
 <option value="sniper">Sniper</option>
 </select>
 
-<label>⚡ Velocidade do Cursor</label>
+<!-- 🔫 ARMA -->
+<select id="arma">
+<option value="smg">SMG</option>
+<option value="ar">AR</option>
+<option value="sniper">Sniper</option>
+</select>
+
 <input type="range" min="1" max="10" value="5" id="cursor">
-
-<label>🎯 Precisão</label>
 <input type="range" min="1" max="10" value="7" id="precisao">
-
-<label>🔥 Estabilidade</label>
 <input type="range" min="1" max="10" value="6" id="estabilidade">
 
-<!-- 🔘 BOTÃO DE TIRO -->
-<label>🔘 Tamanho do Botão de Tiro (%)</label>
+<!-- BOTÃO -->
 <input type="range" min="0" max="65" value="50" id="botaoTiro">
 <p id="valorBotao">50%</p>
 
-<button onclick="gerar()">GERAR SENSIBILIDADE</button>
-<button onclick="copiarSensi()">📋 Copiar</button>
-<button onclick="salvarSensi()">💾 Salvar</button>
+<button onclick="gerar()">GERAR</button>
+<button onclick="modoPro()">🤖 MODO PRO</button>
+<button onclick="copiarSensi()">📋 COPIAR</button>
 
 <div id="resultado" class="resultado" style="display:none;"></div>
 
@@ -134,7 +130,6 @@ button{
 
 <script>
 
-/* CELULARES */
 const celulares = {
 a14:{baixa:520,media:650,alta:750},
 a34:{baixa:600,media:750,alta:900},
@@ -147,124 +142,90 @@ iphone11:{baixa:750,media:900,alta:1000},
 realmeC55:{baixa:600,media:750,alta:850}
 };
 
-/* NOMES */
 const nomesCelulares = {
-a14:"A14",
-a34:"A34",
-s21:"S21",
-note12:"Note 12",
-note13:"Note 13",
-g23:"G23",
-g32:"G32",
-iphone11:"iPhone 11",
-realmeC55:"C55"
+a14:"A14",a34:"A34",s21:"S21",
+note12:"Note12",note13:"Note13",
+g23:"G23",g32:"G32",
+iphone11:"iPhone",realmeC55:"C55"
 };
 
-/* 🔍 PESQUISA */
-const input = document.getElementById("buscarCelular");
-const select = document.getElementById("celular");
-
-input.addEventListener("input", function(){
-  let filtro = input.value.toLowerCase();
-  for(let i=0;i<select.options.length;i++){
-    let txt = select.options[i].text.toLowerCase();
-    select.options[i].style.display =
-      txt.includes(filtro) ? "block" : "none";
-  }
-});
-
-/* 📱 BOTÕES */
-const containerBotoes = document.getElementById("botoesCelular");
-
-for(let key in celulares){
-  let btn = document.createElement("button");
-  btn.innerText = nomesCelulares[key] || key;
-
-  btn.onclick = function(){
-    document.getElementById("celular").value = key;
-  };
-
-  containerBotoes.appendChild(btn);
+/* BOTÕES */
+let cont = document.getElementById("botoesCelular");
+for(let k in celulares){
+ let b=document.createElement("button");
+ b.innerText=nomesCelulares[k];
+ b.onclick=()=>document.getElementById("celular").value=k;
+ cont.appendChild(b);
 }
 
-/* 🔘 SLIDER BOTÃO */
-const sliderBotao = document.getElementById("botaoTiro");
-const valorBotao = document.getElementById("valorBotao");
-
-sliderBotao.oninput = function(){
-  valorBotao.innerText = this.value + "%";
+/* PESQUISA */
+buscarCelular.oninput = ()=>{
+ let f=buscarCelular.value.toLowerCase();
+ for(let o of celular.options){
+  o.style.display=o.text.toLowerCase().includes(f)?"block":"none";
+ }
 }
 
-/* GERADOR */
+/* SLIDER */
+botaoTiro.oninput=()=>valorBotao.innerText=botaoTiro.value+"%";
+
+/* GERAR */
 function gerar(){
 
-let celular = document.getElementById("celular").value;
-let dpiTipo = document.getElementById("dpi").value;
-let estilo = document.getElementById("estilo").value;
+let c=celular.value;
+let dpiV=celulares[c][dpi.value];
+let base=Math.round(dpiV/6);
 
-let cursor = document.getElementById("cursor").value;
-let precisao = document.getElementById("precisao").value;
-let estabilidade = document.getElementById("estabilidade").value;
-let botao = document.getElementById("botaoTiro").value;
+if(estilo.value=="rush") base+=15;
+if(estilo.value=="capa") base-=5;
+if(estilo.value=="sniper") base-=20;
 
-let dpiValor = celulares[celular][dpiTipo];
+if(arma.value=="smg") base+=10;
+if(arma.value=="sniper") base-=15;
 
-let base = Math.round(dpiValor / 6);
+base+=Math.round((cursor.value*1.5)+(precisao.value*2)+(estabilidade.value*1.2));
 
-if(estilo=="rush") base+=15;
-if(estilo=="capa") base-=5;
-if(estilo=="sniper") base-=20;
+base=Math.max(60,Math.min(200,base));
 
-let ajuste = (cursor*1.5)+(precisao*2)+(estabilidade*1.2);
-base += Math.round(ajuste);
-
-if(base>200) base=200;
-if(base<60) base=60;
-
-let geral=base;
-let redDot=base-5;
-let doisX=base-15;
-let quatroX=base-25;
-let awm=base-35;
-let olhadinha=base+10;
-
-document.getElementById("resultado").style.display="block";
-document.getElementById("resultado").innerHTML=`
-🔥 RESULTADO GERADO 🔥<br><br>
-📱 DPI Numérica: ${dpiValor}<br>
-🎮 Estilo: ${estilo}<br><br>
-🎯 Geral: ${geral}<br>
-🔴 Red Dot: ${redDot}<br>
-🔭 2x: ${doisX}<br>
-🔬 4x: ${quatroX}<br>
-🎯 AWM: ${awm}<br>
-👀 Olhadinha: ${olhadinha}<br>
-🔘 Botão de Tiro: ${botao}%
+resultado.style.display="block";
+resultado.innerHTML=`
+🔥 RESULTADO 🔥<br>
+DPI: ${dpiV}<br>
+Geral: ${base}<br>
+RedDot: ${base-5}<br>
+2x: ${base-15}<br>
+4x: ${base-25}<br>
+AWM: ${base-35}<br>
+Olhadinha: ${base+10}<br>
+Botão: ${botaoTiro.value}%
 `;
-
 }
+
+/* 🤖 PRO */
+function modoPro(){
+estilo.value="rush";
+dpi.value="alta";
+cursor.value=7;
+precisao.value=8;
+estabilidade.value=7;
+botaoTiro.value=55;
+valorBotao.innerText="55%";
+gerar();
+}
+
+/* DETECTAR */
+function detectar(){
+let ua=navigator.userAgent.toLowerCase();
+if(ua.includes("iphone")) celular.value="iphone11";
+if(ua.includes("samsung")) celular.value="a34";
+if(ua.includes("xiaomi")) celular.value="note13";
+}
+detectar();
 
 /* COPIAR */
 function copiarSensi(){
-let texto = document.getElementById("resultado").innerText;
-navigator.clipboard.writeText(texto);
+navigator.clipboard.writeText(resultado.innerText);
 alert("Copiado!");
-}
-
-/* SALVAR */
-function salvarSensi(){
-let texto = document.getElementById("resultado").innerHTML;
-localStorage.setItem("sensi", texto);
-alert("Salvo!");
-}
-
-/* CARREGAR */
-window.onload = function(){
-let salva = localStorage.getItem("sensi");
-if(salva){
-document.getElementById("resultado").style.display="block";
-document.getElementById("resultado").innerHTML = salva;
-}
 }
 
 </script>
