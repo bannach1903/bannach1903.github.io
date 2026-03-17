@@ -72,80 +72,87 @@ Seu resultado aparecerá aqui...
 </div>
 
 <script>
-// ----------------- CELULARES -----------------
-const celulares = [
-  {nome:"Samsung A10", tipo:"fraco"},
-  {nome:"Samsung A12", tipo:"fraco"},
-  {nome:"Moto G23", tipo:"medio"},
-  {nome:"Redmi Note 13 4G", tipo:"medio"},
-  {nome:"POCO X3 Pro", tipo:"forte"},
-  {nome:"iPhone 14", tipo:"forte"},
-  {nome:"Samsung S21", tipo:"forte"},
-  {nome:"ROG Phone 7", tipo:"forte"}
-];
+window.onload = function(){
 
-// Carregar select
-const selectCelular = document.getElementById("celular");
-celulares.forEach(cel=>{
-  let option = document.createElement("option");
-  option.value = cel.tipo; // mantém o tipo
-  option.textContent = cel.tipo==="fraco"?"🔻 "+cel.nome:cel.tipo==="medio"?"⚖️ "+cel.nome:"🚀 "+cel.nome;
-  selectCelular.appendChild(option);
-});
+  // ----------------- CELULARES -----------------
+  const celulares = [
+    {nome:"Samsung A10", tipo:"fraco"},
+    {nome:"Samsung A12", tipo:"fraco"},
+    {nome:"Moto G23", tipo:"medio"},
+    {nome:"Redmi Note 13 4G", tipo:"medio"},
+    {nome:"POCO X3 Pro", tipo:"forte"},
+    {nome:"iPhone 14", tipo:"forte"},
+    {nome:"Samsung S21", tipo:"forte"},
+    {nome:"ROG Phone 7", tipo:"forte"}
+  ];
 
-// Atualizar sliders
-const dpi = document.getElementById("dpi");
-const botao = document.getElementById("botao");
-const cursor = document.getElementById("cursor");
-dpi.oninput = ()=> dpiValor.innerText = dpi.value;
-botao.oninput = ()=> botaoValor.innerText = botao.value;
-cursor.oninput = ()=> cursorValor.innerText = cursor.value;
+  // Carregar select
+  const selectCelular = document.getElementById("celular");
+  celulares.forEach(cel=>{
+    let option = document.createElement("option");
+    option.value = cel.tipo; 
+    option.textContent = cel.tipo==="fraco"?"🔻 "+cel.nome:cel.tipo==="medio"?"⚖️ "+cel.nome:"🚀 "+cel.nome;
+    selectCelular.appendChild(option);
+  });
 
-// ----------------- GERADOR PRO -----------------
-function gerar(){
-  let tipo = selectCelular.value; // usar selectCelular aqui
-  let estilo = document.getElementById("estilo").value;
-  let dpiVal = parseInt(dpi.value);
-  let botaoVal = parseInt(botao.value);
-  let cursorVal = parseInt(cursor.value);
+  // Atualizar sliders
+  const dpi = document.getElementById("dpi");
+  const botao = document.getElementById("botao");
+  const cursor = document.getElementById("cursor");
+  dpi.oninput = ()=> dpiValor.innerText = dpi.value;
+  botao.oninput = ()=> botaoValor.innerText = botao.value;
+  cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-  let base = tipo==="fraco"?90: tipo==="medio"?105:115;
-  let ajusteDPI = (dpiVal - 500)/15;
-  let ajusteCursor = (cursorVal - 50)/4;
-  let ajusteBotao = (botaoVal - 50)/8;
-  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
-  if(estilo==="capa") geral-=5;
+  // ----------------- GERADOR PRO -----------------
+  window.gerar = function(){
+    let tipo = selectCelular.value; 
+    let estilo = document.getElementById("estilo").value;
+    let dpiVal = parseInt(dpi.value);
+    let botaoVal = parseInt(botao.value);
+    let cursorVal = parseInt(cursor.value);
 
-  let redDot = geral-3;
-  let x2 = geral-10;
-  let x4 = geral-18;
-  let awm = geral-28;
-  let olhadinha = geral+8;
-  if(estilo==="capa"){ redDot-=2; x2-=3; x4-=5 }
+    let base = tipo==="fraco"?90: tipo==="medio"?105:115;
+    let ajusteDPI = (dpiVal - 500)/15;
+    let ajusteCursor = (cursorVal - 50)/4;
+    let ajusteBotao = (botaoVal - 50)/8;
+    let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
+    if(estilo==="capa") geral-=5;
 
-  function limitar(v){ if(v<0)return 0; if(v>200)return 200; return Math.round(v) }
-  geral=limitar(geral);
-  redDot=limitar(redDot);
-  x2=limitar(x2);
-  x4=limitar(x4);
-  awm=limitar(awm);
-  olhadinha=limitar(olhadinha);
+    let redDot = geral-3;
+    let x2 = geral-10;
+    let x4 = geral-18;
+    let awm = geral-28;
+    let olhadinha = geral+8;
+    if(estilo==="capa"){ redDot-=2; x2-=3; x4-=5 }
 
-  document.getElementById("resultado").innerHTML=`
-    🔥 RESULTADO PRO 🔥<br><br>
-    Estilo: ${estilo} <br>
-    DPI: ${dpiVal} <br>
-    Geral: ${geral} <br>
-    RedDot: ${redDot} <br>
-    2x: ${x2} <br>
-    4x: ${x4} <br>
-    AWM: ${awm} <br>
-    Olhadinha: ${olhadinha} <br>
-    Botão: ${botaoVal}%
-  `;
-}
+    function limitar(v){ if(v<0)return 0; if(v>200)return 200; return Math.round(v) }
+    geral=limitar(geral);
+    redDot=limitar(redDot);
+    x2=limitar(x2);
+    x4=limitar(x4);
+    awm=limitar(awm);
+    olhadinha=limitar(olhadinha);
 
-function copiar(){ 
-  navigator.clipboard.writeText(document.getElementById("resultado").innerText); 
-  alert("Copiado!") 
-}
+    document.getElementById("resultado").innerHTML=`
+      🔥 RESULTADO PRO 🔥<br><br>
+      Estilo: ${estilo} <br>
+      DPI: ${dpiVal} <br>
+      Geral: ${geral} <br>
+      RedDot: ${redDot} <br>
+      2x: ${x2} <br>
+      4x: ${x4} <br>
+      AWM: ${awm} <br>
+      Olhadinha: ${olhadinha} <br>
+      Botão: ${botaoVal}%
+    `;
+  }
+
+  window.copiar = function(){ 
+    navigator.clipboard.writeText(document.getElementById("resultado").innerText); 
+    alert("Copiado!") 
+  }
+  
+} // fim window.onload
+</script>
+</body>
+</html>
