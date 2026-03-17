@@ -1,25 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador PRO Sensibilidade FF + Mapeador</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
+}
+
+.container{
+  padding:20px;
+}
+
+select, input{
+  width:90%;
+  margin:10px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+
+button{
+  width:90%;
+  padding:15px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  background:red;
+  color:white;
+}
+
+.resultado{
+  background:#1a1a1a;
+  padding:15px;
+  margin-top:15px;
+  border-radius:10px;
+}
+
+h2{
+  margin-bottom:0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔥 GERADOR PRO FF 🔥</h2>
+
+<!-- Seção Geral -->
+<select id="celular"></select>
+
+<select id="estilo">
+  <option value="equilibrado">⚖️ Rush Equilibrado</option>
+  <option value="capa">🎯 Mais Capa (HS)</option>
+</select>
+
+<p>DPI: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+
+<p>Botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
+
+<p>Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
+<button onclick="gerar()">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
+
+<div class="resultado" id="resultado">
+Seu resultado aparecerá aqui...
+</div>
+
+<hr style="margin:20px 0; border:1px solid white;">
+
+<!-- NOVA SEÇÃO: SENSI MAPEADOR / MOBILADOR -->
+<h2>🎮 SENSIBILIDADE MAPEADOR / MOBILADOR</h2>
+
+<p>Sensi Horizontal do Jogo: <span id="horizJogoValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="horizJogo">
+
+<p>Sensi Vertical do Jogo: <span id="vertJogoValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="vertJogo">
+
+<p>Sensi do Mouse: <span id="mouseValor">50</span></p>
+<input type="range" min="10" max="200" value="50" id="mouse">
+
+<p>Sensi do Celular: <span id="celValor">50</span></p>
+<input type="range" min="10" max="200" value="50" id="cel">
+
+<button onclick="gerarMapeador()">GERAR MAPEADOR</button>
+<button onclick="copiarMapeador()">COPIAR MAPEADOR</button>
+
+<div class="resultado" id="resultadoMapeador">
+Seu resultado do mapeador aparecerá aqui...
+</div>
+
+</div>
+
 <script>
 
-// ----------------- CELULARES COM CONFIG IDEAL -----------------
+// ----------------- CELULARES -----------------
 const celulares = [
-  {nome: "Samsung A10", tipo: "fraco", base: 88, horiz: 90, vert: 180, mouse: 120, cel: 130},
-  {nome: "Samsung A12", tipo: "fraco", base: 90, horiz: 95, vert: 185, mouse: 125, cel: 135},
-  {nome: "Motorola G23", tipo: "medio", base: 100, horiz: 100, vert: 200, mouse: 140, cel: 150},
-  {nome: "Redmi Note 13 4G", tipo: "medio", base: 105, horiz: 110, vert: 210, mouse: 150, cel: 160},
-  {nome: "POCO X3 Pro", tipo: "forte", base: 112, horiz: 120, vert: 220, mouse: 170, cel: 180},
-  {nome: "iPhone 11", tipo: "forte", base: 115, horiz: 125, vert: 230, mouse: 180, cel: 190}
+  {nome: "Samsung A10", tipo: "fraco"},
+  {nome: "Samsung A12", tipo: "fraco"},
+  {nome: "Motorola G23", tipo: "medio"},
+  {nome: "Redmi Note 13 4G", tipo: "medio"},
+  {nome: "POCO X3 Pro", tipo: "forte"},
+  {nome: "iPhone 11", tipo: "forte"}
 ];
 
 const select = document.getElementById("celular")
-
-celulares.forEach((cel, index) => {
+celulares.forEach(cel => {
   let option = document.createElement("option")
-  option.value = index
-
+  option.value = cel.tipo
   if(cel.tipo === "fraco") option.textContent = "🔻 " + cel.nome
   if(cel.tipo === "medio") option.textContent = "⚖️ " + cel.nome
   if(cel.tipo === "forte") option.textContent = "🚀 " + cel.nome
-
   select.appendChild(option)
 });
 
@@ -31,19 +138,22 @@ cursor.oninput = () => cursorValor.innerText = cursor.value
 horizJogo.oninput = () => horizJogoValor.innerText = horizJogo.value
 vertJogo.oninput = () => vertJogoValor.innerText = vertJogo.value
 mouse.oninput = () => mouseValor.innerText = mouse.value
-cel.oninput = () => celValor.innerText = celValor.innerText = cel.value
+cel.oninput = () => celValor.innerText = cel.value
 
 // ----------------- GERADOR FF -----------------
 function gerar(){
 
-  let celSelecionado = celulares[celular.value]
+  let tipo = celular.value
   let estilo = document.getElementById("estilo").value
 
   let dpiVal = parseInt(dpi.value)
   let botaoVal = parseInt(botao.value)
   let cursorVal = parseInt(cursor.value)
 
-  let base = celSelecionado.base
+  let base
+  if(tipo === "fraco") base = 90
+  else if(tipo === "medio") base = 105
+  else base = 115
 
   let ajusteDPI = (dpiVal - 500)/15
   let ajusteCursor = (cursorVal - 50)/4
@@ -67,17 +177,23 @@ function gerar(){
 
   function limitar(v){ if(v<0) return 0; if(v>200) return 200; return Math.round(v) }
 
+  geral = limitar(geral)
+  redDot = limitar(redDot)
+  x2 = limitar(x2)
+  x4 = limitar(x4)
+  awm = limitar(awm)
+  olhadinha = limitar(olhadinha)
+
   resultado.innerHTML = `
     🔥 RESULTADO PRO 🔥<br><br>
-    Celular: ${celSelecionado.nome}<br>
-    Estilo: ${estilo}<br>
-    DPI: ${dpiVal}<br>
-    Geral: ${limitar(geral)}<br>
-    RedDot: ${limitar(redDot)}<br>
-    2x: ${limitar(x2)}<br>
-    4x: ${limitar(x4)}<br>
-    AWM: ${limitar(awm)}<br>
-    Olhadinha: ${limitar(olhadinha)}<br>
+    Estilo: ${estilo} <br>
+    DPI: ${dpiVal} <br>
+    Geral: ${geral} <br>
+    RedDot: ${redDot} <br>
+    2x: ${x2} <br>
+    4x: ${x4} <br>
+    AWM: ${awm} <br>
+    Olhadinha: ${olhadinha} <br>
     Botão: ${botaoVal}%
   `
 }
@@ -87,32 +203,24 @@ function copiar(){
   alert("Copiado!")
 }
 
-// ----------------- GERADOR MAPEADOR MELHORADO -----------------
+// ----------------- GERADOR MAPEADOR -----------------
 function gerarMapeador(){
+  let horiz = parseInt(horizJogo.value)
+  let vert = parseInt(vertJogo.value)
+  let mouseVal = parseInt(mouse.value)
+  let celVal = parseInt(cel.value)
 
-  let celSelecionado = celulares[celular.value]
-
-  // valores automáticos baseados no celular
-  let horiz = celSelecionado.horiz
-  let vert = celSelecionado.vert
-  let mouseVal = celSelecionado.mouse
-  let celVal = celSelecionado.cel
-
-  // também soma com o ajuste do usuário
-  horiz += parseInt(horizJogo.value) - 50
-  vert += parseInt(vertJogo.value) - 50
-  mouseVal += parseInt(mouse.value) - 50
-  celVal += parseInt(cel.value) - 50
-
+  // Aqui fazemos ajuste universal pra todas as versões do mapeador
   let geral = (horiz + vert)/2
+  let mouseSensi = mouseVal * 1.0
+  let celularSensi = celVal * 1.0
 
   resultadoMapeador.innerHTML = `
-    🎮 RESULTADO MAPEADOR PRO 🎮<br><br>
-    Celular: ${celSelecionado.nome}<br>
-    Horizontal: ${Math.round(horiz)}<br>
-    Vertical: ${Math.round(vert)}<br>
-    Mouse: ${Math.round(mouseVal)}<br>
-    Celular: ${Math.round(celVal)}<br>
+    🎮 RESULTADO MAPAADOR 🎮<br><br>
+    Horizontal do Jogo: ${horiz}<br>
+    Vertical do Jogo: ${vert}<br>
+    Sensibilidade do Mouse: ${mouseSensi}<br>
+    Sensibilidade do Celular: ${celularSensi}<br>
     Geral Map: ${Math.round(geral)}
   `
 }
@@ -121,5 +229,7 @@ function copiarMapeador(){
   navigator.clipboard.writeText(resultadoMapeador.innerText)
   alert("Copiado!")
 }
-
 </script>
+
+</body>
+</html>
