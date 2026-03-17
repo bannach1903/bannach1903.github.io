@@ -54,6 +54,13 @@ button{
   background:#222;
 }
 
+/* SLIDER TEXTO */
+#valorBotao{
+  margin:0;
+  font-size:14px;
+  color:#ccc;
+}
+
 .resultado{
   margin-top:15px;
   text-align:left;
@@ -72,7 +79,7 @@ button{
 
 <input type="text" id="buscarCelular" placeholder="🔍 Pesquisar celular...">
 
-<!-- 📱 BOTÕES -->
+<!-- BOTÕES -->
 <div id="botoesCelular"></div>
 
 <label>📱 Escolha seu Celular</label>
@@ -112,6 +119,11 @@ button{
 <label>🔥 Estabilidade</label>
 <input type="range" min="1" max="10" value="6" id="estabilidade">
 
+<!-- 🔘 BOTÃO DE TIRO -->
+<label>🔘 Tamanho do Botão de Tiro (%)</label>
+<input type="range" min="0" max="65" value="50" id="botaoTiro">
+<p id="valorBotao">50%</p>
+
 <button onclick="gerar()">GERAR SENSIBILIDADE</button>
 <button onclick="copiarSensi()">📋 Copiar</button>
 <button onclick="salvarSensi()">💾 Salvar</button>
@@ -135,7 +147,7 @@ iphone11:{baixa:750,media:900,alta:1000},
 realmeC55:{baixa:600,media:750,alta:850}
 };
 
-/* NOMES BONITOS */
+/* NOMES */
 const nomesCelulares = {
 a14:"A14",
 a34:"A34",
@@ -161,7 +173,7 @@ input.addEventListener("input", function(){
   }
 });
 
-/* 📱 BOTÕES AUTOMÁTICOS */
+/* 📱 BOTÕES */
 const containerBotoes = document.getElementById("botoesCelular");
 
 for(let key in celulares){
@@ -175,6 +187,14 @@ for(let key in celulares){
   containerBotoes.appendChild(btn);
 }
 
+/* 🔘 SLIDER BOTÃO */
+const sliderBotao = document.getElementById("botaoTiro");
+const valorBotao = document.getElementById("valorBotao");
+
+sliderBotao.oninput = function(){
+  valorBotao.innerText = this.value + "%";
+}
+
 /* GERADOR */
 function gerar(){
 
@@ -185,6 +205,7 @@ let estilo = document.getElementById("estilo").value;
 let cursor = document.getElementById("cursor").value;
 let precisao = document.getElementById("precisao").value;
 let estabilidade = document.getElementById("estabilidade").value;
+let botao = document.getElementById("botaoTiro").value;
 
 let dpiValor = celulares[celular][dpiTipo];
 
@@ -217,26 +238,27 @@ document.getElementById("resultado").innerHTML=`
 🔭 2x: ${doisX}<br>
 🔬 4x: ${quatroX}<br>
 🎯 AWM: ${awm}<br>
-👀 Olhadinha: ${olhadinha}
+👀 Olhadinha: ${olhadinha}<br>
+🔘 Botão de Tiro: ${botao}%
 `;
 
 }
 
-/* 📋 COPIAR */
+/* COPIAR */
 function copiarSensi(){
 let texto = document.getElementById("resultado").innerText;
 navigator.clipboard.writeText(texto);
 alert("Copiado!");
 }
 
-/* 💾 SALVAR */
+/* SALVAR */
 function salvarSensi(){
 let texto = document.getElementById("resultado").innerHTML;
 localStorage.setItem("sensi", texto);
 alert("Salvo!");
 }
 
-/* 🔄 CARREGAR */
+/* CARREGAR */
 window.onload = function(){
 let salva = localStorage.getItem("sensi");
 if(salva){
