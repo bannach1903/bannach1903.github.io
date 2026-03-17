@@ -1,202 +1,23 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador Oficial de Sensi Free Fire</title>
+let dispositivos = JSON.parse(localStorage.getItem("dispositivos")) || {
+  "Motorola G23": {
+    dpi: 700,
+    geral: 92,
+    redDot: 88,
+    mira2x: 82,
+    mira4x: 75,
+    awm: 60,
+    olhadinha: 70,
+    botao: 55
+  },
 
-<style>
-body{
-  margin:0;
-  background:#0f0f0f;
-  font-family:Arial;
-  color:white;
-  text-align:center;
-}
-h1{
-  background:black;
-  padding:15px;
-  color:#ff0033;
-  box-shadow:0 0 15px red;
-}
-.container{
-  width:95%;
-  max-width:500px;
-  margin:auto;
-  margin-top:20px;
-  background:#1a1a1a;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 0 10px #ff0033;
-}
-select, button{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
-  border:none;
-}
-button{
-  background:#ff0033;
-  color:white;
-  font-weight:bold;
-}
-.resultado{
-  margin-top:15px;
-  text-align:left;
-  background:#111;
-  padding:15px;
-  border-radius:8px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>
-
-<div class="container">
-
-<label>📱 Escolha seu Celular</label>
-<select id="celular">
-
-<!-- SAMSUNG -->
-<option value="a14">Samsung Galaxy A14</option>
-<option value="a34">Samsung Galaxy A34</option>
-<option value="s20">Samsung Galaxy S20</option>
-<option value="s21">Samsung Galaxy S21</option>
-<option value="s22">Samsung Galaxy S22</option>
-
-<!-- XIAOMI -->
-<option value="note10">Redmi Note 10</option>
-<option value="note11">Redmi Note 11</option>
-<option value="note12">Redmi Note 12</option>
-<option value="pocox3">Poco X3</option>
-<option value="pocox5">Poco X5</option>
-
-<!-- MOTOROLA -->
-<option value="g22">Moto G22</option>
-<option value="g32">Moto G32</option>
-<option value="g53">Moto G53</option>
-<option value="g73">Moto G73</option>
-
-<!-- IPHONE -->
-<option value="iphone11">iPhone 11</option>
-<option value="iphone12">iPhone 12</option>
-<option value="iphone13">iPhone 13</option>
-<option value="iphone14">iPhone 14</option>
-
-<!-- REALME -->
-<option value="realmeC55">Realme C55</option>
-<option value="realme11">Realme 11</option>
-
-</select>
-
-<label>📊 DPI</label>
-<select id="dpi">
-<option value="baixa">Baixa</option>
-<option value="media">Média</option>
-<option value="alta">Alta</option>
-</select>
-
-<label>🎮 Estilo de Jogo</label>
-<select id="estilo">
-<option value="rush">Rushador</option>
-<option value="capa">Só Capa</option>
-<option value="equilibrado">Equilibrado</option>
-<option value="sniper">Sniper</option>
-</select>
-
-<button onclick="gerar()">GERAR SENSIBILIDADE</button>
-
-<div id="resultado" class="resultado" style="display:none;"></div>
-
-</div>
-
-<script>
-
-/* ==============================
-   DPI NUMÉRICA POR CELULAR
-============================== */
-
-const celulares = {
-
-a14:{baixa:411,media:520,alta:640},
-a34:{baixa:430,media:600,alta:750},
-s20:{baixa:480,media:720,alta:960},
-s21:{baixa:500,media:750,alta:1000},
-s22:{baixa:520,media:800,alta:1050},
-
-note10:{baixa:420,media:580,alta:720},
-note11:{baixa:430,media:600,alta:780},
-note12:{baixa:450,media:650,alta:900},
-pocox3:{baixa:470,media:700,alta:920},
-pocox5:{baixa:480,media:720,alta:950},
-
-g22:{baixa:400,media:550,alta:700},
-g32:{baixa:420,media:600,alta:750},
-g53:{baixa:430,media:650,alta:820},
-g73:{baixa:450,media:700,alta:880},
-
-iphone11:{baixa:500,media:750,alta:1000},
-iphone12:{baixa:520,media:780,alta:1050},
-iphone13:{baixa:540,media:800,alta:1100},
-iphone14:{baixa:560,media:850,alta:1150},
-
-realmeC55:{baixa:420,media:600,alta:780},
-realme11:{baixa:440,media:650,alta:850}
-
+  "Redmi Note 13 4G": {
+    dpi: 720,
+    geral: 95,
+    redDot: 90,
+    mira2x: 85,
+    mira4x: 78,
+    awm: 62,
+    olhadinha: 72,
+    botao: 58
+  }
 };
-
-/* ==============================
-   GERADOR DE SENSI
-============================== */
-
-function gerar(){
-
-let celular = document.getElementById("celular").value;
-let dpiTipo = document.getElementById("dpi").value;
-let estilo = document.getElementById("estilo").value;
-
-let dpiValor = celulares[celular][dpiTipo];
-
-/* cálculo base */
-let base = Math.round(dpiValor / 6);
-
-/* ajuste por estilo */
-if(estilo=="rush") base+=15;
-if(estilo=="capa") base-=5;
-if(estilo=="sniper") base-=20;
-
-/* limites */
-if(base>200) base=200;
-if(base<60) base=60;
-
-/* gerar valores */
-let geral=base;
-let redDot=base-5;
-let doisX=base-15;
-let quatroX=base-25;
-let awm=base-35;
-let olhadinha=base+10;
-
-document.getElementById("resultado").style.display="block";
-document.getElementById("resultado").innerHTML=`
-🔥 RESULTADO GERADO 🔥<br><br>
-📱 DPI Numérica: ${dpiValor}<br>
-🎮 Estilo: ${estilo}<br><br>
-
-🎯 Geral: ${geral}<br>
-🔴 Red Dot: ${redDot}<br>
-🔭 2x: ${doisX}<br>
-🔬 4x: ${quatroX}<br>
-🎯 AWM: ${awm}<br>
-👀 Olhadinha: ${olhadinha}
-`;
-
-}
-
-</script>
-
-</body>
-</html>
