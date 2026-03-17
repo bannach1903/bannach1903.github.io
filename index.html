@@ -41,6 +41,19 @@ button{
   color:white;
   font-weight:bold;
 }
+
+/* BOTÕES DE CELULAR */
+#botoesCelular{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-bottom:10px;
+}
+#botoesCelular button{
+  flex:1 1 30%;
+  background:#222;
+}
+
 .resultado{
   margin-top:15px;
   text-align:left;
@@ -58,6 +71,9 @@ button{
 <div class="container">
 
 <input type="text" id="buscarCelular" placeholder="🔍 Pesquisar celular...">
+
+<!-- 📱 BOTÕES -->
+<div id="botoesCelular"></div>
 
 <label>📱 Escolha seu Celular</label>
 <select id="celular">
@@ -119,6 +135,19 @@ iphone11:{baixa:750,media:900,alta:1000},
 realmeC55:{baixa:600,media:750,alta:850}
 };
 
+/* NOMES BONITOS */
+const nomesCelulares = {
+a14:"A14",
+a34:"A34",
+s21:"S21",
+note12:"Note 12",
+note13:"Note 13",
+g23:"G23",
+g32:"G32",
+iphone11:"iPhone 11",
+realmeC55:"C55"
+};
+
 /* 🔍 PESQUISA */
 const input = document.getElementById("buscarCelular");
 const select = document.getElementById("celular");
@@ -131,6 +160,20 @@ input.addEventListener("input", function(){
       txt.includes(filtro) ? "block" : "none";
   }
 });
+
+/* 📱 BOTÕES AUTOMÁTICOS */
+const containerBotoes = document.getElementById("botoesCelular");
+
+for(let key in celulares){
+  let btn = document.createElement("button");
+  btn.innerText = nomesCelulares[key] || key;
+
+  btn.onclick = function(){
+    document.getElementById("celular").value = key;
+  };
+
+  containerBotoes.appendChild(btn);
+}
 
 /* GERADOR */
 function gerar(){
