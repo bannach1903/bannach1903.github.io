@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF + Mapeador</title>
-
+<title>Gerador PRO Sensibilidade FF</title>
 <style>
 body{
   margin:0;
@@ -43,7 +42,6 @@ h2{margin-bottom:0;}
 </style>
 </head>
 <body>
-
 <div class="container">
 
 <h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
@@ -71,29 +69,6 @@ h2{margin-bottom:0;}
 Seu resultado aparecerá aqui...
 </div>
 
-<hr style="margin:20px 0; border:1px solid white;">
-
-<h2>🎮 SENSIBILIDADE MAPEADOR</h2>
-
-<p>Horizontal do Jogo: <span id="horizJogoValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="horizJogo">
-
-<p>Vertical do Jogo: <span id="vertJogoValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="vertJogo">
-
-<p>Mouse: <span id="mouseValor">50</span></p>
-<input type="range" min="10" max="200" value="50" id="mouse">
-
-<p>Celular: <span id="celValor">50</span></p>
-<input type="range" min="10" max="200" value="50" id="cel">
-
-<button onclick="gerarMapeador()">GERAR MAPEADOR</button>
-<button onclick="copiarMapeador()">COPIAR MAPEADOR</button>
-
-<div class="resultado" id="resultadoMapeador">
-Seu resultado do mapeador aparecerá aqui...
-</div>
-
 </div>
 
 <script>
@@ -101,12 +76,63 @@ Seu resultado do mapeador aparecerá aqui...
 const celulares = [
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
-  {nome:"Moto G23", tipo:"medio"},
+  {nome:"Samsung A13", tipo:"fraco"},
+  {nome:"Samsung A03", tipo:"fraco"},
+  {nome:"Moto E7", tipo:"fraco"},
+  {nome:"Moto E13", tipo:"fraco"},
+  {nome:"Moto G8 Play", tipo:"fraco"},
+  {nome:"Redmi 9A", tipo:"fraco"},
+  {nome:"Redmi 10A", tipo:"fraco"},
+  {nome:"Realme C11", tipo:"fraco"},
+  {nome:"Realme C30", tipo:"fraco"},
+  {nome:"Infinix Hot 12", tipo:"fraco"},
+  {nome:"Tecno Spark 9", tipo:"fraco"},
+  {nome:"Lava Z2", tipo:"fraco"},
+  {nome:"Motorola G23", tipo:"medio"},
+  {nome:"Moto G32", tipo:"medio"},
+  {nome:"Moto G52", tipo:"medio"},
+  {nome:"Moto G60", tipo:"medio"},
+  {nome:"Moto G84", tipo:"medio"},
+  {nome:"Samsung A32", tipo:"medio"},
+  {nome:"Samsung A34", tipo:"medio"},
+  {nome:"Samsung A51", tipo:"medio"},
+  {nome:"Samsung A54", tipo:"medio"},
+  {nome:"Samsung A25 5G", tipo:"medio"},
+  {nome:"Redmi Note 10", tipo:"medio"},
+  {nome:"Redmi Note 11", tipo:"medio"},
+  {nome:"Redmi Note 12", tipo:"medio"},
   {nome:"Redmi Note 13 4G", tipo:"medio"},
+  {nome:"Redmi Note 13 5G", tipo:"medio"},
+  {nome:"POCO M3", tipo:"medio"},
+  {nome:"POCO M5", tipo:"medio"},
+  {nome:"POCO X5", tipo:"medio"},
+  {nome:"Realme 11", tipo:"medio"},
+  {nome:"Realme 12", tipo:"medio"},
+  {nome:"Infinix Zero 20", tipo:"medio"},
+  {nome:"Tecno Camon 19", tipo:"medio"},
+  {nome:"Lava Agni 2", tipo:"medio"},
   {nome:"POCO X3 Pro", tipo:"forte"},
-  {nome:"iPhone 14", tipo:"forte"},
+  {nome:"POCO X5 Pro", tipo:"forte"},
+  {nome:"POCO X6 Pro", tipo:"forte"},
+  {nome:"POCO F4", tipo:"forte"},
+  {nome:"POCO F5", tipo:"forte"},
+  {nome:"Samsung S20 FE", tipo:"forte"},
   {nome:"Samsung S21", tipo:"forte"},
-  {nome:"ROG Phone 7", tipo:"forte"}
+  {nome:"Samsung S22", tipo:"forte"},
+  {nome:"Samsung S23", tipo:"forte"},
+  {nome:"Samsung S24", tipo:"forte"},
+  {nome:"iPhone XR", tipo:"forte"},
+  {nome:"iPhone 11", tipo:"forte"},
+  {nome:"iPhone 12", tipo:"forte"},
+  {nome:"iPhone 13", tipo:"forte"},
+  {nome:"iPhone 14", tipo:"forte"},
+  {nome:"iPhone 15", tipo:"forte"},
+  {nome:"ROG Phone 6", tipo:"forte"},
+  {nome:"ROG Phone 7", tipo:"forte"},
+  {nome:"Asus Zenfone 10", tipo:"forte"},
+  {nome:"Realme GT 3", tipo:"forte"},
+  {nome:"Redmi K60", tipo:"forte"},
+  {nome:"Samsung Z Fold 5", tipo:"forte"}
 ];
 
 // Carregar select
@@ -122,11 +148,6 @@ celulares.forEach(cel=>{
 dpi.oninput=()=>dpiValor.innerText=dpi.value;
 botao.oninput=()=>botaoValor.innerText=botao.value;
 cursor.oninput=()=>cursorValor.innerText=cursor.value;
-
-horizJogo.oninput=()=>horizJogoValor.innerText=horizJogo.value;
-vertJogo.oninput=()=>vertJogoValor.innerText=vertJogo.value;
-mouse.oninput=()=>mouseValor.innerText=mouse.value;
-cel.oninput=()=>celValor.innerText=cel.value;
 
 // ----------------- GERADOR PRO -----------------
 function gerar(){
@@ -173,27 +194,3 @@ function gerar(){
 }
 
 function copiar(){ navigator.clipboard.writeText(resultado.innerText); alert("Copiado!") }
-
-// ----------------- GERADOR MAPEADOR -----------------
-function gerarMapeador(){
-  let horiz=parseInt(horizJogo.value);
-  let vert=parseInt(vertJogo.value);
-  let mouseVal=parseInt(mouse.value);
-  let celVal=parseInt(cel.value);
-  let geral=(horiz+vert)/2;
-  resultadoMapeador.innerHTML=`
-    🎮 RESULTADO MAPEADOR 🎮<br><br>
-    Horizontal do Jogo: ${horiz}<br>
-    Vertical do Jogo: ${vert}<br>
-    Sensibilidade do Mouse: ${mouseVal}<br>
-    Sensibilidade do Celular: ${celVal}<br>
-    Geral Map: ${Math.round(geral)}
-  `;
-}
-
-function copiarMapeador(){ navigator.clipboard.writeText(resultadoMapeador.innerText); alert("Copiado!") }
-
-</script>
-
-</body>
-</html>
