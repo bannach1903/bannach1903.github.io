@@ -1,23 +1,14 @@
-let dispositivos = JSON.parse(localStorage.getItem("dispositivos")) || {
-  "Motorola G23": {
-    dpi: 700,
-    geral: 92,
-    redDot: 88,
-    mira2x: 82,
-    mira4x: 75,
-    awm: 60,
-    olhadinha: 70,
-    botao: 55
-  },
+const select = document.getElementById("celulares");
 
-  "Redmi Note 13 4G": {
-    dpi: 720,
-    geral: 95,
-    redDot: 90,
-    mira2x: 85,
-    mira4x: 78,
-    awm: 62,
-    olhadinha: 72,
-    botao: 58
+function atualizarLista() {
+  select.innerHTML = "";
+
+  for (let nome in dispositivos) {
+    let option = document.createElement("option");
+    option.value = nome;
+    option.textContent = nome;
+    select.appendChild(option);
   }
-};
+}
+
+atualizarLista();
