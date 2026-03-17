@@ -3,49 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sensibilidade Mobilador</title>
+<title>Gerador PRO Sensibilidade FF + Mapeador</title>
+
 <style>
-body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
+}
 .container{padding:20px;}
-select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;font-size:16px;}
-button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;font-size:16px;font-weight:bold;background:red;color:white;}
-.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;}
+select, input{
+  width:90%;
+  margin:10px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+button{
+  width:90%;
+  padding:15px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  background:red;
+  color:white;
+}
+.resultado{
+  background:#1a1a1a;
+  padding:15px;
+  margin-top:15px;
+  border-radius:10px;
+}
 h2{margin-bottom:0;}
 </style>
 </head>
 <body>
-<div class="container">
-<h2>🎮 Gerador de Sensibilidade Mobilador 🎮</h2>
 
-<p>Escolha o aparelho:</p>
+<div class="container">
+
+<h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
+
 <select id="celular"></select>
 
-<p>Horizontal do Jogo: <span id="horizValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="horiz">
+<select id="estilo">
+  <option value="equilibrado">⚖️ Rush Equilibrado</option>
+  <option value="capa">🎯 Mais Capa (HS)</option>
+</select>
 
-<p>Vertical do Jogo: <span id="vertValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="vert">
+<p>DPI: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
 
-<button onclick="gerarMobilador()">GERAR SENSI</button>
-<button onclick="copiarMobilador()">COPIAR</button>
+<p>Botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
 
-<div class="resultado" id="resultadoMobilador">
-Resultado aparecerá aqui...
+<p>Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
+<button onclick="gerar()">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
+
+<div class="resultado" id="resultado">
+Seu resultado aparecerá aqui...
 </div>
+
+<hr style="margin:20px 0; border:1px solid white;">
+
+<h2>🎮 SENSIBILIDADE MAPEADOR</h2>
+
+<p>Horizontal do Jogo: <span id="horizJogoValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="horizJogo">
+
+<p>Vertical do Jogo: <span id="vertJogoValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="vertJogo">
+
+<p>Mouse: <span id="mouseValor">50</span></p>
+<input type="range" min="10" max="200" value="50" id="mouse">
+
+<p>Celular: <span id="celValor">50</span></p>
+<input type="range" min="10" max="200" value="50" id="cel">
+
+<button onclick="gerarMapeador()">GERAR MAPEADOR</button>
+<button onclick="copiarMapeador()">COPIAR MAPEADOR</button>
+
+<div class="resultado" id="resultadoMapeador">
+Seu resultado do mapeador aparecerá aqui...
+</div>
+
 </div>
 
 <script>
-// Lista de aparelhos
-const celulares=[
+// ----------------- CELULARES -----------------
+const celulares = [
   {nome:"Samsung A10", tipo:"fraco"},
-  {nome:"Motorola G23", tipo:"medio"},
+  {nome:"Samsung A12", tipo:"fraco"},
+  {nome:"Moto G23", tipo:"medio"},
   {nome:"Redmi Note 13 4G", tipo:"medio"},
   {nome:"POCO X3 Pro", tipo:"forte"},
-  {nome:"iPhone 14", tipo:"forte"}
+  {nome:"iPhone 14", tipo:"forte"},
+  {nome:"Samsung S21", tipo:"forte"},
+  {nome:"ROG Phone 7", tipo:"forte"}
 ];
 
 // Carregar select
-const select=document.getElementById("celular");
+const select = document.getElementById("celular");
 celulares.forEach(cel=>{
   let option=document.createElement("option");
   option.value=cel.tipo;
@@ -54,40 +119,81 @@ celulares.forEach(cel=>{
 });
 
 // Atualizar sliders
-horiz.oninput=()=>horizValor.innerText=horiz.value;
-vert.oninput=()=>vertValor.innerText=vert.value;
+dpi.oninput=()=>dpiValor.innerText=dpi.value;
+botao.oninput=()=>botaoValor.innerText=botao.value;
+cursor.oninput=()=>cursorValor.innerText=cursor.value;
 
-// Gerar mobilador
-function gerarMobilador(){
-  let tipo=select.value;
-  let horiz=parseInt(horiz.value);
-  let vert=parseInt(vert.value);
+horizJogo.oninput=()=>horizJogoValor.innerText=horizJogo.value;
+vertJogo.oninput=()=>vertJogoValor.innerText=vertJogo.value;
+mouse.oninput=()=>mouseValor.innerText=mouse.value;
+cel.oninput=()=>celValor.innerText=cel.value;
 
-  // Ajuste por tipo de aparelho
-  let ajusteTipo = tipo==="fraco"?0.9:tipo==="medio"?1.0:1.1;
+// ----------------- GERADOR PRO -----------------
+function gerar(){
+  let tipo = celular.value;
+  let estilo = document.getElementById("estilo").value;
+  let dpiVal = parseInt(dpi.value);
+  let botaoVal = parseInt(botao.value);
+  let cursorVal = parseInt(cursor.value);
 
-  let geral=(horiz+vert)/2;
-  let mouseGG=Math.round(horiz*1.2*ajusteTipo);
-  let mousePanda=Math.round(horiz*1.1*ajusteTipo);
-  let mousePro=Math.round(horiz*1.15*ajusteTipo);
-  let celular=Math.round(vert*ajusteTipo);
+  let base = tipo==="fraco"?90: tipo==="medio"?105:115;
+  let ajusteDPI = (dpiVal - 500)/15;
+  let ajusteCursor = (cursorVal - 50)/4;
+  let ajusteBotao = (botaoVal - 50)/8;
+  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
+  if(estilo==="capa") geral-=5;
 
-  document.getElementById("resultadoMobilador").innerHTML=`
-    🤖 Sensibilidade Mobilador 🤖<br><br>
-    Horizontal do Jogo: ${horiz}<br>
-    Vertical do Jogo: ${vert}<br>
-    Geral: ${Math.round(geral)}<br><br>
-    🔹 GG MOUSE PRO: ${mouseGG} (Mouse), ${celular} (Celular)<br>
-    🔹 PANDA MOUSE PRO: ${mousePanda} (Mouse), ${celular} (Celular)<br>
-    🔹 MOUSE PRO: ${mousePro} (Mouse), ${celular} (Celular)
+  let redDot = geral-3;
+  let x2 = geral-10;
+  let x4 = geral-18;
+  let awm = geral-28;
+  let olhadinha = geral+8;
+  if(estilo==="capa"){ redDot-=2; x2-=3; x4-=5 }
+
+  function limitar(v){ if(v<0)return 0; if(v>200)return 200; return Math.round(v) }
+  geral=limitar(geral);
+  redDot=limitar(redDot);
+  x2=limitar(x2);
+  x4=limitar(x4);
+  awm=limitar(awm);
+  olhadinha=limitar(olhadinha);
+
+  resultado.innerHTML=`
+    🔥 RESULTADO PRO 🔥<br><br>
+    Estilo: ${estilo} <br>
+    DPI: ${dpiVal} <br>
+    Geral: ${geral} <br>
+    RedDot: ${redDot} <br>
+    2x: ${x2} <br>
+    4x: ${x4} <br>
+    AWM: ${awm} <br>
+    Olhadinha: ${olhadinha} <br>
+    Botão: ${botaoVal}%
   `;
 }
 
-// Copiar resultado
-function copiarMobilador(){
-  navigator.clipboard.writeText(document.getElementById("resultadoMobilador").innerText);
-  alert("Copiado!");
+function copiar(){ navigator.clipboard.writeText(resultado.innerText); alert("Copiado!") }
+
+// ----------------- GERADOR MAPEADOR -----------------
+function gerarMapeador(){
+  let horiz=parseInt(horizJogo.value);
+  let vert=parseInt(vertJogo.value);
+  let mouseVal=parseInt(mouse.value);
+  let celVal=parseInt(cel.value);
+  let geral=(horiz+vert)/2;
+  resultadoMapeador.innerHTML=`
+    🎮 RESULTADO MAPEADOR 🎮<br><br>
+    Horizontal do Jogo: ${horiz}<br>
+    Vertical do Jogo: ${vert}<br>
+    Sensibilidade do Mouse: ${mouseVal}<br>
+    Sensibilidade do Celular: ${celVal}<br>
+    Geral Map: ${Math.round(geral)}
+  `;
 }
+
+function copiarMapeador(){ navigator.clipboard.writeText(resultadoMapeador.innerText); alert("Copiado!") }
+
 </script>
+
 </body>
 </html>
