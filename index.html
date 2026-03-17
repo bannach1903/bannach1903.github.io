@@ -52,11 +52,10 @@ button{
 
 <div class="container">
 
-<h2>🔥 GERADOR PRO FF 🔥</h2>
+<h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
 
 <select id="celular"></select>
 
-<!-- NOVO: ESTILO DE JOGO -->
 <select id="estilo">
   <option value="equilibrado">⚖️ Rush Equilibrado</option>
   <option value="capa">🎯 Mais Capa (HS)</option>
@@ -82,21 +81,68 @@ Seu resultado aparecerá aqui...
 
 <script>
 
-// CELULARES
+// LISTA COMPLETA DE CELULARES
 const celulares = [
+
+  // 🔻 FRACOS
   {nome: "Samsung A10", tipo: "fraco"},
+  {nome: "Samsung A12", tipo: "fraco"},
+  {nome: "Samsung A13", tipo: "fraco"},
+  {nome: "Samsung A03", tipo: "fraco"},
   {nome: "Moto E7", tipo: "fraco"},
+  {nome: "Moto E13", tipo: "fraco"},
+  {nome: "Moto G8 Play", tipo: "fraco"},
+  {nome: "Redmi 9A", tipo: "fraco"},
+  {nome: "Redmi 10A", tipo: "fraco"},
+  {nome: "Realme C11", tipo: "fraco"},
+  {nome: "Realme C30", tipo: "fraco"},
 
+  // ⚖️ MÉDIOS
   {nome: "Motorola G23", tipo: "medio"},
-  {nome: "Redmi Note 13 4G", tipo: "medio"},
+  {nome: "Moto G32", tipo: "medio"},
+  {nome: "Moto G52", tipo: "medio"},
+  {nome: "Moto G60", tipo: "medio"},
+  {nome: "Moto G84", tipo: "medio"},
+  {nome: "Samsung A32", tipo: "medio"},
+  {nome: "Samsung A34", tipo: "medio"},
   {nome: "Samsung A51", tipo: "medio"},
+  {nome: "Samsung A54", tipo: "medio"},
+  {nome: "Samsung A25 5G", tipo: "medio"},
+  {nome: "Redmi Note 10", tipo: "medio"},
+  {nome: "Redmi Note 11", tipo: "medio"},
+  {nome: "Redmi Note 12", tipo: "medio"},
+  {nome: "Redmi Note 13 4G", tipo: "medio"},
+  {nome: "Redmi Note 13 5G", tipo: "medio"},
+  {nome: "POCO M3", tipo: "medio"},
+  {nome: "POCO M5", tipo: "medio"},
+  {nome: "POCO X5", tipo: "medio"},
+  {nome: "Realme 11", tipo: "medio"},
+  {nome: "Realme 12", tipo: "medio"},
 
+  // 🚀 FORTES
   {nome: "POCO X3 Pro", tipo: "forte"},
+  {nome: "POCO X5 Pro", tipo: "forte"},
+  {nome: "POCO X6 Pro", tipo: "forte"},
+  {nome: "POCO F4", tipo: "forte"},
+  {nome: "POCO F5", tipo: "forte"},
+  {nome: "Samsung S20 FE", tipo: "forte"},
   {nome: "Samsung S21", tipo: "forte"},
-  {nome: "iPhone 11", tipo: "forte"}
+  {nome: "Samsung S22", tipo: "forte"},
+  {nome: "Samsung S23", tipo: "forte"},
+  {nome: "Samsung S24", tipo: "forte"},
+  {nome: "iPhone XR", tipo: "forte"},
+  {nome: "iPhone 11", tipo: "forte"},
+  {nome: "iPhone 12", tipo: "forte"},
+  {nome: "iPhone 13", tipo: "forte"},
+  {nome: "iPhone 14", tipo: "forte"},
+  {nome: "iPhone 15", tipo: "forte"},
+  {nome: "ROG Phone 6", tipo: "forte"},
+  {nome: "ROG Phone 7", tipo: "forte"}
 ]
 
-// SELECT
+// CARREGAR SELECT
+const select = document.getElementById("celular")
+
 celulares.forEach(cel => {
   let option = document.createElement("option")
   option.value = cel.tipo
@@ -105,7 +151,7 @@ celulares.forEach(cel => {
   if(cel.tipo === "medio") option.textContent = "⚖️ " + cel.nome
   if(cel.tipo === "forte") option.textContent = "🚀 " + cel.nome
 
-  celular.appendChild(option)
+  select.appendChild(option)
 })
 
 // SLIDERS
@@ -113,7 +159,7 @@ dpi.oninput = () => dpiValor.innerText = dpi.value
 botao.oninput = () => botaoValor.innerText = botao.value
 cursor.oninput = () => cursorValor.innerText = cursor.value
 
-// GERADOR
+// GERADOR PRO
 function gerar(){
 
   let tipo = celular.value
@@ -135,9 +181,8 @@ function gerar(){
 
   let geral = base + ajusteDPI + ajusteCursor - ajusteBotao
 
-  // ESTILO DE JOGO 🔥
   if(estilo === "capa"){
-    geral -= 5       // mais controle
+    geral -= 5
   }
 
   let redDot = geral - 3
@@ -146,7 +191,6 @@ function gerar(){
   let awm = geral - 28
   let olhadinha = geral + 8
 
-  // AJUSTE EXTRA PARA CAPA
   if(estilo === "capa"){
     redDot -= 2
     x2 -= 3
@@ -182,7 +226,7 @@ function gerar(){
 
 // COPIAR
 function copiar(){
-  let texto = resultado.innerText
+  let texto = document.getElementById("resultado").innerText
   navigator.clipboard.writeText(texto)
   alert("Copiado!")
 }
