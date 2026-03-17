@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO de Sensibilidade FF</title>
+<title>Gerador PRO Sensibilidade FF</title>
 
 <style>
 body{
@@ -42,3 +42,152 @@ button{
 .resultado{
   background:#1a1a1a;
   padding:15px;
+  margin-top:15px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔥 GERADOR PRO FF 🔥</h2>
+
+<select id="celular"></select>
+
+<!-- NOVO: ESTILO DE JOGO -->
+<select id="estilo">
+  <option value="equilibrado">⚖️ Rush Equilibrado</option>
+  <option value="capa">🎯 Mais Capa (HS)</option>
+</select>
+
+<p>DPI: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+
+<p>Botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
+
+<p>Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
+<button onclick="gerar()">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
+
+<div class="resultado" id="resultado">
+Seu resultado aparecerá aqui...
+</div>
+
+</div>
+
+<script>
+
+// CELULARES
+const celulares = [
+  {nome: "Samsung A10", tipo: "fraco"},
+  {nome: "Moto E7", tipo: "fraco"},
+
+  {nome: "Motorola G23", tipo: "medio"},
+  {nome: "Redmi Note 13 4G", tipo: "medio"},
+  {nome: "Samsung A51", tipo: "medio"},
+
+  {nome: "POCO X3 Pro", tipo: "forte"},
+  {nome: "Samsung S21", tipo: "forte"},
+  {nome: "iPhone 11", tipo: "forte"}
+]
+
+// SELECT
+celulares.forEach(cel => {
+  let option = document.createElement("option")
+  option.value = cel.tipo
+
+  if(cel.tipo === "fraco") option.textContent = "🔻 " + cel.nome
+  if(cel.tipo === "medio") option.textContent = "⚖️ " + cel.nome
+  if(cel.tipo === "forte") option.textContent = "🚀 " + cel.nome
+
+  celular.appendChild(option)
+})
+
+// SLIDERS
+dpi.oninput = () => dpiValor.innerText = dpi.value
+botao.oninput = () => botaoValor.innerText = botao.value
+cursor.oninput = () => cursorValor.innerText = cursor.value
+
+// GERADOR
+function gerar(){
+
+  let tipo = celular.value
+  let estilo = document.getElementById("estilo").value
+
+  let dpiVal = parseInt(dpi.value)
+  let botaoVal = parseInt(botao.value)
+  let cursorVal = parseInt(cursor.value)
+
+  let base
+
+  if(tipo === "fraco") base = 90
+  else if(tipo === "medio") base = 105
+  else base = 115
+
+  let ajusteDPI = (dpiVal - 500) / 15
+  let ajusteCursor = (cursorVal - 50) / 4
+  let ajusteBotao = (botaoVal - 50) / 8
+
+  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao
+
+  // ESTILO DE JOGO 🔥
+  if(estilo === "capa"){
+    geral -= 5       // mais controle
+  }
+
+  let redDot = geral - 3
+  let x2 = geral - 10
+  let x4 = geral - 18
+  let awm = geral - 28
+  let olhadinha = geral + 8
+
+  // AJUSTE EXTRA PARA CAPA
+  if(estilo === "capa"){
+    redDot -= 2
+    x2 -= 3
+    x4 -= 5
+  }
+
+  function limitar(v){
+    if(v < 0) return 0
+    if(v > 200) return 200
+    return Math.round(v)
+  }
+
+  geral = limitar(geral)
+  redDot = limitar(redDot)
+  x2 = limitar(x2)
+  x4 = limitar(x4)
+  awm = limitar(awm)
+  olhadinha = limitar(olhadinha)
+
+  document.getElementById("resultado").innerHTML = `
+  🔥 RESULTADO PRO 🔥<br><br>
+  Estilo: ${estilo} <br>
+  DPI: ${dpiVal} <br>
+  Geral: ${geral} <br>
+  RedDot: ${redDot} <br>
+  2x: ${x2} <br>
+  4x: ${x4} <br>
+  AWM: ${awm} <br>
+  Olhadinha: ${olhadinha} <br>
+  Botão: ${botaoVal}% 
+  `
+}
+
+// COPIAR
+function copiar(){
+  let texto = resultado.innerText
+  navigator.clipboard.writeText(texto)
+  alert("Copiado!")
+}
+
+</script>
+
+</body>
+</html>
