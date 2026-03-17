@@ -3,76 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Robo de Sensibilidade Mobilador</title>
+<title>Sensibilidade Mobilador</title>
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0f0f0f;
-  color:white;
-  text-align:center;
-}
+body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
 .container{padding:20px;}
-select, input{
-  width:90%;
-  margin:10px;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  font-size:16px;
-}
-button{
-  width:90%;
-  padding:15px;
-  margin:10px;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:bold;
-  background:red;
-  color:white;
-}
-.resultado{
-  background:#1a1a1a;
-  padding:15px;
-  margin-top:15px;
-  border-radius:10px;
-}
+select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;font-size:16px;}
+button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;font-size:16px;font-weight:bold;background:red;color:white;}
+.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;}
 h2{margin-bottom:0;}
 </style>
 </head>
 <body>
-
 <div class="container">
-<h2>🤖 ROBÔ DE SENSI MOBILADOR 🤖</h2>
+<h2>🎮 Gerador de Sensibilidade Mobilador 🎮</h2>
 
+<p>Escolha o aparelho:</p>
 <select id="celular"></select>
 
-<button onclick="gerarRobo()">GERAR SENSI AUTOMÁTICA</button>
-<button onclick="copiarRobo()">COPIAR RESULTADO</button>
+<p>Horizontal do Jogo: <span id="horizValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="horiz">
 
-<div class="resultado" id="resultadoRobo">
-Resultado do Robô aparecerá aqui...
+<p>Vertical do Jogo: <span id="vertValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="vert">
+
+<button onclick="gerarMobilador()">GERAR SENSI</button>
+<button onclick="copiarMobilador()">COPIAR</button>
+
+<div class="resultado" id="resultadoMobilador">
+Resultado aparecerá aqui...
 </div>
 </div>
 
 <script>
-
-// Lista completa de celulares
-const celulares = [
+// Lista de aparelhos
+const celulares=[
   {nome:"Samsung A10", tipo:"fraco"},
-  {nome:"Samsung A12", tipo:"fraco"},
-  {nome:"Moto G23", tipo:"medio"},
+  {nome:"Motorola G23", tipo:"medio"},
   {nome:"Redmi Note 13 4G", tipo:"medio"},
   {nome:"POCO X3 Pro", tipo:"forte"},
-  {nome:"iPhone 11", tipo:"forte"},
-  {nome:"Samsung S21", tipo:"forte"},
-  {nome:"iPhone 14", tipo:"forte"},
-  {nome:"ROG Phone 7", tipo:"forte"}
+  {nome:"iPhone 14", tipo:"forte"}
 ];
 
 // Carregar select
-const select = document.getElementById("celular");
+const select=document.getElementById("celular");
 celulares.forEach(cel=>{
   let option=document.createElement("option");
   option.value=cel.tipo;
@@ -80,50 +53,41 @@ celulares.forEach(cel=>{
   select.appendChild(option);
 });
 
-// Função do Robô de Sensibilidade
-function gerarRobo(){
-  let tipo = select.value;
+// Atualizar sliders
+horiz.oninput=()=>horizValor.innerText=horiz.value;
+vert.oninput=()=>vertValor.innerText=vert.value;
 
-  // Base de sensibilidade por tipo de aparelho
-  let baseFF = tipo==="fraco"?90:tipo==="medio"?105:115;
+// Gerar mobilador
+function gerarMobilador(){
+  let tipo=select.value;
+  let horiz=parseInt(horiz.value);
+  let vert=parseInt(vert.value);
 
-  // Sensibilidade do jogo (horizontal e vertical)
-  let horiz = baseFF + 5;
-  let vert = baseFF;
+  // Ajuste por tipo de aparelho
+  let ajusteTipo = tipo==="fraco"?0.9:tipo==="medio"?1.0:1.1;
 
-  // Sensibilidade do mouse
-  let mouseGG = horiz*1.2;
-  let mousePanda = horiz*1.1;
-  let mousePro = horiz*1.15;
+  let geral=(horiz+vert)/2;
+  let mouseGG=Math.round(horiz*1.2*ajusteTipo);
+  let mousePanda=Math.round(horiz*1.1*ajusteTipo);
+  let mousePro=Math.round(horiz*1.15*ajusteTipo);
+  let celular=Math.round(vert*ajusteTipo);
 
-  // Sensibilidade do celular (para mobilador)
-  let cel = vert*1.0;
-
-  // Resultado
-  document.getElementById("resultadoRobo").innerHTML=`
-    🤖 ROBÔ DE SENSI 🤖<br><br>
-    Aparelho: ${tipo}<br><br>
-    🔹 SENSI FF 🔹<br>
-    Horizontal: ${horiz}<br>
-    Vertical: ${vert}<br><br>
-    🔹 GG MOUSE PRO 🔹<br>
-    Mouse: ${Math.round(mouseGG)}<br>
-    Celular: ${Math.round(cel)}<br><br>
-    🔹 PANDA MOUSE PRO 🔹<br>
-    Mouse: ${Math.round(mousePanda)}<br>
-    Celular: ${Math.round(cel)}<br><br>
-    🔹 MOUSE PRO 🔹<br>
-    Mouse: ${Math.round(mousePro)}<br>
-    Celular: ${Math.round(cel)}
+  document.getElementById("resultadoMobilador").innerHTML=`
+    🤖 Sensibilidade Mobilador 🤖<br><br>
+    Horizontal do Jogo: ${horiz}<br>
+    Vertical do Jogo: ${vert}<br>
+    Geral: ${Math.round(geral)}<br><br>
+    🔹 GG MOUSE PRO: ${mouseGG} (Mouse), ${celular} (Celular)<br>
+    🔹 PANDA MOUSE PRO: ${mousePanda} (Mouse), ${celular} (Celular)<br>
+    🔹 MOUSE PRO: ${mousePro} (Mouse), ${celular} (Celular)
   `;
 }
 
 // Copiar resultado
-function copiarRobo(){
-  navigator.clipboard.writeText(document.getElementById("resultadoRobo").innerText);
-  alert("Resultado copiado!");
+function copiarMobilador(){
+  navigator.clipboard.writeText(document.getElementById("resultadoMobilador").innerText);
+  alert("Copiado!");
 }
 </script>
-
 </body>
 </html>
