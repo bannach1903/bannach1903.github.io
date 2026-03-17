@@ -1,200 +1,151 @@
 <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Sensibilidade FF</title>
 
-<html lang="pt-br">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Gerador Oficial de Sensi Free Fire</title>  <style>  
-body{  
-  margin:0;  
-  background:#0f0f0f;  
-  font-family:Arial;  
-  color:white;  
-  text-align:center;  
-}  
-h1{  
-  background:black;  
-  padding:15px;  
-  color:#ff0033;  
-  box-shadow:0 0 15px red;  
-}  
-.container{  
-  width:95%;  
-  max-width:500px;  
-  margin:auto;  
-  margin-top:20px;  
-  background:#1a1a1a;  
-  padding:20px;  
-  border-radius:10px;  
-  box-shadow:0 0 10px #ff0033;  
-}  
-select, button, input{  
-  width:100%;  
-  padding:10px;  
-  margin:8px 0;  
-  border-radius:8px;  
-  border:none;  
-}  
-button{  
-  background:#ff0033;  
-  color:white;  
-  font-weight:bold;  
-}  
-  
-/* BOTÕES */  
-#botoesCelular{  
-  display:flex;  
-  flex-wrap:wrap;  
-  gap:5px;  
-}  
-#botoesCelular button{  
-  flex:1 1 30%;  
-  background:#222;  
-}  
-  
-/* ANIMAÇÃO */  
-.resultado{  
-  margin-top:15px;  
-  text-align:left;  
-  background:#111;  
-  padding:15px;  
-  border-radius:8px;  
-  animation: fade 0.5s ease;  
-}  
-  
-@keyframes fade{  
-  from{opacity:0;transform:translateY(10px);}  
-  to{opacity:1;transform:translateY(0);}  
-}  
-</style>  </head>  <body>  <h1>🔥 GERADOR DE SENSI FREE FIRE 🔥</h1>  <div class="container">  <input type="text" id="buscarCelular" placeholder="🔍 Pesquisar celular...">  <div id="botoesCelular"></div>  <select id="celular">  
-<option value="a14">Samsung Galaxy A14</option>  
-<option value="a34">Samsung Galaxy A34</option>  
-<option value="s21">Samsung Galaxy S21</option>  
-<option value="note12">Redmi Note 12</option>  
-<option value="note13">Redmi Note 13 4G</option>  
-<option value="g23">Moto G23</option>  
-<option value="g32">Moto G32</option>  
-<option value="iphone11">iPhone 11</option>  
-<option value="realmeC55">Realme C55</option>  
-</select>  <select id="dpi">  
-<option value="baixa">Baixa</option>  
-<option value="media">Média</option>  
-<option value="alta">Alta</option>  
-</select>  <select id="estilo">  
-<option value="rush">Rush</option>  
-<option value="capa">Capa</option>  
-<option value="equilibrado">Equilibrado</option>  
-<option value="sniper">Sniper</option>  
-</select>  <!-- 🔫 ARMA -->  <select id="arma">  
-<option value="smg">SMG</option>  
-<option value="ar">AR</option>  
-<option value="sniper">Sniper</option>  
-</select>  <input type="range" min="1" max="10" value="5" id="cursor">  
-<input type="range" min="1" max="10" value="7" id="precisao">  
-<input type="range" min="1" max="10" value="6" id="estabilidade">  <!-- BOTÃO -->  <input type="range" min="0" max="65" value="50" id="botaoTiro">  
-<p id="valorBotao">50%</p>  <button onclick="gerar()">GERAR</button>
-<button onclick="modoPro()">🤖 MODO PRO</button>
-<button onclick="copiarSensi()">📋 COPIAR</button>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+  text-align:center;
+}
 
-<div id="resultado" class="resultado" style="display:none;"></div>  </div>  <script>  
-  
-const celulares = {  
-a14:{baixa:520,media:650,alta:750},  
-a34:{baixa:600,media:750,alta:900},  
-s21:{baixa:750,media:900,alta:1000},  
-note12:{baixa:650,media:800,alta:900},  
-note13:{baixa:700,media:850,alta:950},  
-g23:{baixa:600,media:700,alta:820},  
-g32:{baixa:600,media:750,alta:850},  
-iphone11:{baixa:750,media:900,alta:1000},  
-realmeC55:{baixa:600,media:750,alta:850}  
-};  
-  
-const nomesCelulares = {  
-a14:"A14",a34:"A34",s21:"S21",  
-note12:"Note12",note13:"Note13",  
-g23:"G23",g32:"G32",  
-iphone11:"iPhone",realmeC55:"C55"  
-};  
-  
-/* BOTÕES */  
-let cont = document.getElementById("botoesCelular");  
-for(let k in celulares){  
- let b=document.createElement("button");  
- b.innerText=nomesCelulares[k];  
- b.onclick=()=>document.getElementById("celular").value=k;  
- cont.appendChild(b);  
-}  
-  
-/* PESQUISA */  
-buscarCelular.oninput = ()=>{  
- let f=buscarCelular.value.toLowerCase();  
- for(let o of celular.options){  
-  o.style.display=o.text.toLowerCase().includes(f)?"block":"none";  
- }  
-}  
-  
-/* SLIDER */  
-botaoTiro.oninput=()=>valorBotao.innerText=botaoTiro.value+"%";  
-  
-/* GERAR */  
-function gerar(){  
-  
-let c=celular.value;  
-let dpiV=celulares[c][dpi.value];  
-let base=Math.round(dpiV/6);  
-  
-if(estilo.value=="rush") base+=15;  
-if(estilo.value=="capa") base-=5;  
-if(estilo.value=="sniper") base-=20;  
-  
-if(arma.value=="smg") base+=10;  
-if(arma.value=="sniper") base-=15;  
-  
-base+=Math.round((cursor.value*1.5)+(precisao.value*2)+(estabilidade.value*1.2));  
-  
-base=Math.max(60,Math.min(200,base));  
-  
-resultado.style.display="block";  
-resultado.innerHTML=`  
-🔥 RESULTADO 🔥<br>  
-DPI: ${dpiV}<br>  
-Geral: ${base}<br>  
-RedDot: ${base-5}<br>  
-2x: ${base-15}<br>  
-4x: ${base-25}<br>  
-AWM: ${base-35}<br>  
-Olhadinha: ${base+10}<br>  
-Botão: ${botaoTiro.value}%  
-`;  
-}  
-  
-/* 🤖 PRO */  
-function modoPro(){  
-estilo.value="rush";  
-dpi.value="alta";  
-cursor.value=7;  
-precisao.value=8;  
-estabilidade.value=7;  
-botaoTiro.value=55;  
-valorBotao.innerText="55%";  
-gerar();  
-}  
-  
-/* DETECTAR */  
-function detectar(){  
-let ua=navigator.userAgent.toLowerCase();  
-if(ua.includes("iphone")) celular.value="iphone11";  
-if(ua.includes("samsung")) celular.value="a34";  
-if(ua.includes("xiaomi")) celular.value="note13";  
-}  
-detectar();  
-  
-/* COPIAR */  
-function copiarSensi(){  
-navigator.clipboard.writeText(resultado.innerText);  
-alert("Copiado!");  
-}  
-  
-</script>  </body>  
-</html>  
+.container{
+  padding:20px;
+}
+
+select, input{
+  width:90%;
+  margin:10px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+}
+
+button{
+  width:90%;
+  padding:15px;
+  margin:10px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+  background:red;
+  color:white;
+}
+
+.resultado{
+  background:#1a1a1a;
+  padding:15px;
+  margin-top:15px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🔥 GERADOR DE SENSI FF 🔥</h2>
+
+<select id="celular">
+  <option value="medio">Selecione seu celular</option>
+  <option value="fraco">Samsung A10</option>
+  <option value="medio">Motorola G23</option>
+  <option value="medio">Redmi Note 13 4G</option>
+  <option value="forte">iPhone 11</option>
+  <option value="forte">POCO X5</option>
+</select>
+
+<p>DPI: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+
+<p>Botão de Disparo: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
+
+<p>Velocidade do Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
+<button onclick="gerar()">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
+
+<div class="resultado" id="resultado">
+Seu resultado aparecerá aqui...
+</div>
+
+</div>
+
+<script>
+
+// atualizar valores na tela
+dpi.oninput = () => dpiValor.innerText = dpi.value
+botao.oninput = () => botaoValor.innerText = botao.value
+cursor.oninput = () => cursorValor.innerText = cursor.value
+
+function gerar(){
+
+  let tipo = document.getElementById("celular").value
+  let dpiVal = parseInt(dpi.value)
+  let botaoVal = parseInt(botao.value)
+  let cursorVal = parseInt(cursor.value)
+
+  // BASE POR APARELHO
+  let base
+
+  if(tipo === "fraco"){
+    base = 120
+  }else if(tipo === "medio"){
+    base = 140
+  }else{
+    base = 160
+  }
+
+  // CALCULO INTELIGENTE
+  let geral = base + (dpiVal/10) + (cursorVal/5)
+  let redDot = geral - 5
+  let x2 = geral - 15
+  let x4 = geral - 25
+  let awm = geral - 35
+  let olhadinha = geral + 10
+
+  // AJUSTE PELO BOTÃO
+  geral -= botaoVal/10
+  redDot -= botaoVal/12
+
+  // ARREDONDAR
+  geral = Math.round(geral)
+  redDot = Math.round(redDot)
+  x2 = Math.round(x2)
+  x4 = Math.round(x4)
+  awm = Math.round(awm)
+  olhadinha = Math.round(olhadinha)
+
+  document.getElementById("resultado").innerHTML = `
+  🔥 RESULTADO 🔥<br><br>
+  DPI: ${dpiVal} <br>
+  Geral: ${geral} <br>
+  RedDot: ${redDot} <br>
+  2x: ${x2} <br>
+  4x: ${x4} <br>
+  AWM: ${awm} <br>
+  Olhadinha: ${olhadinha} <br>
+  Botão: ${botaoVal}% 
+  `
+}
+
+function copiar(){
+  let texto = document.getElementById("resultado").innerText
+  navigator.clipboard.writeText(texto)
+  alert("Copiado!")
+}
+
+</script>
+
+</body>
+</html>
