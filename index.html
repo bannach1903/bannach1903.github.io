@@ -1,14 +1,20 @@
-const select = document.getElementById("celulares");
+function adicionarCelular() {
+  let nome = prompt("Nome do celular:");
+  let dpi = Number(prompt("DPI:"));
+  let geral = Number(prompt("Geral:"));
+  let redDot = Number(prompt("Red Dot:"));
+  let mira2x = Number(prompt("Mira 2x:"));
+  let mira4x = Number(prompt("Mira 4x:"));
+  let awm = Number(prompt("AWM:"));
+  let olhadinha = Number(prompt("Olhadinha:"));
+  let botao = Number(prompt("Botão:"));
 
-function atualizarLista() {
-  select.innerHTML = "";
+  dispositivos[nome] = {
+    dpi, geral, redDot, mira2x, mira4x, awm, olhadinha, botao
+  };
 
-  for (let nome in dispositivos) {
-    let option = document.createElement("option");
-    option.value = nome;
-    option.textContent = nome;
-    select.appendChild(option);
-  }
+  localStorage.setItem("dispositivos", JSON.stringify(dispositivos));
+
+  atualizarLista();
+  alert("Celular adicionado!");
 }
-
-atualizarLista();
