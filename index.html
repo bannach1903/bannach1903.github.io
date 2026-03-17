@@ -31,6 +31,7 @@ button{
   font-weight:bold;
   background:red;
   color:white;
+  cursor:pointer;
 }
 .resultado{
   background:#1a1a1a;
@@ -76,14 +77,76 @@ window.onload = function(){
 
   // ----------------- CELULARES -----------------
   const celulares = [
+    // 🔻 FRACOS
     {nome:"Samsung A10", tipo:"fraco"},
     {nome:"Samsung A12", tipo:"fraco"},
-    {nome:"Moto G23", tipo:"medio"},
+    {nome:"Samsung A13", tipo:"fraco"},
+    {nome:"Samsung A03", tipo:"fraco"},
+    {nome:"Moto E7", tipo:"fraco"},
+    {nome:"Moto E13", tipo:"fraco"},
+    {nome:"Moto G8 Play", tipo:"fraco"},
+    {nome:"Redmi 9A", tipo:"fraco"},
+    {nome:"Redmi 10A", tipo:"fraco"},
+    {nome:"Realme C11", tipo:"fraco"},
+    {nome:"Realme C30", tipo:"fraco"},
+    {nome:"Infinix Hot 12", tipo:"fraco"},
+    {nome:"Tecno Spark 9", tipo:"fraco"},
+    {nome:"Lava Z2", tipo:"fraco"},
+    {nome:"Itel A56", tipo:"fraco"},
+    {nome:"Galaxy M02", tipo:"fraco"},
+
+    // ⚖️ MÉDIOS
+    {nome:"Motorola G23", tipo:"medio"},
+    {nome:"Moto G32", tipo:"medio"},
+    {nome:"Moto G52", tipo:"medio"},
+    {nome:"Moto G60", tipo:"medio"},
+    {nome:"Moto G84", tipo:"medio"},
+    {nome:"Samsung A32", tipo:"medio"},
+    {nome:"Samsung A34", tipo:"medio"},
+    {nome:"Samsung A51", tipo:"medio"},
+    {nome:"Samsung A54", tipo:"medio"},
+    {nome:"Samsung A25 5G", tipo:"medio"},
+    {nome:"Redmi Note 10", tipo:"medio"},
+    {nome:"Redmi Note 11", tipo:"medio"},
+    {nome:"Redmi Note 12", tipo:"medio"},
     {nome:"Redmi Note 13 4G", tipo:"medio"},
+    {nome:"Redmi Note 13 5G", tipo:"medio"},
+    {nome:"POCO M3", tipo:"medio"},
+    {nome:"POCO M5", tipo:"medio"},
+    {nome:"POCO X5", tipo:"medio"},
+    {nome:"Realme 11", tipo:"medio"},
+    {nome:"Realme 12", tipo:"medio"},
+    {nome:"Infinix Zero 20", tipo:"medio"},
+    {nome:"Tecno Camon 19", tipo:"medio"},
+    {nome:"Lava Agni 2", tipo:"medio"},
+    {nome:"Galaxy F12", tipo:"medio"},
+    {nome:"Galaxy M12", tipo:"medio"},
+
+    // 🚀 FORTES
     {nome:"POCO X3 Pro", tipo:"forte"},
-    {nome:"iPhone 14", tipo:"forte"},
+    {nome:"POCO X5 Pro", tipo:"forte"},
+    {nome:"POCO X6 Pro", tipo:"forte"},
+    {nome:"POCO F4", tipo:"forte"},
+    {nome:"POCO F5", tipo:"forte"},
+    {nome:"Samsung S20 FE", tipo:"forte"},
     {nome:"Samsung S21", tipo:"forte"},
-    {nome:"ROG Phone 7", tipo:"forte"}
+    {nome:"Samsung S22", tipo:"forte"},
+    {nome:"Samsung S23", tipo:"forte"},
+    {nome:"Samsung S24", tipo:"forte"},
+    {nome:"iPhone XR", tipo:"forte"},
+    {nome:"iPhone 11", tipo:"forte"},
+    {nome:"iPhone 12", tipo:"forte"},
+    {nome:"iPhone 13", tipo:"forte"},
+    {nome:"iPhone 14", tipo:"forte"},
+    {nome:"iPhone 15", tipo:"forte"},
+    {nome:"ROG Phone 6", tipo:"forte"},
+    {nome:"ROG Phone 7", tipo:"forte"},
+    {nome:"Asus Zenfone 10", tipo:"forte"},
+    {nome:"Realme GT 3", tipo:"forte"},
+    {nome:"Redmi K60", tipo:"forte"},
+    {nome:"Samsung Z Fold 5", tipo:"forte"},
+    {nome:"Xiaomi 13 Pro", tipo:"forte"},
+    {nome:"OnePlus 12", tipo:"forte"}
   ];
 
   // Carregar select
