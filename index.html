@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF - App Competitivo</title>
+<title>Gerador PRO Sensibilidade FF - Insano CAPA</title>
 <style>
 body{
   margin:0;
@@ -45,7 +45,7 @@ button{
 <body>
 <div class="container">
 
-<h2>🔥 GERADOR PRO DE SENSI FF - NÍVEL COMPETITIVO 🔥</h2>
+<h2>🔥 GERADOR PRO DE SENSI FF - NÍVEL INSANO 🔥</h2>
 
 <select id="modo">
   <option value="mobile">📱 Mobile Normal</option>
@@ -159,17 +159,14 @@ window.gerar = function(){
   let botaoVal = parseInt(botao.value);
   let cursorVal = parseInt(cursor.value);
 
-  // Base do jogo
   let base = tipo==="fraco"?88: tipo==="medio"?100:110;
   let ajusteDPI = (dpiVal - 500)/25;
   let ajusteCursor = (cursorVal - 50)/6;
   let ajusteBotao = (botaoVal - 50)/12;
   let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
 
-  // Limitar geral mobilador
   let mobiladorGeral = modo==="mobilador"?Math.min(Math.max(geral/4,0),25):geral;
 
-  // Sensibilidades secundárias
   let redDot = mobiladorGeral - 2;
   let x2 = mobiladorGeral - 8;
   let x4 = mobiladorGeral - 15;
@@ -180,21 +177,17 @@ window.gerar = function(){
   geral=limitar(geral); redDot=limitar(redDot); x2=limitar(x2);
   x4=limitar(x4); awm=limitar(awm); olhadinha=limitar(olhadinha);
 
-  // Buffers
   let bufferGPU = document.getElementById("bufferGPU").value;
   let bufferLogger = document.getElementById("bufferLogger").value;
 
-  // Anti recuo, auxílio e estabilidade
-  let antiRecuo = 85;
-  let auxMira = 50;
-  let estabilidade = 90;
+  let antiRecuo = 100;
+  let auxMira = 100;
+  let estabilidade = 100;
 
-  // Escalas
   let escalaJanela = "0.5x";
   let escalaTransicao = "0.5x";
   let escalaAnimador = "0x";
 
-  // GG Mouse Pro
   let dpiMouse = modo==="mobilador"?Math.round(1000 + (dpiVal-500)/2):0;
   let horizontal = modo==="mobilador"?280:0;
   let vertical = modo==="mobilador"?310:0;
@@ -226,7 +219,6 @@ window.gerar = function(){
   `;
 }
 
-// copiar
 window.copiar = function(){
   let texto = document.getElementById("resultado").innerText;
   navigator.clipboard.writeText(texto);
