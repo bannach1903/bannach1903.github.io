@@ -3,49 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF - Insano CAPA</title>
+<title>Gerador PRO Sensibilidade FF - Cards Animados</title>
 <style>
 body{
   margin:0;
-  font-family:Arial;
-  background:#0f0f0f;
+  font-family:'Arial', sans-serif;
+  background:#121212;
   color:white;
   text-align:center;
 }
-.container{padding:20px;}
-select, input{
+.container{
+  padding:20px;
+  max-width:500px;
+  margin:auto;
+}
+h2{
+  color:#ff4c4c;
+  text-shadow:0 0 10px #ff0000;
+}
+
+/* Cards */
+.cards{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  margin-top:20px;
+}
+.card{
+  background:#1a1a1a;
+  border-radius:10px;
+  padding:15px;
+  text-align:left;
+  transition:0.3s;
+  box-shadow:0 4px 10px rgba(0,0,0,0.5);
+}
+.card:hover{
+  transform: translateY(-5px);
+  box-shadow:0 8px 20px rgba(255,0,0,0.4);
+}
+
+/* Sliders e selects */
+select,input[type=range]{
   width:90%;
-  margin:10px;
+  margin:10px 0;
   padding:10px;
   border-radius:10px;
   border:none;
   font-size:16px;
+  background:#1f1f1f;
+  color:white;
 }
+
+/* Botões */
 button{
   width:90%;
   padding:15px;
-  margin:10px;
+  margin:10px 0;
   border:none;
   border-radius:10px;
   font-size:16px;
   font-weight:bold;
-  background:red;
-  color:white;
   cursor:pointer;
+  transition:0.3s;
 }
-.resultado{
-  background:#1a1a1a;
-  padding:15px;
-  margin-top:15px;
-  border-radius:10px;
-  text-align:left;
+button:hover{
+  transform: translateY(-3px);
+  box-shadow:0 4px 15px rgba(255,0,0,0.4);
 }
+
+/* Slider custom */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width:20px;
+  height:20px;
+  background:#ff4c4c;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 0 5px rgba(255,0,0,0.7);
+  transition:0.3s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+label{display:block; text-align:left; margin-left:5%;}
 </style>
 </head>
 <body>
-<div class="container">
 
-<h2>🔥 GERADOR PRO DE SENSI FF - NÍVEL INSANO 🔥</h2>
+<div class="container">
+<h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
 
 <select id="modo">
   <option value="mobile">📱 Mobile Normal</option>
@@ -65,8 +112,20 @@ button{
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
-<p>Cursor: <span id="cursorValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="cursor">
+<p id="ciclosContainer" style="display:none;">
+<select id="ciclos">
+  <option value="1">Ciclos 1</option>
+  <option value="2">Ciclos 2</option>
+  <option value="3">Ciclos 3</option>
+  <option value="4">Ciclos 4</option>
+  <option value="5">Ciclos 5</option>
+  <option value="6">Ciclos 6</option>
+  <option value="7" selected>Ciclos 7</option>
+  <option value="8">Ciclos 8</option>
+  <option value="9">Ciclos 9</option>
+  <option value="10">Ciclos 10</option>
+</select>
+</p>
 
 <select id="bufferGPU">
   <option value="8192KB">Buffer GPU: 8.192KB</option>
@@ -85,147 +144,122 @@ button{
 <button onclick="gerar()">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
-<div class="resultado" id="resultado">
+<div class="cards" id="resultado">
 Seu resultado aparecerá aqui...
 </div>
-
 </div>
 
 <script>
-window.onload = function(){
-
-const celulares = [
-  {nome:"Samsung A10", tipo:"fraco"}, {nome:"Samsung A12", tipo:"fraco"},
-  {nome:"Samsung A13", tipo:"fraco"}, {nome:"Samsung A03", tipo:"fraco"},
-  {nome:"Moto E7", tipo:"fraco"}, {nome:"Moto E13", tipo:"fraco"},
-  {nome:"Moto G8 Play", tipo:"fraco"}, {nome:"Redmi 9A", tipo:"fraco"},
-  {nome:"Redmi 10A", tipo:"fraco"}, {nome:"Realme C11", tipo:"fraco"},
-  {nome:"Realme C30", tipo:"fraco"}, {nome:"Infinix Hot 12", tipo:"fraco"},
-  {nome:"Tecno Spark 9", tipo:"fraco"}, {nome:"Galaxy M02", tipo:"fraco"},
-
-  {nome:"Motorola G23", tipo:"medio"}, {nome:"Moto G32", tipo:"medio"},
-  {nome:"Moto G52", tipo:"medio"}, {nome:"Moto G60", tipo:"medio"},
-  {nome:"Moto G84", tipo:"medio"}, {nome:"Samsung A32", tipo:"medio"},
-  {nome:"Samsung A34", tipo:"medio"}, {nome:"Samsung A51", tipo:"medio"},
-  {nome:"Samsung A54", tipo:"medio"}, {nome:"Samsung A25 5G", tipo:"medio"},
-  {nome:"Samsung A15 5G", tipo:"medio"}, {nome:"Redmi Note 10", tipo:"medio"},
-  {nome:"Redmi Note 11", tipo:"medio"}, {nome:"Redmi Note 12", tipo:"medio"},
-  {nome:"Redmi Note 13 4G", tipo:"medio"}, {nome:"Redmi Note 13 5G", tipo:"medio"},
-  {nome:"POCO M3", tipo:"medio"}, {nome:"POCO M5", tipo:"medio"},
-  {nome:"POCO X5", tipo:"medio"}, {nome:"Realme 11", tipo:"medio"},
-  {nome:"Realme 12", tipo:"medio"}, {nome:"Galaxy M12", tipo:"medio"},
-
-  {nome:"POCO X3 Pro", tipo:"forte"}, {nome:"POCO X5 Pro", tipo:"forte"},
-  {nome:"POCO X6 Pro", tipo:"forte"}, {nome:"POCO F4", tipo:"forte"},
-  {nome:"POCO F5", tipo:"forte"}, {nome:"Samsung S20 FE", tipo:"forte"},
-  {nome:"Samsung S21", tipo:"forte"}, {nome:"Samsung S22", tipo:"forte"},
-  {nome:"Samsung S23", tipo:"forte"}, {nome:"Samsung S24", tipo:"forte"},
-  {nome:"iPhone XR", tipo:"forte"}, {nome:"iPhone 11", tipo:"forte"},
-  {nome:"iPhone 12", tipo:"forte"}, {nome:"iPhone 13", tipo:"forte"},
-  {nome:"iPhone 14", tipo:"forte"}, {nome:"iPhone 15", tipo:"forte"},
-  {nome:"ROG Phone 6", tipo:"forte"}, {nome:"ROG Phone 7", tipo:"forte"},
-  {nome:"Asus Zenfone 10", tipo:"forte"}, {nome:"Realme GT 3", tipo:"forte"},
-  {nome:"Redmi K60", tipo:"forte"}, {nome:"Xiaomi 13 Pro", tipo:"forte"},
-  {nome:"OnePlus 12", tipo:"forte"}
-];
-
+// Elementos
 const selectCelular = document.getElementById("celular");
-celulares.forEach(cel=>{
-  let option = document.createElement("option");
-  option.value = cel.tipo;
-  option.textContent =
-    cel.tipo==="fraco"?"🔻 "+cel.nome:
-    cel.tipo==="medio"?"⚖️ "+cel.nome:
-    "🚀 "+cel.nome;
-  selectCelular.appendChild(option);
-});
-
 const dpi = document.getElementById("dpi");
-const botao = document.getElementById("botao");
-const cursor = document.getElementById("cursor");
 const dpiValor = document.getElementById("dpiValor");
+const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
-const cursorValor = document.getElementById("cursorValor");
+const ciclosContainer = document.getElementById("ciclosContainer");
+const ciclos = document.getElementById("ciclos");
 
+// Atualiza sliders
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
-cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-window.gerar = function(){
-  let tipo = selectCelular.value;
-  let estilo = document.getElementById("estilo").value;
-  let modo = document.getElementById("modo").value;
-  let dpiVal = parseInt(dpi.value);
-  let botaoVal = parseInt(botao.value);
-  let cursorVal = parseInt(cursor.value);
+// Lista de celulares por marca
+const marcas = {
+  "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
+  "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
+  "Redmi":["9A","10A","Note 10","Note 11","Note 12","Note 13 4G","Note 13 5G","K60"],
+  "POCO":["M3","M5","X3 Pro","X5","X5 Pro","X6 Pro","F4","F5"],
+  "Realme":["C11","C30","11","12","GT 3"],
+  "iPhone":["XR","11","12","13","14","15"],
+  "ROG":["Phone 6","Phone 7"],
+  "Asus":["Zenfone 10"],
+  "Xiaomi":["13 Pro"],
+  "OnePlus":["12"]
+};
 
-  let base = tipo==="fraco"?88: tipo==="medio"?100:110;
-  let ajusteDPI = (dpiVal - 500)/25;
-  let ajusteCursor = (cursorVal - 50)/6;
-  let ajusteBotao = (botaoVal - 50)/12;
-  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
+// Preenche select
+for(const marca in marcas){
+  let group = document.createElement("optgroup");
+  group.label = marca;
+  marcas[marca].forEach(aparelho=>{
+    let option = document.createElement("option");
+    option.value = marca+" "+aparelho;
+    option.textContent = marca+" "+aparelho;
+    group.appendChild(option);
+  });
+  selectCelular.appendChild(group);
+}
 
-  let mobiladorGeral = modo==="mobilador"?Math.min(Math.max(geral/4,0),25):geral;
+// Atualiza visibilidade
+function atualizarConfigAndroid(){
+  const tipo = selectCelular.value.toLowerCase();
+  const isIphone = tipo.includes("iphone");
 
-  let redDot = mobiladorGeral - 2;
-  let x2 = mobiladorGeral - 8;
-  let x4 = mobiladorGeral - 15;
-  let awm = mobiladorGeral - 25;
-  let olhadinha = mobiladorGeral + 6;
+  dpi.parentElement.style.display = isIphone ? "none" : "block";
+  ciclosContainer.style.display = isIphone ? "block" : "none";
 
-  function limitar(v){ return Math.round(Math.max(0,Math.min(v,200))); }
-  geral=limitar(geral); redDot=limitar(redDot); x2=limitar(x2);
-  x4=limitar(x4); awm=limitar(awm); olhadinha=limitar(olhadinha);
+  gerar();
+}
 
-  let bufferGPU = document.getElementById("bufferGPU").value;
-  let bufferLogger = document.getElementById("bufferLogger").value;
+selectCelular.onchange = atualizarConfigAndroid;
+dpi.oninput = gerar;
+botao.oninput = gerar;
+ciclos.onchange = gerar;
 
-  let antiRecuo = 100;
-  let auxMira = 100;
-  let estabilidade = 100;
+// Gera cards
+function gerar(){
+  const tipo = selectCelular.value.toLowerCase();
+  const estilo = document.getElementById("estilo").value;
+  const modo = document.getElementById("modo").value;
+  const dpiVal = parseInt(dpi.value);
+  const botaoVal = parseInt(botao.value);
+  const ciclosVal = parseInt(ciclos.value);
+  const bufferGPU = document.getElementById("bufferGPU").value;
+  const bufferLogger = document.getElementById("bufferLogger").value;
 
-  let escalaJanela = "0.5x";
-  let escalaTransicao = "0.5x";
-  let escalaAnimador = "0x";
+  const geral = 100;
+  const redDot = 98;
+  const x2 = 92;
+  const x4 = 85;
+  const awm = 75;
+  const olhadinha = 106;
+  const antiRecuo = 100;
+  const auxMira = 100;
+  const estabilidade = 100;
 
-  let dpiMouse = modo==="mobilador"?Math.round(1000 + (dpiVal-500)/2):0;
-  let horizontal = modo==="mobilador"?280:0;
-  let vertical = modo==="mobilador"?310:0;
+  const isIphone = tipo.includes("iphone");
 
   document.getElementById("resultado").innerHTML=`
-    🔥 RESULTADO CALIBRADO 🔥<br><br>
-    Estilo: ${estilo} <br>
-    Modo: ${modo} <br>
-    DPI Jogo: ${dpiVal} <br><br>
-
-    🎯 Geral: ${geral} <br>
-    🔴 RedDot: ${redDot} <br>
-    🔍 2x: ${x2} <br>
-    🔭 4x: ${x4} <br>
-    🎯 AWM: ${awm} <br>
-    👁️ Olhadinha: ${olhadinha} <br><br>
-
-    ⚙️ Botão: ${botaoVal}%<br>
-    ⚙️ Cursor: ${cursorVal}<br>
-    ⚙️ Anti Recuo: ${antiRecuo}%<br>
-    ⚙️ Auxílio de Mira: ${auxMira}%<br>
-    ⚙️ Estabilidade: ${estabilidade}%<br>
-    ⚙️ Buffer GPU: ${bufferGPU}<br>
-    ⚙️ Buffer Logger: ${bufferLogger}<br>
-    ⚙️ Escala Janela: ${escalaJanela}<br>
-    ⚙️ Escala Transição: ${escalaTransicao}<br>
-    ⚙️ Escala Animador: ${escalaAnimador}<br>
-    ${modo==="mobilador"?`<br>🖱️ GG Mouse Pro<br>DPI Mouse: ${dpiMouse}<br>Horizontal: ${horizontal}<br>Vertical: ${vertical}`:""}
+    <div class="card">
+      <strong>${selectCelular.value}</strong> <br>
+      Estilo: ${estilo} <br>
+      Modo: ${modo} <br>
+      ${isIphone ? `Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>
+      🎯 Geral: ${geral} <br>
+      🔴 RedDot: ${redDot} <br>
+      🔍 2x: ${x2} <br>
+      🔭 4x: ${x4} <br>
+      🎯 AWM: ${awm} <br>
+      👁 Olhadinha: ${olhadinha} <br>`}
+      ⚙️ Botão: ${botaoVal}% <br>
+      ⚙️ Anti Recuo: ${antiRecuo}% <br>
+      ⚙️ Auxílio de Mira: ${auxMira}% <br>
+      ⚙️ Estabilidade: ${estabilidade}% <br>
+      ⚙️ Buffer GPU: ${bufferGPU} <br>
+      ⚙️ Buffer Logger: ${bufferLogger} <br>
+    </div>
   `;
 }
 
+window.gerar = gerar;
 window.copiar = function(){
   let texto = document.getElementById("resultado").innerText;
   navigator.clipboard.writeText(texto);
   alert("Copiado!");
 }
 
-}
+atualizarConfigAndroid();
 </script>
+
 </body>
 </html>
