@@ -82,8 +82,6 @@ Seu resultado aparecerá aqui...
 window.onload = function(){
 
 const celulares = [
-
-  // 🔻 FRACOS
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
   {nome:"Samsung A13", tipo:"fraco"},
@@ -99,7 +97,6 @@ const celulares = [
   {nome:"Tecno Spark 9", tipo:"fraco"},
   {nome:"Galaxy M02", tipo:"fraco"},
 
-  // ⚖️ MÉDIOS
   {nome:"Motorola G23", tipo:"medio"},
   {nome:"Moto G32", tipo:"medio"},
   {nome:"Moto G52", tipo:"medio"},
@@ -123,7 +120,6 @@ const celulares = [
   {nome:"Realme 12", tipo:"medio"},
   {nome:"Galaxy M12", tipo:"medio"},
 
-  // 🚀 FORTES
   {nome:"POCO X3 Pro", tipo:"forte"},
   {nome:"POCO X5 Pro", tipo:"forte"},
   {nome:"POCO X6 Pro", tipo:"forte"},
@@ -225,14 +221,16 @@ window.gerar = function(){
 
     let horizontal = rand(260,320);
     let vertical = rand(280,350);
+    let mouseDPI = rand(800,1600);
     let aceleracao = (Math.random()*3 + 10).toFixed(1);
     let delay = rand(500,800);
 
     let ajuste = (horizontal + vertical)/120;
+    let ajusteDPI = (mouseDPI - 1000)/500;
 
-    geral -= ajuste*0.7;
-    redDot -= ajuste*0.5;
-    x2 -= ajuste*0.3;
+    geral -= ajuste*0.7 + ajusteDPI*2;
+    redDot -= ajuste*0.5 + ajusteDPI*1.5;
+    x2 -= ajuste*0.3 + ajusteDPI;
 
     geral=limitar(geral);
     redDot=limitar(redDot);
@@ -242,6 +240,7 @@ window.gerar = function(){
     <br><br>🖱️ GG MOUSE PRO<br>
     Horizontal: ${horizontal}<br>
     Vertical: ${vertical}<br>
+    DPI Mouse: ${mouseDPI}<br>
     Aceleração: ${aceleracao}<br>
     Delay: ${delay} ms
     `;
