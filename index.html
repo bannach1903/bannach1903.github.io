@@ -61,7 +61,7 @@ const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Sliders atualizam valor visual
+// Atualiza valores visuais dos sliders
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
 cursor.oninput = ()=> { cursorValor.innerText = cursor.value; };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; };
@@ -125,9 +125,17 @@ function gerar(){
   // Ciclos para iPhone
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
 
-  // Buffers Android calculados conforme sensibilidade
-  let bufferGeral = !isIphone ? Math.round(8192 + (geral-100)*200) : 0;
-  let bufferLoggerGeral = !isIphone ? Math.round(60 + (geral-100)*2) : 0;
+  // Buffers Android calculados conforme a sensibilidade
+  const bufferGPUValores = [8192,16384,32768,65536]; // valores reais CPU/GPU
+  const bufferLoggerValores = [0,64,256,1024,4096,8192]; // valores em KB do Logger
+
+  // Seleciona buffer proporcional
+  let bufferGeral = 0;
+  let bufferLoggerGeral = 0;
+  if(!isIphone){
+    bufferGeral = bufferGPUValores[Math.min(Math.floor((geral-100)/10),bufferGPUValores.length-1)];
+    bufferLoggerGeral = bufferLoggerValores[Math.min(Math.floor((geral-100)/10),bufferLoggerValores.length-1)];
+  }
 
   const antiRecuo = 100;
   const auxMira = 100;
@@ -151,7 +159,7 @@ function gerar(){
       ⚙️ Anti Recuo: ${antiRecuo}%<br>
       ⚙️ Auxílio de Mira: ${auxMira}%<br>
       ⚙️ Estabilidade: ${estabilidade}%<br>
-      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGeral}KB<br>⚙️ Buffer Logger: ${bufferLoggerGeral}KB<br>` : ""}
+      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGeral} KB<br>⚙️ Buffer Logger: ${bufferLoggerGeral} KB<br>` : ""}
     </div>
   `;
 }
