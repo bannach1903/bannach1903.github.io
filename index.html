@@ -44,20 +44,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
-<select id="bufferGPU">
-  <option value="8192KB">Buffer GPU: 8.192KB</option>
-  <option value="16384KB">Buffer GPU: 16.384KB</option>
-  <option value="32768KB">Buffer GPU: 32.768KB</option>
-  <option value="65536KB">Buffer GPU: 65.536KB</option>
-</select>
-
-<select id="bufferLogger">
-  <option value="60KB">Buffer Logger: 60KB</option>
-  <option value="256KB">Buffer Logger: 256KB</option>
-  <option value="1MB">Buffer Logger: 1MB</option>
-  <option value="4MB">Buffer Logger: 4MB</option>
-</select>
-
 <button id="btnGerar">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
@@ -74,8 +60,6 @@ const cursorContainer = document.getElementById("cursorContainer");
 const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
-const bufferGPU = document.getElementById("bufferGPU");
-const bufferLogger = document.getElementById("bufferLogger");
 
 // Sliders atualizam valor visual
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
@@ -115,8 +99,6 @@ function atualizarConfigAndroid(){
   const isIphone = tipo.includes("iphone");
   dpiContainer.style.display = isIphone ? "none" : "block";
   cursorContainer.style.display = isIphone ? "none" : "block";
-  bufferGPU.style.display = isIphone ? "none" : "block";
-  bufferLogger.style.display = isIphone ? "none" : "block";
 }
 selectCelular.onchange = atualizarConfigAndroid;
 
@@ -127,11 +109,10 @@ function gerar(){
   const modo = document.getElementById("modo").value;
   const botaoVal = parseInt(botao.value);
   const cursorVal = parseInt(cursor.value);
-  const bufferGPUVal = bufferGPU.value;
-  const bufferLoggerVal = bufferLogger.value;
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
+  // Calculo sensibilidade
   let base = 100;
   if(!isIphone) base += (dpiVal-500)/10;
   const geral = Math.round(base);
@@ -141,7 +122,13 @@ function gerar(){
   const awm = Math.round(geral-25);
   const olhadinha = Math.round(geral+6);
 
+  // Ciclos para iPhone
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
+
+  // Buffers Android calculados conforme sensibilidade
+  let bufferGeral = !isIphone ? Math.round(8192 + (geral-100)*200) : 0;
+  let bufferLoggerGeral = !isIphone ? Math.round(60 + (geral-100)*2) : 0;
+
   const antiRecuo = 100;
   const auxMira = 100;
   const estabilidade = 100;
@@ -159,18 +146,17 @@ function gerar(){
       🎯 AWM: ${awm} <br>
       👁 Olhadinha: ${olhadinha} <br><br>
 
-      <!-- Bloco único de todas ⚙️ -->
       ⚙️ Botão: ${botaoVal}%<br>
       ${!isIphone ? `⚙️ Velocidade do Cursor: ${cursorVal}<br>` : ""}
       ⚙️ Anti Recuo: ${antiRecuo}%<br>
       ⚙️ Auxílio de Mira: ${auxMira}%<br>
       ⚙️ Estabilidade: ${estabilidade}%<br>
-      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGPUVal}<br>⚙️ Buffer Logger: ${bufferLoggerVal}<br>` : ""}
+      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGeral}KB<br>⚙️ Buffer Logger: ${bufferLoggerGeral}KB<br>` : ""}
     </div>
   `;
 }
 
-// Botão GERAR agora funciona mesmo sem mexer nos sliders
+// Botão GERAR
 document.getElementById("btnGerar").onclick = gerar;
 
 // Copiar
