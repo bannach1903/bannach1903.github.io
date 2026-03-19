@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF</title>
+<title>Gerador PRO Sensibilidade FF - GG Mouse Pro</title>
 <style>
 body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
@@ -19,7 +19,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 </style>
 </head>
 <body>
-
 <div class="container">
 <h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
 
@@ -38,11 +37,11 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 <p id="dpiContainer">DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
 
-<p id="cursorContainer">Velocidade do Cursor: <span id="cursorValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="cursor">
-
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
+
+<p id="cursorContainer">Velocidade do Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
 
 <button id="btnGerar">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
@@ -61,12 +60,12 @@ const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Atualiza valores dos sliders
+// Sliders
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
 cursor.oninput = ()=> { cursorValor.innerText = cursor.value; };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; };
 
-// Lista de celulares por marca
+// Celulares
 const marcas = {
   "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
@@ -93,7 +92,7 @@ for(const marca in marcas){
   selectCelular.appendChild(group);
 }
 
-// Atualiza visibilidade Android/iPhone
+// Visibilidade Android/iPhone
 function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
@@ -102,7 +101,7 @@ function atualizarConfigAndroid(){
 }
 selectCelular.onchange = atualizarConfigAndroid;
 
-// Função gerar
+// GERAR
 function gerar(){
   const tipo = selectCelular.value.toLowerCase();
   const estilo = document.getElementById("estilo").value;
@@ -112,13 +111,12 @@ function gerar(){
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
-  // Base sensibilidade
   let base = 100;
   if(!isIphone) base += (dpiVal-500)/10;
   let geral = Math.round(base);
 
-  // Ajuste Mobilador
-  let geralFinal = (modo==="mobilador" && !isIphone) ? Math.round(geral/4) : geral;
+  let mobilador = (modo==="mobilador" && !isIphone);
+  let geralFinal = mobilador ? Math.round(geral/4) : geral;
 
   const redDot = Math.round(geralFinal-2);
   const x2 = Math.round(geralFinal-8);
@@ -126,12 +124,10 @@ function gerar(){
   const awm = Math.round(geralFinal-25);
   const olhadinha = Math.round(geralFinal+6);
 
-  // Ciclos iPhone
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
 
-  // Buffers Android
   const bufferGPUValores = [8192,16384,32768,65536];
-  const bufferLoggerValores = [0,64,256,1024,4096,8192];
+  const bufferLoggerValores = [64,256,1024,4096,8192];
   let bufferGeral = 0;
   let bufferLoggerGeral = 0;
   if(!isIphone){
@@ -143,6 +139,10 @@ function gerar(){
   const antiRecuo = 100;
   const auxMira = 100;
   const estabilidade = 100;
+
+  let dpiMouse = mobilador ? Math.round(1000 + (dpiVal-500)/2) : 0;
+  let horizontal = mobilador ? 280 : 0;
+  let vertical = mobilador ? 310 : 0;
 
   document.getElementById("resultado").innerHTML=`
     <div class="card">
@@ -163,6 +163,7 @@ function gerar(){
       ⚙️ Auxílio de Mira: ${auxMira}%<br>
       ⚙️ Estabilidade: ${estabilidade}%<br>
       ${!isIphone ? `⚙️ Buffer GPU: ${bufferGeral} KB<br>⚙️ Buffer Logger: ${bufferLoggerGeral} KB<br>` : ""}
+      ${mobilador ? `<br>🖱️ GG Mouse Pro<br>DPI Mouse: ${dpiMouse}<br>Horizontal: ${horizontal}<br>Vertical: ${vertical}` : ""}
     </div>
   `;
 }
