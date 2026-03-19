@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF - Ciclos Dinâmicos</title>
+<title>Gerador PRO Sensibilidade FF - Cursor Android</title>
 <style>
 body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
@@ -38,6 +38,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 <p id="dpiContainer">DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
 
+<p id="cursorContainer">Velocidade do Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
@@ -65,6 +68,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 const selectCelular = document.getElementById("celular");
 const dpi = document.getElementById("dpi");
 const dpiValor = document.getElementById("dpiValor");
+const cursor = document.getElementById("cursor");
+const cursorValor = document.getElementById("cursorValor");
+const cursorContainer = document.getElementById("cursorContainer");
 const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
@@ -73,6 +79,7 @@ const bufferLogger = document.getElementById("bufferLogger");
 
 // Atualiza sliders em tempo real
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
+cursor.oninput = ()=> { cursorValor.innerText = cursor.value; gerar(); };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
 
 // Lista de celulares por marca
@@ -107,6 +114,7 @@ function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
   dpiContainer.style.display = isIphone ? "none" : "block";
+  cursorContainer.style.display = isIphone ? "none" : "block";
   bufferGPU.style.display = isIphone ? "none" : "block";
   bufferLogger.style.display = isIphone ? "none" : "block";
   gerar();
@@ -120,6 +128,7 @@ function gerar(){
   const estilo = document.getElementById("estilo").value;
   const modo = document.getElementById("modo").value;
   const botaoVal = parseInt(botao.value);
+  const cursorVal = parseInt(cursor.value);
   const bufferGPUVal = bufferGPU.value;
   const bufferLoggerVal = bufferLogger.value;
 
@@ -148,7 +157,7 @@ function gerar(){
       <strong>${selectCelular.value}</strong> <br>
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
-      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geral} <br>`}
+      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geral} <br>Velocidade do Cursor: ${cursorVal} <br>`}
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
       🔭 4x: ${x4} <br>
