@@ -50,7 +50,7 @@ button{
 
 <select id="modo">
   <option value="mobile">📱 Mobile Normal</option>
-  <option value="mobilador">🚀 Mobilador (Desempenho)</option>
+  <option value="mobilador">🚀 Mobilador (GG Mouse Pro)</option>
 </select>
 
 <select id="celular"></select>
@@ -81,9 +81,8 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
-// 🔥 SUA LISTA COMPLETA (NÃO ALTERADA)
+// 🔥 LISTA COMPLETA (INALTERADA)
 const celulares = [
-
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
   {nome:"Samsung A13", tipo:"fraco"},
@@ -209,7 +208,35 @@ window.gerar = function(){
   awm=limitar(awm);
   olhadinha=limitar(olhadinha);
 
-  let animSet = modo==="mobilador"?["Desligado","0.5x"]:["1x","0.5x"];
+  // 🚀 GG MOUSE PRO (HORIZONTAL / VERTICAL)
+  let ggMouse = "";
+
+  if(modo==="mobilador"){
+
+    let horizontal = rand(250,320);
+    let vertical = rand(280,350);
+
+    let aceleracao = (Math.random()*3 + 10).toFixed(1);
+    let delay = rand(500,800);
+
+    let ajuste = (horizontal + vertical)/100;
+
+    geral -= ajuste*0.5;
+    redDot -= ajuste*0.3;
+    x2 -= ajuste*0.2;
+
+    geral=limitar(geral);
+    redDot=limitar(redDot);
+    x2=limitar(x2);
+
+    ggMouse = `
+    <br><br>🖱️ GG MOUSE PRO<br>
+    Horizontal: ${horizontal}<br>
+    Vertical: ${vertical}<br>
+    Aceleração: ${aceleracao}<br>
+    Delay: ${delay} ms
+    `;
+  }
 
   document.getElementById("resultado").innerHTML=`
     🔥 RESULTADO CALIBRADO 🔥<br><br>
@@ -227,11 +254,7 @@ window.gerar = function(){
     ⚙️ DPI: ${dpiVal}<br>
     🔘 Botão: ${botaoVal}%<br><br>
 
-    🚀 DESEMPENHO<br>
-    Animações: ${pick(animSet)}<br>
-    Buffer CPU: ${pick(["16.384 KB","32.768 KB","65.536 KB"])}<br>
-    Logger: ${pick(["256 KB","1 MB","4 MB"])}<br>
-    Menor largura: ${modo==="mobilador"?rand(420,500):rand(380,420)} dp
+    ${ggMouse}
   `;
 }
 
@@ -244,10 +267,6 @@ window.copiar = function(){
 // utils
 function rand(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
-}
-
-function pick(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
 }
 
 }
