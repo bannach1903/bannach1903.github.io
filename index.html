@@ -178,31 +178,17 @@ window.gerar = function(){
   let base = tipo==="fraco"?85: tipo==="medio"?95:100;
   if(modo==="mobilador") base += 3;
 
-  let geral;
-
-  if(modo==="mobilador"){
-    geral = rand(25,45);
-  }else{
-    geral = base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
-  }
+  let geral = modo==="mobilador"
+    ? rand(25,45)
+    : base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
 
   if(estilo==="capa") geral -= 4;
 
-  let redDot, x2, x4, awm, olhadinha;
-
-  if(modo==="mobilador"){
-    redDot = geral - rand(1,3);
-    x2 = geral - rand(5,8);
-    x4 = geral - rand(10,15);
-    awm = geral - rand(15,20);
-    olhadinha = geral + rand(2,5);
-  }else{
-    redDot = geral - 4;
-    x2 = geral - 10;
-    x4 = geral - 18;
-    awm = geral - 30;
-    olhadinha = geral + 3;
-  }
+  let redDot = geral - 4;
+  let x2 = geral - 10;
+  let x4 = geral - 18;
+  let awm = geral - 30;
+  let olhadinha = geral + 3;
 
   function limitar(v){
     return Math.max(0, Math.min(200, Math.round(v)));
@@ -214,6 +200,11 @@ window.gerar = function(){
   x4=limitar(x4);
   awm=limitar(awm);
   olhadinha=limitar(olhadinha);
+
+  // 🎯 SISTEMA AVANÇADO (AMBOS MODOS)
+  let antiRecuo = rand(60,90);
+  let auxilioMira = rand(40,70);
+  let estabilidade = rand(70,95);
 
   let ggMouse = "";
 
@@ -261,6 +252,11 @@ window.gerar = function(){
 
     ⚙️ DPI: ${dpiVal}<br>
     🔘 Botão: ${botaoVal}%<br><br>
+
+    🎯 AJUSTES AVANÇADOS<br>
+    Anti Recuo: ${antiRecuo}%<br>
+    Auxílio de Mira: ${auxilioMira}%<br>
+    Estabilidade do Tiro: ${estabilidade}%<br>
 
     ${ggMouse}
   `;
