@@ -3,90 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF - Cards Animados</title>
+<title>Gerador PRO Sensibilidade FF - iPhone Automático</title>
 <style>
-body{
-  margin:0;
-  font-family:'Arial', sans-serif;
-  background:#121212;
-  color:white;
-  text-align:center;
-}
-.container{
-  padding:20px;
-  max-width:500px;
-  margin:auto;
-}
-h2{
-  color:#ff4c4c;
-  text-shadow:0 0 10px #ff0000;
-}
-
-/* Cards */
-.cards{
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-  margin-top:20px;
-}
-.card{
-  background:#1a1a1a;
-  border-radius:10px;
-  padding:15px;
-  text-align:left;
-  transition:0.3s;
-  box-shadow:0 4px 10px rgba(0,0,0,0.5);
-}
-.card:hover{
-  transform: translateY(-5px);
-  box-shadow:0 8px 20px rgba(255,0,0,0.4);
-}
-
-/* Sliders e selects */
-select,input[type=range]{
-  width:90%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  font-size:16px;
-  background:#1f1f1f;
-  color:white;
-}
-
-/* Botões */
-button{
-  width:90%;
-  padding:15px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
-button:hover{
-  transform: translateY(-3px);
-  box-shadow:0 4px 15px rgba(255,0,0,0.4);
-}
-
-/* Slider custom */
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width:20px;
-  height:20px;
-  background:#ff4c4c;
-  border-radius:50%;
-  cursor:pointer;
-  box-shadow:0 0 5px rgba(255,0,0,0.7);
-  transition:0.3s;
-}
-input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-label{display:block; text-align:left; margin-left:5%;}
+body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
+.container{padding:20px;max-width:500px;margin:auto;}
+h2{color:#ff4c4c;text-shadow:0 0 10px #ff0000;}
+.cards{display:flex;flex-direction:column;gap:15px;margin-top:20px;}
+.card{background:#1a1a1a;border-radius:10px;padding:15px;text-align:left;transition:0.3s;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+.card:hover{transform: translateY(-5px);box-shadow:0 8px 20px rgba(255,0,0,0.4);}
+select,input[type=range]{width:90%;margin:10px 0;padding:10px;border-radius:10px;border:none;font-size:16px;background:#1f1f1f;color:white;}
+button{width:90%;padding:15px;margin:10px 0;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover{transform: translateY(-3px);box-shadow:0 4px 15px rgba(255,0,0,0.4);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#ff4c4c;border-radius:50%;cursor:pointer;box-shadow:0 0 5px rgba(255,0,0,0.7);transition:0.3s;}
+input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 </style>
 </head>
 <body>
@@ -111,21 +40,6 @@ label{display:block; text-align:left; margin-left:5%;}
 
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
-
-<p id="ciclosContainer" style="display:none;">
-<select id="ciclos">
-  <option value="1">Ciclos 1</option>
-  <option value="2">Ciclos 2</option>
-  <option value="3">Ciclos 3</option>
-  <option value="4">Ciclos 4</option>
-  <option value="5">Ciclos 5</option>
-  <option value="6">Ciclos 6</option>
-  <option value="7" selected>Ciclos 7</option>
-  <option value="8">Ciclos 8</option>
-  <option value="9">Ciclos 9</option>
-  <option value="10">Ciclos 10</option>
-</select>
-</p>
 
 <select id="bufferGPU">
   <option value="8192KB">Buffer GPU: 8.192KB</option>
@@ -156,16 +70,13 @@ const dpi = document.getElementById("dpi");
 const dpiValor = document.getElementById("dpiValor");
 const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
-const ciclosContainer = document.getElementById("ciclosContainer");
-const ciclos = document.getElementById("ciclos");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Atualiza sliders e gera em tempo real
+// Sliders em tempo real
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
-ciclos.oninput = gerar;
 
-// Lista de celulares por marca
+// Celulares por marca
 const marcas = {
   "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
@@ -192,31 +103,30 @@ for(const marca in marcas){
   selectCelular.appendChild(group);
 }
 
-// Atualiza visibilidade
+// Atualiza visibilidade e gera automaticamente
 function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
 
   dpiContainer.style.display = isIphone ? "none" : "block";
-  ciclosContainer.style.display = isIphone ? "block" : "none";
 
-  gerar();
+  gerar(); // gera automaticamente
 }
 
 selectCelular.onchange = atualizarConfigAndroid;
 
-// Gera cards
+// Função gerar
 function gerar(){
   const tipo = selectCelular.value.toLowerCase();
   const estilo = document.getElementById("estilo").value;
   const modo = document.getElementById("modo").value;
   const botaoVal = parseInt(botao.value);
-  const ciclosVal = parseInt(ciclos.value);
   const bufferGPU = document.getElementById("bufferGPU").value;
   const bufferLogger = document.getElementById("bufferLogger").value;
 
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
+  const ciclosVal = isIphone ? 7 : "N/A"; // Ciclos automático para iPhone
 
   // Valores fixos
   const geral = 100;
@@ -234,7 +144,7 @@ function gerar(){
       <strong>${selectCelular.value}</strong> <br>
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
-      ${isIphone ? `Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>
+      ${isIphone ? `🎯 Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>
       🎯 Geral: ${geral} <br>
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
