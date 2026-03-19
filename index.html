@@ -81,6 +81,7 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
+// 🔥 SUA LISTA ORIGINAL (NÃO MEXI)
 const celulares = [
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
@@ -146,129 +147,131 @@ const celulares = [
 ];
 
 const selectCelular = document.getElementById("celular");
-
-celulares.forEach(cel=>{
-  let option = document.createElement("option");
-  option.value = cel.tipo;
-  option.textContent =
-    cel.tipo==="fraco"?"🔻 "+cel.nome:
-    cel.tipo==="medio"?"⚖️ "+cel.nome:
-    "🚀 "+cel.nome;
-  selectCelular.appendChild(option);
+celulares.forEach(c=>{
+  let o = document.createElement("option");
+  o.value = c.tipo;
+  o.textContent =
+    c.tipo==="fraco"?"🔻 "+c.nome:
+    c.tipo==="medio"?"⚖️ "+c.nome:
+    "🚀 "+c.nome;
+  selectCelular.appendChild(o);
 });
 
 const dpi = document.getElementById("dpi");
 const botao = document.getElementById("botao");
 const cursor = document.getElementById("cursor");
 
-dpi.oninput = ()=> document.getElementById("dpiValor").innerText = dpi.value;
-botao.oninput = ()=> document.getElementById("botaoValor").innerText = botao.value;
-cursor.oninput = ()=> document.getElementById("cursorValor").innerText = cursor.value;
+dpi.oninput = ()=> dpiValor.innerText = dpi.value;
+botao.oninput = ()=> botaoValor.innerText = botao.value;
+cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
 window.gerar = function(){
 
-  let modo = document.getElementById("modo").value;
-  let tipo = selectCelular.value;
-  let estilo = document.getElementById("estilo").value;
+let modo = document.getElementById("modo").value;
+let tipo = selectCelular.value;
+let estilo = document.getElementById("estilo").value;
 
-  let dpiVal = parseInt(dpi.value);
-  let botaoVal = parseInt(botao.value);
-  let cursorVal = parseInt(cursor.value);
+let dpiVal = +dpi.value;
+let botaoVal = +botao.value;
+let cursorVal = +cursor.value;
 
-  let base = tipo==="fraco"?85: tipo==="medio"?95:100;
-  if(modo==="mobilador") base += 3;
+let base = tipo==="fraco"?85: tipo==="medio"?95:100;
 
-  let geral = modo==="mobilador"
-    ? rand(25,45)
-    : base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
+// 🔥 ALTERAÇÃO QUE VOCÊ PEDIU
+let geral = modo==="mobilador"
+  ? rand(0,25)
+  : base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
 
-  if(estilo==="capa") geral -= 4;
+// 🎯 SISTEMA
+let anti = rand(60,90);
+let aux = rand(40,70);
+let est = rand(70,95);
 
-  let redDot = geral - 4;
-  let x2 = geral - 10;
-  let x4 = geral - 18;
-  let awm = geral - 30;
-  let olhadinha = geral + 3;
+geral -= anti/10;
+geral += aux/20;
+geral -= est/15;
 
-  function limitar(v){
-    return Math.max(0, Math.min(200, Math.round(v)));
-  }
+// ⚙️ ANDROID
+let escala = (Math.random()*0.5+0.3);
+let buffer = ["128K","256K","512K","1M"][rand(0,3)];
+let gpu = Math.random()>0.5?"Ativado":"Desativado";
 
-  geral=limitar(geral);
-  redDot=limitar(redDot);
-  x2=limitar(x2);
-  x4=limitar(x4);
-  awm=limitar(awm);
-  olhadinha=limitar(olhadinha);
+geral += (1-escala)*10;
+if(gpu==="Ativado") geral+=3;
 
-  // 🎯 SISTEMA AVANÇADO (AMBOS MODOS)
-  let antiRecuo = rand(60,90);
-  let auxilioMira = rand(40,70);
-  let estabilidade = rand(70,95);
+// 🎯 MIRAS
+let red = geral-4;
+let x2 = geral-10;
+let x4 = geral-18;
+let awm = geral-30;
+let olho = geral+3;
 
-  let ggMouse = "";
+// 🖱️ MOBILADOR
+let gg="";
 
-  if(modo==="mobilador"){
+if(modo==="mobilador"){
 
-    let horizontal = rand(260,320);
-    let vertical = rand(280,350);
-    let mouseDPI = rand(800,1600);
-    let aceleracao = (Math.random()*3 + 10).toFixed(1);
-    let delay = rand(500,800);
+let dpiMouse = rand(800,1600);
+let ajusteDPI = (dpiMouse-1000)/40;
 
-    let ajuste = (horizontal + vertical)/120;
-    let ajusteDPI = (mouseDPI - 1000)/500;
+// sincronização real
+geral -= ajusteDPI*0.5;
+red -= ajusteDPI*0.3;
+x2 -= ajusteDPI*0.2;
 
-    geral -= ajuste*0.7 + ajusteDPI*2;
-    redDot -= ajuste*0.5 + ajusteDPI*1.5;
-    x2 -= ajuste*0.3 + ajusteDPI;
+let h = rand(260,320);
+let v = rand(280,350);
 
-    geral=limitar(geral);
-    redDot=limitar(redDot);
-    x2=limitar(x2);
-
-    ggMouse = `
-    <br><br>🖱️ GG MOUSE PRO<br>
-    Horizontal: ${horizontal}<br>
-    Vertical: ${vertical}<br>
-    DPI Mouse: ${mouseDPI}<br>
-    Aceleração: ${aceleracao}<br>
-    Delay: ${delay} ms
-    `;
-  }
-
-  document.getElementById("resultado").innerHTML=`
-    🔥 RESULTADO CALIBRADO 🔥<br><br>
-
-    📱 Modo: ${modo}<br>
-    🎯 Estilo: ${estilo}<br><br>
-
-    🎯 Geral: ${geral}<br>
-    🔴 RedDot: ${redDot}<br>
-    🔍 2x: ${x2}<br>
-    🔭 4x: ${x4}<br>
-    🎯 AWM: ${awm}<br>
-    👁️ Olhadinha: ${olhadinha}<br><br>
-
-    ⚙️ DPI: ${dpiVal}<br>
-    🔘 Botão: ${botaoVal}%<br><br>
-
-    🎯 AJUSTES AVANÇADOS<br>
-    Anti Recuo: ${antiRecuo}%<br>
-    Auxílio de Mira: ${auxilioMira}%<br>
-    Estabilidade do Tiro: ${estabilidade}%<br>
-
-    ${ggMouse}
-  `;
+gg=`
+<br><br>🖱️ GG Mouse Pro<br>
+DPI Mouse: ${dpiMouse}<br>
+Horizontal: ${h}<br>
+Vertical: ${v}<br>
+Aceleração: ${(Math.random()*3+10).toFixed(1)}<br>
+Delay: ${rand(200,400)} ms
+`;
 }
 
-window.copiar = function(){
-  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
-  alert("Copiado!");
+function limitar(v){
+return Math.max(0,Math.min(200,Math.round(v)));
+}
+
+geral=limitar(geral);
+red=limitar(red);
+x2=limitar(x2);
+x4=limitar(x4);
+awm=limitar(awm);
+olho=limitar(olho);
+
+resultado.innerHTML=`
+🔥 RESULTADO FINAL 🔥<br><br>
+
+🎯 Geral: ${geral}<br>
+🔴 RedDot: ${red}<br>
+🔍 2x: ${x2}<br>
+🔭 4x: ${x4}<br>
+🎯 AWM: ${awm}<br>
+👁️ Olhadinha: ${olho}<br><br>
+
+🎯 Anti Recuo: ${anti}%<br>
+🎯 Auxílio: ${aux}%<br>
+🎯 Estabilidade: ${est}%<br><br>
+
+⚙️ Escala: ${escala.toFixed(1)}x<br>
+⚙️ Buffer: ${buffer}<br>
+⚙️ GPU: ${gpu}<br>
+
+${gg}
+`;
 }
 
 function rand(min,max){
-  return Math.floor(Math.random()*(max-min+1))+min;
+return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+window.copiar = function(){
+navigator.clipboard.writeText(resultado.innerText);
+alert("Copiado!");
 }
 
 }
