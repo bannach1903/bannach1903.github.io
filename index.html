@@ -77,12 +77,11 @@ const dpiContainer = document.getElementById("dpiContainer");
 const bufferGPU = document.getElementById("bufferGPU");
 const bufferLogger = document.getElementById("bufferLogger");
 
-// Atualiza sliders em tempo real
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
 cursor.oninput = ()=> { cursorValor.innerText = cursor.value; gerar(); };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
 
-// Lista de celulares por marca
+// Lista de celulares
 const marcas = {
   "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
@@ -109,7 +108,7 @@ for(const marca in marcas){
   selectCelular.appendChild(group);
 }
 
-// Atualiza visibilidade para iPhone
+// Atualiza visibilidade
 function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
@@ -122,7 +121,6 @@ function atualizarConfigAndroid(){
 
 selectCelular.onchange = atualizarConfigAndroid;
 
-// Função gerar
 function gerar(){
   const tipo = selectCelular.value.toLowerCase();
   const estilo = document.getElementById("estilo").value;
@@ -131,11 +129,9 @@ function gerar(){
   const cursorVal = parseInt(cursor.value);
   const bufferGPUVal = bufferGPU.value;
   const bufferLoggerVal = bufferLogger.value;
-
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
-  // Calcular sensibilidade
   let base = 100;
   if(!isIphone) base += (dpiVal-500)/10;
   const geral = Math.round(base);
@@ -145,9 +141,7 @@ function gerar(){
   const awm = Math.round(geral-25);
   const olhadinha = Math.round(geral+6);
 
-  // Ciclos baseados na sensibilidade
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
-
   const antiRecuo = 100;
   const auxMira = 100;
   const estabilidade = 100;
@@ -157,17 +151,21 @@ function gerar(){
       <strong>${selectCelular.value}</strong> <br>
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
-      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geral} <br>⚙️ Velocidade do Cursor: ${cursorVal} <br>`}
+      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` 
+                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geral} <br>`}
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
       🔭 4x: ${x4} <br>
       🎯 AWM: ${awm} <br>
-      👁 Olhadinha: ${olhadinha} <br>
-      ⚙️ Botão: ${botaoVal}% <br>
-      ⚙️ Anti Recuo: ${antiRecuo}% <br>
-      ⚙️ Auxílio de Mira: ${auxMira}% <br>
-      ⚙️ Estabilidade: ${estabilidade}% <br>
-      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGPUVal} <br>⚙️ Buffer Logger: ${bufferLoggerVal} <br>` : ""}
+      👁 Olhadinha: ${olhadinha} <br><br>
+
+      <!-- Bloco único de todas ⚙️ -->
+      ⚙️ Botão: ${botaoVal}%<br>
+      ${!isIphone ? `⚙️ Velocidade do Cursor: ${cursorVal}<br>` : ""}
+      ⚙️ Anti Recuo: ${antiRecuo}%<br>
+      ⚙️ Auxílio de Mira: ${auxMira}%<br>
+      ⚙️ Estabilidade: ${estabilidade}%<br>
+      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGPUVal}<br>⚙️ Buffer Logger: ${bufferLoggerVal}<br>` : ""}
     </div>
   `;
 }
@@ -180,6 +178,5 @@ window.copiar = function(){
 
 atualizarConfigAndroid();
 </script>
-
 </body>
 </html>
