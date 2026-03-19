@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF - iPhone Automático</title>
+<title>Gerador PRO Sensibilidade FF - Ciclos Dinâmicos</title>
 <style>
 body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
@@ -58,13 +58,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 <button onclick="gerar()">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
-<div class="cards" id="resultado">
-Seu resultado aparecerá aqui...
-</div>
+<div class="cards" id="resultado">Seu resultado aparecerá aqui...</div>
 </div>
 
 <script>
-// Elementos
 const selectCelular = document.getElementById("celular");
 const dpi = document.getElementById("dpi");
 const dpiValor = document.getElementById("dpiValor");
@@ -72,11 +69,11 @@ const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Sliders em tempo real
+// Atualiza sliders em tempo real
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
 
-// Celulares por marca
+// Lista de celulares por marca
 const marcas = {
   "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
@@ -103,14 +100,12 @@ for(const marca in marcas){
   selectCelular.appendChild(group);
 }
 
-// Atualiza visibilidade e gera automaticamente
+// Atualiza visibilidade
 function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
-
   dpiContainer.style.display = isIphone ? "none" : "block";
-
-  gerar(); // gera automaticamente
+  gerar();
 }
 
 selectCelular.onchange = atualizarConfigAndroid;
@@ -126,15 +121,20 @@ function gerar(){
 
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
-  const ciclosVal = isIphone ? 7 : "N/A"; // Ciclos automático para iPhone
 
-  // Valores fixos
-  const geral = 100;
-  const redDot = 98;
-  const x2 = 92;
-  const x4 = 85;
-  const awm = 75;
-  const olhadinha = 106;
+  // Calcular sensibilidade
+  let base = 100;
+  if(!isIphone) base += (dpiVal-500)/10;
+  const geral = Math.round(base);
+  const redDot = Math.round(geral-2);
+  const x2 = Math.round(geral-8);
+  const x4 = Math.round(geral-15);
+  const awm = Math.round(geral-25);
+  const olhadinha = Math.round(geral+6);
+
+  // Ciclos baseados na sensibilidade (arredondado)
+  const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
+
   const antiRecuo = 100;
   const auxMira = 100;
   const estabilidade = 100;
@@ -144,13 +144,12 @@ function gerar(){
       <strong>${selectCelular.value}</strong> <br>
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
-      ${isIphone ? `🎯 Ciclos: ${ciclosVal} <br>` : `DPI: ${dpiVal} <br>
-      🎯 Geral: ${geral} <br>
+      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` : `🎯 Sensibilidade: ${geral} <br>`}
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
       🔭 4x: ${x4} <br>
       🎯 AWM: ${awm} <br>
-      👁 Olhadinha: ${olhadinha} <br>`}
+      👁 Olhadinha: ${olhadinha} <br>
       ⚙️ Botão: ${botaoVal}% <br>
       ⚙️ Anti Recuo: ${antiRecuo}% <br>
       ⚙️ Auxílio de Mira: ${auxMira}% <br>
@@ -160,8 +159,6 @@ function gerar(){
     </div>
   `;
 }
-
-window.gerar = gerar;
 
 window.copiar = function(){
   let texto = document.getElementById("resultado").innerText;
