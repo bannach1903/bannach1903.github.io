@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO Sensibilidade FF</title>
+<title>Gerador PRO Sensibilidade FF - App Competitivo</title>
 
 <style>
 body{
@@ -39,6 +39,7 @@ button{
   padding:15px;
   margin-top:15px;
   border-radius:10px;
+  text-align:left;
 }
 </style>
 </head>
@@ -46,7 +47,7 @@ button{
 <body>
 <div class="container">
 
-<h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
+<h2>🔥 GERADOR PRO DE SENSI FF - NÍVEL COMPETITIVO 🔥</h2>
 
 <select id="modo">
   <option value="mobile">📱 Mobile Normal</option>
@@ -81,10 +82,8 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
-// ---------------- CELULARES COMPLETOS ----------------
+// ---------------- CELULARES ----------------
 const celulares = [
-
-  // 🔻 FRACOS
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
   {nome:"Samsung A13", tipo:"fraco"},
@@ -100,7 +99,6 @@ const celulares = [
   {nome:"Tecno Spark 9", tipo:"fraco"},
   {nome:"Galaxy M02", tipo:"fraco"},
 
-  // ⚖️ MÉDIOS
   {nome:"Motorola G23", tipo:"medio"},
   {nome:"Moto G32", tipo:"medio"},
   {nome:"Moto G52", tipo:"medio"},
@@ -124,7 +122,6 @@ const celulares = [
   {nome:"Realme 12", tipo:"medio"},
   {nome:"Galaxy M12", tipo:"medio"},
 
-  // 🚀 FORTES
   {nome:"POCO X3 Pro", tipo:"forte"},
   {nome:"POCO X5 Pro", tipo:"forte"},
   {nome:"POCO X6 Pro", tipo:"forte"},
@@ -237,34 +234,67 @@ window.gerar = function(){
   `;
 }
 
-// -------- ADDON (SEM ALTERAR NADA) --------
-const gerarOriginal = window.gerar;
+// -------- MODO COMPETITIVO INSANO --------
+(function(){
 
-window.gerar = function(){
-
-  gerarOriginal();
-
-  let modo = document.getElementById("modo").value;
-  let resultadoDiv = document.getElementById("resultado");
-
-  let extra = "<br><br>⚙️ SISTEMA AVANÇADO<br>";
-
-  let bufferGPUList = ["8.192KB","16.384KB","32.768KB","65.536KB"];
-  let bufferGPU = bufferGPUList[Math.floor(Math.random()*4)];
-
-  extra += `⚙️ Buffer GPU: ${bufferGPU}<br>`;
-
-  if(modo==="mobilador"){
-    extra += `
-    <br>🖱️ GG Mouse Pro<br>
-    DPI Mouse: ${Math.floor(Math.random()*800+800)}<br>
-    Horizontal: ${Math.floor(Math.random()*60+260)}<br>
-    Vertical: ${Math.floor(Math.random()*70+280)}<br>
-    `;
-  }
-
-  resultadoDiv.innerHTML += extra;
+function clamp(v,min,max){
+  return Math.max(min, Math.min(max,v));
 }
+
+setTimeout(()=>{
+  const btn = document.querySelector("button[onclick='gerar()']");
+  const resultadoDiv = document.getElementById("resultado");
+  if(!btn || !resultadoDiv) return;
+
+  btn.addEventListener("click", ()=>{
+    setTimeout(()=>{
+
+      if(resultadoDiv.innerHTML.includes("MODO COMPETITIVO")) return;
+
+      let modo = document.getElementById("modo").value;
+      let dpi = parseInt(document.getElementById("dpi").value);
+      let cursor = parseInt(document.getElementById("cursor").value);
+      let tipo = document.getElementById("celular").value;
+
+      let controle = cursor/100;
+      let velocidade = (dpi-300)/500;
+
+      let anti = clamp(80 - velocidade*10 + controle*5,70,90);
+      let aux = clamp(50 - velocidade*5,40,60);
+      let est = clamp(90 + controle*5 - velocidade*5,85,98);
+
+      let bufferGPU = tipo==="fraco"?"16.384KB":
+                      tipo==="medio"?"32.768KB":
+                      "65.536KB";
+
+      let extra = `
+      <br><br>🚀 MODO COMPETITIVO<br>
+      🎯 Anti Recuo: ${Math.round(anti)}%<br>
+      🎯 Auxílio: ${Math.round(aux)}%<br>
+      🎯 Estabilidade: ${Math.round(est)}%<br>
+      ⚙️ Buffer GPU: ${bufferGPU}<br>
+      ⚙️ Escala Janela: 0.5x<br>
+      ⚙️ Escala Transição: 0.5x<br>
+      ⚙️ Escala Animador: 0x<br>
+      `;
+
+      if(modo==="mobilador"){
+        extra += `
+        <br>🖱️ GG Mouse Pro<br>
+        DPI Mouse: ${Math.round(clamp(1000+velocidade*400,900,1400))}<br>
+        Horizontal: 280<br>
+        Vertical: 310<br>
+        `;
+      }
+
+      resultadoDiv.innerHTML += extra;
+
+    },90);
+  });
+
+},500);
+
+})();
 
 // copiar
 window.copiar = function(){
