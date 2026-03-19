@@ -81,8 +81,10 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
-// 🔥 SUA LISTA ORIGINAL (NÃO MEXI)
+// ---------------- CELULARES COMPLETOS ----------------
 const celulares = [
+
+  // 🔻 FRACOS
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
   {nome:"Samsung A13", tipo:"fraco"},
@@ -98,6 +100,7 @@ const celulares = [
   {nome:"Tecno Spark 9", tipo:"fraco"},
   {nome:"Galaxy M02", tipo:"fraco"},
 
+  // ⚖️ MÉDIOS
   {nome:"Motorola G23", tipo:"medio"},
   {nome:"Moto G32", tipo:"medio"},
   {nome:"Moto G52", tipo:"medio"},
@@ -121,6 +124,7 @@ const celulares = [
   {nome:"Realme 12", tipo:"medio"},
   {nome:"Galaxy M12", tipo:"medio"},
 
+  // 🚀 FORTES
   {nome:"POCO X3 Pro", tipo:"forte"},
   {nome:"POCO X5 Pro", tipo:"forte"},
   {nome:"POCO X6 Pro", tipo:"forte"},
@@ -146,132 +150,127 @@ const celulares = [
   {nome:"OnePlus 12", tipo:"forte"}
 ];
 
+// carregar select
 const selectCelular = document.getElementById("celular");
-celulares.forEach(c=>{
-  let o = document.createElement("option");
-  o.value = c.tipo;
-  o.textContent =
-    c.tipo==="fraco"?"🔻 "+c.nome:
-    c.tipo==="medio"?"⚖️ "+c.nome:
-    "🚀 "+c.nome;
-  selectCelular.appendChild(o);
+celulares.forEach(cel=>{
+  let option = document.createElement("option");
+  option.value = cel.tipo;
+  option.textContent =
+    cel.tipo==="fraco"?"🔻 "+cel.nome:
+    cel.tipo==="medio"?"⚖️ "+cel.nome:
+    "🚀 "+cel.nome;
+  selectCelular.appendChild(option);
 });
 
+// sliders
 const dpi = document.getElementById("dpi");
 const botao = document.getElementById("botao");
 const cursor = document.getElementById("cursor");
+
+const dpiValor = document.getElementById("dpiValor");
+const botaoValor = document.getElementById("botaoValor");
+const cursorValor = document.getElementById("cursorValor");
 
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
+// -------- GERADOR ORIGINAL --------
 window.gerar = function(){
 
-let modo = document.getElementById("modo").value;
-let tipo = selectCelular.value;
-let estilo = document.getElementById("estilo").value;
+  let tipo = selectCelular.value;
+  let estilo = document.getElementById("estilo").value;
 
-let dpiVal = +dpi.value;
-let botaoVal = +botao.value;
-let cursorVal = +cursor.value;
+  let dpiVal = parseInt(dpi.value);
+  let botaoVal = parseInt(botao.value);
+  let cursorVal = parseInt(cursor.value);
 
-let base = tipo==="fraco"?85: tipo==="medio"?95:100;
+  let base = tipo==="fraco"?88: tipo==="medio"?100:110;
 
-// 🔥 ALTERAÇÃO QUE VOCÊ PEDIU
-let geral = modo==="mobilador"
-  ? rand(0,25)
-  : base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
+  let ajusteDPI = (dpiVal - 500)/25;
+  let ajusteCursor = (cursorVal - 50)/6;
+  let ajusteBotao = (botaoVal - 50)/12;
 
-// 🎯 SISTEMA
-let anti = rand(60,90);
-let aux = rand(40,70);
-let est = rand(70,95);
+  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
 
-geral -= anti/10;
-geral += aux/20;
-geral -= est/15;
+  if(estilo==="capa") geral -= 4;
 
-// ⚙️ ANDROID
-let escala = (Math.random()*0.5+0.3);
-let buffer = ["128K","256K","512K","1M"][rand(0,3)];
-let gpu = Math.random()>0.5?"Ativado":"Desativado";
+  let redDot = geral - 2;
+  let x2 = geral - 8;
+  let x4 = geral - 15;
+  let awm = geral - 25;
+  let olhadinha = geral + 6;
 
-geral += (1-escala)*10;
-if(gpu==="Ativado") geral+=3;
+  if(estilo==="capa"){
+    redDot -= 2;
+    x2 -= 2;
+    x4 -= 3;
+    olhadinha += 2;
+  }
 
-// 🎯 MIRAS
-let red = geral-4;
-let x2 = geral-10;
-let x4 = geral-18;
-let awm = geral-30;
-let olho = geral+3;
+  function limitar(v){
+    if(v<0)return 0;
+    if(v>200)return 200;
+    return Math.round(v);
+  }
 
-// 🖱️ MOBILADOR
-let gg="";
+  geral=limitar(geral);
+  redDot=limitar(redDot);
+  x2=limitar(x2);
+  x4=limitar(x4);
+  awm=limitar(awm);
+  olhadinha=limitar(olhadinha);
 
-if(modo==="mobilador"){
+  document.getElementById("resultado").innerHTML=`
+    🔥 RESULTADO CALIBRADO 🔥<br><br>
+    Estilo: ${estilo} <br>
+    DPI: ${dpiVal} <br><br>
 
-let dpiMouse = rand(800,1600);
-let ajusteDPI = (dpiMouse-1000)/40;
+    🎯 Geral: ${geral} <br>
+    🔴 RedDot: ${redDot} <br>
+    🔍 2x: ${x2} <br>
+    🔭 4x: ${x4} <br>
+    🎯 AWM: ${awm} <br>
+    👁️ Olhadinha: ${olhadinha} <br><br>
 
-// sincronização real
-geral -= ajusteDPI*0.5;
-red -= ajusteDPI*0.3;
-x2 -= ajusteDPI*0.2;
-
-let h = rand(260,320);
-let v = rand(280,350);
-
-gg=`
-<br><br>🖱️ GG Mouse Pro<br>
-DPI Mouse: ${dpiMouse}<br>
-Horizontal: ${h}<br>
-Vertical: ${v}<br>
-Aceleração: ${(Math.random()*3+10).toFixed(1)}<br>
-Delay: ${rand(200,400)} ms
-`;
+    ⚙️ Botão: ${botaoVal}%
+  `;
 }
 
-function limitar(v){
-return Math.max(0,Math.min(200,Math.round(v)));
+// -------- ADDON (SEM ALTERAR NADA) --------
+const gerarOriginal = window.gerar;
+
+window.gerar = function(){
+
+  gerarOriginal();
+
+  let modo = document.getElementById("modo").value;
+  let resultadoDiv = document.getElementById("resultado");
+
+  let extra = "<br><br>⚙️ SISTEMA AVANÇADO<br>";
+
+  let bufferGPUList = ["8.192KB","16.384KB","32.768KB","65.536KB"];
+  let bufferGPU = bufferGPUList[Math.floor(Math.random()*4)];
+
+  extra += `⚙️ Buffer GPU: ${bufferGPU}<br>`;
+
+  if(modo==="mobilador"){
+    extra += `
+    <br>🖱️ GG Mouse Pro<br>
+    DPI Mouse: ${Math.floor(Math.random()*800+800)}<br>
+    Horizontal: ${Math.floor(Math.random()*60+260)}<br>
+    Vertical: ${Math.floor(Math.random()*70+280)}<br>
+    `;
+  }
+
+  resultadoDiv.innerHTML += extra;
 }
 
-geral=limitar(geral);
-red=limitar(red);
-x2=limitar(x2);
-x4=limitar(x4);
-awm=limitar(awm);
-olho=limitar(olho);
-
-resultado.innerHTML=`
-🔥 RESULTADO FINAL 🔥<br><br>
-
-🎯 Geral: ${geral}<br>
-🔴 RedDot: ${red}<br>
-🔍 2x: ${x2}<br>
-🔭 4x: ${x4}<br>
-🎯 AWM: ${awm}<br>
-👁️ Olhadinha: ${olho}<br><br>
-
-🎯 Anti Recuo: ${anti}%<br>
-🎯 Auxílio: ${aux}%<br>
-🎯 Estabilidade: ${est}%<br><br>
-
-⚙️ Escala: ${escala.toFixed(1)}x<br>
-⚙️ Buffer: ${buffer}<br>
-⚙️ GPU: ${gpu}<br>
-
-${gg}
-`;
-}
-
-function rand(min,max){
-return Math.floor(Math.random()*(max-min+1))+min;
-}
-
+// copiar
 window.copiar = function(){
-navigator.clipboard.writeText(resultado.innerText);
-alert("Copiado!");
+  let texto = document.getElementById("resultado").innerText;
+  navigator.clipboard.writeText(texto);
+  alert("Copiado!");
 }
 
 }
