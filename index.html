@@ -81,8 +81,9 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
-// 🔥 LISTA COMPLETA (INALTERADA)
 const celulares = [
+
+  // 🔻 FRACOS
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
   {nome:"Samsung A13", tipo:"fraco"},
@@ -98,6 +99,7 @@ const celulares = [
   {nome:"Tecno Spark 9", tipo:"fraco"},
   {nome:"Galaxy M02", tipo:"fraco"},
 
+  // ⚖️ MÉDIOS
   {nome:"Motorola G23", tipo:"medio"},
   {nome:"Moto G32", tipo:"medio"},
   {nome:"Moto G52", tipo:"medio"},
@@ -121,6 +123,7 @@ const celulares = [
   {nome:"Realme 12", tipo:"medio"},
   {nome:"Galaxy M12", tipo:"medio"},
 
+  // 🚀 FORTES
   {nome:"POCO X3 Pro", tipo:"forte"},
   {nome:"POCO X5 Pro", tipo:"forte"},
   {nome:"POCO X6 Pro", tipo:"forte"},
@@ -146,7 +149,6 @@ const celulares = [
   {nome:"OnePlus 12", tipo:"forte"}
 ];
 
-// carregar select
 const selectCelular = document.getElementById("celular");
 
 celulares.forEach(cel=>{
@@ -159,20 +161,14 @@ celulares.forEach(cel=>{
   selectCelular.appendChild(option);
 });
 
-// sliders
 const dpi = document.getElementById("dpi");
 const botao = document.getElementById("botao");
 const cursor = document.getElementById("cursor");
 
-const dpiValor = document.getElementById("dpiValor");
-const botaoValor = document.getElementById("botaoValor");
-const cursorValor = document.getElementById("cursorValor");
+dpi.oninput = ()=> document.getElementById("dpiValor").innerText = dpi.value;
+botao.oninput = ()=> document.getElementById("botaoValor").innerText = botao.value;
+cursor.oninput = ()=> document.getElementById("cursorValor").innerText = cursor.value;
 
-dpi.oninput = ()=> dpiValor.innerText = dpi.value;
-botao.oninput = ()=> botaoValor.innerText = botao.value;
-cursor.oninput = ()=> cursorValor.innerText = cursor.value;
-
-// -------- GERADOR --------
 window.gerar = function(){
 
   let modo = document.getElementById("modo").value;
@@ -183,19 +179,34 @@ window.gerar = function(){
   let botaoVal = parseInt(botao.value);
   let cursorVal = parseInt(cursor.value);
 
-  let base = tipo==="fraco"?88: tipo==="medio"?100:110;
+  let base = tipo==="fraco"?85: tipo==="medio"?95:100;
+  if(modo==="mobilador") base += 3;
 
-  if(modo==="mobilador") base += 8;
+  let geral;
 
-  let geral = base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
+  if(modo==="mobilador"){
+    geral = rand(25,45);
+  }else{
+    geral = base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
+  }
 
   if(estilo==="capa") geral -= 4;
 
-  let redDot = geral - 2;
-  let x2 = geral - 8;
-  let x4 = geral - 15;
-  let awm = geral - 25;
-  let olhadinha = geral + 6;
+  let redDot, x2, x4, awm, olhadinha;
+
+  if(modo==="mobilador"){
+    redDot = geral - rand(1,3);
+    x2 = geral - rand(5,8);
+    x4 = geral - rand(10,15);
+    awm = geral - rand(15,20);
+    olhadinha = geral + rand(2,5);
+  }else{
+    redDot = geral - 4;
+    x2 = geral - 10;
+    x4 = geral - 18;
+    awm = geral - 30;
+    olhadinha = geral + 3;
+  }
 
   function limitar(v){
     return Math.max(0, Math.min(200, Math.round(v)));
@@ -208,22 +219,20 @@ window.gerar = function(){
   awm=limitar(awm);
   olhadinha=limitar(olhadinha);
 
-  // 🚀 GG MOUSE PRO (HORIZONTAL / VERTICAL)
   let ggMouse = "";
 
   if(modo==="mobilador"){
 
-    let horizontal = rand(250,320);
+    let horizontal = rand(260,320);
     let vertical = rand(280,350);
-
     let aceleracao = (Math.random()*3 + 10).toFixed(1);
     let delay = rand(500,800);
 
-    let ajuste = (horizontal + vertical)/100;
+    let ajuste = (horizontal + vertical)/120;
 
-    geral -= ajuste*0.5;
-    redDot -= ajuste*0.3;
-    x2 -= ajuste*0.2;
+    geral -= ajuste*0.7;
+    redDot -= ajuste*0.5;
+    x2 -= ajuste*0.3;
 
     geral=limitar(geral);
     redDot=limitar(redDot);
@@ -258,13 +267,11 @@ window.gerar = function(){
   `;
 }
 
-// copiar
 window.copiar = function(){
   navigator.clipboard.writeText(document.getElementById("resultado").innerText);
   alert("Copiado!");
 }
 
-// utils
 function rand(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
