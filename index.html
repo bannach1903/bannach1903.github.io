@@ -58,7 +58,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
   <option value="4MB">Buffer Logger: 4MB</option>
 </select>
 
-<button onclick="gerar()">GERAR</button>
+<button id="btnGerar">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
 <div class="cards" id="resultado">Seu resultado aparecerá aqui...</div>
@@ -77,11 +77,12 @@ const dpiContainer = document.getElementById("dpiContainer");
 const bufferGPU = document.getElementById("bufferGPU");
 const bufferLogger = document.getElementById("bufferLogger");
 
-dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
-cursor.oninput = ()=> { cursorValor.innerText = cursor.value; gerar(); };
-botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
+// Sliders atualizam valor visual
+dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
+cursor.oninput = ()=> { cursorValor.innerText = cursor.value; };
+botao.oninput = ()=> { botaoValor.innerText = botao.value; };
 
-// Lista de celulares
+// Lista de celulares por marca
 const marcas = {
   "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
@@ -108,7 +109,7 @@ for(const marca in marcas){
   selectCelular.appendChild(group);
 }
 
-// Atualiza visibilidade
+// Atualiza visibilidade Android/iPhone
 function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
@@ -116,11 +117,10 @@ function atualizarConfigAndroid(){
   cursorContainer.style.display = isIphone ? "none" : "block";
   bufferGPU.style.display = isIphone ? "none" : "block";
   bufferLogger.style.display = isIphone ? "none" : "block";
-  gerar();
 }
-
 selectCelular.onchange = atualizarConfigAndroid;
 
+// Função gerar
 function gerar(){
   const tipo = selectCelular.value.toLowerCase();
   const estilo = document.getElementById("estilo").value;
@@ -170,12 +170,17 @@ function gerar(){
   `;
 }
 
-window.copiar = function(){
+// Botão GERAR agora funciona mesmo sem mexer nos sliders
+document.getElementById("btnGerar").onclick = gerar;
+
+// Copiar
+function copiar(){
   let texto = document.getElementById("resultado").innerText;
   navigator.clipboard.writeText(texto);
   alert("Copiado!");
 }
 
+// Inicializa
 atualizarConfigAndroid();
 </script>
 </body>
