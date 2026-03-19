@@ -48,7 +48,6 @@ button{
 
 <h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
 
-<!-- NOVO -->
 <select id="modo">
   <option value="mobile">📱 Mobile Normal</option>
   <option value="mobilador">🚀 Mobilador (Desempenho)</option>
@@ -82,17 +81,73 @@ Seu resultado aparecerá aqui...
 <script>
 window.onload = function(){
 
+// 🔥 SUA LISTA COMPLETA (NÃO ALTERADA)
 const celulares = [
+
   {nome:"Samsung A10", tipo:"fraco"},
   {nome:"Samsung A12", tipo:"fraco"},
+  {nome:"Samsung A13", tipo:"fraco"},
+  {nome:"Samsung A03", tipo:"fraco"},
+  {nome:"Moto E7", tipo:"fraco"},
+  {nome:"Moto E13", tipo:"fraco"},
+  {nome:"Moto G8 Play", tipo:"fraco"},
+  {nome:"Redmi 9A", tipo:"fraco"},
+  {nome:"Redmi 10A", tipo:"fraco"},
+  {nome:"Realme C11", tipo:"fraco"},
+  {nome:"Realme C30", tipo:"fraco"},
+  {nome:"Infinix Hot 12", tipo:"fraco"},
+  {nome:"Tecno Spark 9", tipo:"fraco"},
+  {nome:"Galaxy M02", tipo:"fraco"},
+
   {nome:"Motorola G23", tipo:"medio"},
+  {nome:"Moto G32", tipo:"medio"},
+  {nome:"Moto G52", tipo:"medio"},
+  {nome:"Moto G60", tipo:"medio"},
+  {nome:"Moto G84", tipo:"medio"},
+  {nome:"Samsung A32", tipo:"medio"},
+  {nome:"Samsung A34", tipo:"medio"},
+  {nome:"Samsung A51", tipo:"medio"},
+  {nome:"Samsung A54", tipo:"medio"},
+  {nome:"Samsung A25 5G", tipo:"medio"},
   {nome:"Samsung A15 5G", tipo:"medio"},
+  {nome:"Redmi Note 10", tipo:"medio"},
+  {nome:"Redmi Note 11", tipo:"medio"},
+  {nome:"Redmi Note 12", tipo:"medio"},
   {nome:"Redmi Note 13 4G", tipo:"medio"},
+  {nome:"Redmi Note 13 5G", tipo:"medio"},
+  {nome:"POCO M3", tipo:"medio"},
+  {nome:"POCO M5", tipo:"medio"},
+  {nome:"POCO X5", tipo:"medio"},
+  {nome:"Realme 11", tipo:"medio"},
+  {nome:"Realme 12", tipo:"medio"},
+  {nome:"Galaxy M12", tipo:"medio"},
+
   {nome:"POCO X3 Pro", tipo:"forte"},
+  {nome:"POCO X5 Pro", tipo:"forte"},
+  {nome:"POCO X6 Pro", tipo:"forte"},
+  {nome:"POCO F4", tipo:"forte"},
+  {nome:"POCO F5", tipo:"forte"},
+  {nome:"Samsung S20 FE", tipo:"forte"},
+  {nome:"Samsung S21", tipo:"forte"},
+  {nome:"Samsung S22", tipo:"forte"},
   {nome:"Samsung S23", tipo:"forte"},
-  {nome:"iPhone 13", tipo:"forte"}
+  {nome:"Samsung S24", tipo:"forte"},
+  {nome:"iPhone XR", tipo:"forte"},
+  {nome:"iPhone 11", tipo:"forte"},
+  {nome:"iPhone 12", tipo:"forte"},
+  {nome:"iPhone 13", tipo:"forte"},
+  {nome:"iPhone 14", tipo:"forte"},
+  {nome:"iPhone 15", tipo:"forte"},
+  {nome:"ROG Phone 6", tipo:"forte"},
+  {nome:"ROG Phone 7", tipo:"forte"},
+  {nome:"Asus Zenfone 10", tipo:"forte"},
+  {nome:"Realme GT 3", tipo:"forte"},
+  {nome:"Redmi K60", tipo:"forte"},
+  {nome:"Xiaomi 13 Pro", tipo:"forte"},
+  {nome:"OnePlus 12", tipo:"forte"}
 ];
 
+// carregar select
 const selectCelular = document.getElementById("celular");
 
 celulares.forEach(cel=>{
@@ -105,6 +160,7 @@ celulares.forEach(cel=>{
   selectCelular.appendChild(option);
 });
 
+// sliders
 const dpi = document.getElementById("dpi");
 const botao = document.getElementById("botao");
 const cursor = document.getElementById("cursor");
@@ -117,7 +173,7 @@ dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-// -------- GERAR --------
+// -------- GERADOR --------
 window.gerar = function(){
 
   let modo = document.getElementById("modo").value;
@@ -130,14 +186,9 @@ window.gerar = function(){
 
   let base = tipo==="fraco"?88: tipo==="medio"?100:110;
 
-  // 🚀 boost mobilador
-  if(modo === "mobilador") base += 8;
+  if(modo==="mobilador") base += 8;
 
-  let ajusteDPI = (dpiVal - 500)/25;
-  let ajusteCursor = (cursorVal - 50)/6;
-  let ajusteBotao = (botaoVal - 50)/12;
-
-  let geral = base + ajusteDPI + ajusteCursor - ajusteBotao;
+  let geral = base + (dpiVal-500)/25 + (cursorVal-50)/6 - (botaoVal-50)/12;
 
   if(estilo==="capa") geral -= 4;
 
@@ -147,17 +198,8 @@ window.gerar = function(){
   let awm = geral - 25;
   let olhadinha = geral + 6;
 
-  if(estilo==="capa"){
-    redDot -= 2;
-    x2 -= 2;
-    x4 -= 3;
-    olhadinha += 2;
-  }
-
   function limitar(v){
-    if(v<0)return 0;
-    if(v>200)return 200;
-    return Math.round(v);
+    return Math.max(0, Math.min(200, Math.round(v)));
   }
 
   geral=limitar(geral);
@@ -167,49 +209,35 @@ window.gerar = function(){
   awm=limitar(awm);
   olhadinha=limitar(olhadinha);
 
-  // ⚙️ CONFIG ANDROID AUTOMÁTICA
-  let animNormal = ["1x","0.5x"];
-  let animBoost = ["0.5x","Desligado"];
-
-  let buffer = ["16.384 KB","32.768 KB","65.536 KB"];
-  let logger = ["256 KB","1 MB","4 MB"];
-
-  let menor = modo==="mobilador" 
-    ? rand(420,500) 
-    : rand(380,420);
-
-  let animSet = modo==="mobilador" ? animBoost : animNormal;
+  let animSet = modo==="mobilador"?["Desligado","0.5x"]:["1x","0.5x"];
 
   document.getElementById("resultado").innerHTML=`
     🔥 RESULTADO CALIBRADO 🔥<br><br>
 
-    📱 Modo: ${modo} <br>
-    🎯 Estilo: ${estilo} <br><br>
+    📱 Modo: ${modo}<br>
+    🎯 Estilo: ${estilo}<br><br>
 
-    🎯 Geral: ${geral} <br>
-    🔴 RedDot: ${redDot} <br>
-    🔍 2x: ${x2} <br>
-    🔭 4x: ${x4} <br>
-    🎯 AWM: ${awm} <br>
-    👁️ Olhadinha: ${olhadinha} <br><br>
+    🎯 Geral: ${geral}<br>
+    🔴 RedDot: ${redDot}<br>
+    🔍 2x: ${x2}<br>
+    🔭 4x: ${x4}<br>
+    🎯 AWM: ${awm}<br>
+    👁️ Olhadinha: ${olhadinha}<br><br>
 
-    ⚙️ DPI: ${dpiVal} <br>
-    🔘 Botão: ${botaoVal}% <br><br>
+    ⚙️ DPI: ${dpiVal}<br>
+    🔘 Botão: ${botaoVal}%<br><br>
 
-    🚀 DESEMPENHO ANDROID <br>
-    Animação janela: ${pick(animSet)} <br>
-    Transição: ${pick(animSet)} <br>
-    Animator: ${pick(animSet)} <br>
-    Buffer CPU: ${pick(buffer)} <br>
-    Logger: ${pick(logger)} <br>
-    Menor largura: ${menor} dp
+    🚀 DESEMPENHO<br>
+    Animações: ${pick(animSet)}<br>
+    Buffer CPU: ${pick(["16.384 KB","32.768 KB","65.536 KB"])}<br>
+    Logger: ${pick(["256 KB","1 MB","4 MB"])}<br>
+    Menor largura: ${modo==="mobilador"?rand(420,500):rand(380,420)} dp
   `;
 }
 
 // copiar
 window.copiar = function(){
-  let texto = document.getElementById("resultado").innerText;
-  navigator.clipboard.writeText(texto);
+  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
   alert("Copiado!");
 }
 
