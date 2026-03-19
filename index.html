@@ -1,77 +1,185 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Site de Sensi FF</title> <!-- Título da aba -->
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f;
-      color: white;
-      text-align: center;
-    }
-    .container {
-      padding: 20px;
-    }
-    h1 {
-      color: #ffcc00;
-    }
-    p {
-      font-size: 18px;
-    }
-    select, button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px;
-      border-radius: 5px;
-    }
-    #resultado {
-      white-space: pre-line;
-      margin-top: 10px;
-    }
-  </style>
-  <script>
-    // ---- GERADOR DE SENSIBILIDADE ----
-    const dispositivos = {
-      "iPhone 11": { dpi: 326, sensi: 80 },
-      "Motorola G23": { dpi: 267, sensi: 70 },
-      "Xiaomi Redmi Note 13 4G": { dpi: 395, sensi: 90 },
-      "Samsung A15 5G": { dpi: 267, sensi: 75 }
-      // adicione mais celulares aqui
-    };
-
-    function gerarSensi() {
-      const sel = document.getElementById("celular").value;
-      if(dispositivos[sel]){
-        const s = dispositivos[sel].sensi;
-        const d = dispositivos[sel].dpi;
-        document.getElementById("resultado").innerText = 
-          `Celular: ${sel}\nDPI: ${d}\nSensibilidade ideal: ${s}`;
-      } else {
-        document.getElementById("resultado").innerText = "Selecione um celular válido!";
-      }
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador PRO Sensibilidade FF - GG Mouse Pro</title>
+<style>
+body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
+.container{padding:20px;max-width:500px;margin:auto;}
+h2{color:#ff4c4c;text-shadow:0 0 10px #ff0000;}
+.cards{display:flex;flex-direction:column;gap:15px;margin-top:20px;}
+.card{background:#1a1a1a;border-radius:10px;padding:15px;text-align:left;transition:0.3s;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+.card:hover{transform: translateY(-5px);box-shadow:0 8px 20px rgba(255,0,0,0.4);}
+select,input[type=range]{width:90%;margin:10px 0;padding:10px;border-radius:10px;border:none;font-size:16px;background:#1f1f1f;color:white;}
+button{width:90%;padding:15px;margin:10px 0;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover{transform: translateY(-3px);box-shadow:0 4px 15px rgba(255,0,0,0.4);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#ff4c4c;border-radius:50%;cursor:pointer;box-shadow:0 0 5px rgba(255,0,0,0.7);transition:0.3s;}
+input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bem-vindo ao Meu Site de Sensi FF!</h1>
-    <p>Aqui você pode gerar a sensibilidade perfeita para o seu Free Fire 🎮</p>
+<div class="container">
+<h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
 
-    <!-- GERADOR -->
-    <div id="gerador">
-      <select id="celular">
-        <option value="">Selecione seu celular</option>
-        <option value="iPhone 11">iPhone 11</option>
-        <option value="Motorola G23">Motorola G23</option>
-        <option value="Xiaomi Redmi Note 13 4G">Xiaomi Redmi Note 13 4G</option>
-        <option value="Samsung A15 5G">Samsung A15 5G</option>
-      </select>
-      <button onclick="gerarSensi()">Gerar Sensibilidade</button>
-      <p id="resultado"></p>
+<select id="modo">
+  <option value="mobile">📱 Mobile Normal</option>
+  <option value="mobilador">🚀 Mobilador (GG Mouse Pro)</option>
+</select>
+
+<select id="celular"></select>
+
+<select id="estilo">
+  <option value="equilibrado">⚖️ Rush Equilibrado</option>
+  <option value="capa">🎯 Mais Capa (HS)</option>
+</select>
+
+<p id="dpiContainer">DPI: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+
+<p>Botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
+
+<p id="cursorContainer">Velocidade do Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
+<button id="btnGerar">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
+
+<div class="cards" id="resultado">Seu resultado aparecerá aqui...</div>
+</div>
+
+<script>
+const selectCelular = document.getElementById("celular");
+const dpi = document.getElementById("dpi");
+const dpiValor = document.getElementById("dpiValor");
+const cursor = document.getElementById("cursor");
+const cursorValor = document.getElementById("cursorValor");
+const cursorContainer = document.getElementById("cursorContainer");
+const botao = document.getElementById("botao");
+const botaoValor = document.getElementById("botaoValor");
+const dpiContainer = document.getElementById("dpiContainer");
+
+// Sliders
+dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
+cursor.oninput = ()=> { cursorValor.innerText = cursor.value; };
+botao.oninput = ()=> { botaoValor.innerText = botao.value; };
+
+// Celulares
+const marcas = {
+  "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
+  "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
+  "Redmi":["9A","10A","Note 10","Note 11","Note 12","Note 13 4G","Note 13 5G","K60"],
+  "POCO":["M3","M5","X3 Pro","X5","X5 Pro","X6 Pro","F4","F5"],
+  "Realme":["C11","C30","11","12","GT 3"],
+  "iPhone":["XR","11","12","13","14","15"],
+  "ROG":["Phone 6","Phone 7"],
+  "Asus":["Zenfone 10"],
+  "Xiaomi":["13 Pro"],
+  "OnePlus":["12"]
+};
+
+// Preenche select
+for(const marca in marcas){
+  let group = document.createElement("optgroup");
+  group.label = marca;
+  marcas[marca].forEach(aparelho=>{
+    let option = document.createElement("option");
+    option.value = marca+" "+aparelho;
+    option.textContent = marca+" "+aparelho;
+    group.appendChild(option);
+  });
+  selectCelular.appendChild(group);
+}
+
+// Visibilidade Android/iPhone
+function atualizarConfigAndroid(){
+  const tipo = selectCelular.value.toLowerCase();
+  const isIphone = tipo.includes("iphone");
+  dpiContainer.style.display = isIphone ? "none" : "block";
+  cursorContainer.style.display = isIphone ? "none" : "block";
+}
+selectCelular.onchange = atualizarConfigAndroid;
+
+// GERAR
+function gerar(){
+  const tipo = selectCelular.value.toLowerCase();
+  const estilo = document.getElementById("estilo").value;
+  const modo = document.getElementById("modo").value;
+  const botaoVal = parseInt(botao.value);
+  const cursorVal = parseInt(cursor.value);
+  const isIphone = tipo.includes("iphone");
+  const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
+
+  let base = 100;
+  if(!isIphone) base += (dpiVal-500)/10;
+  let geral = Math.round(base);
+
+  let mobilador = (modo==="mobilador" && !isIphone);
+  let geralFinal = mobilador ? Math.round(geral/4) : geral;
+
+  const redDot = Math.round(geralFinal-2);
+  const x2 = Math.round(geralFinal-8);
+  const x4 = Math.round(geralFinal-15);
+  const awm = Math.round(geralFinal-25);
+  const olhadinha = Math.round(geralFinal+6);
+
+  const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
+
+  const bufferGPUValores = [8192,16384,32768,65536];
+  const bufferLoggerValores = [64,256,1024,4096,8192];
+  let bufferGeral = 0;
+  let bufferLoggerGeral = 0;
+  if(!isIphone){
+    let idx = Math.min(Math.floor((geral-100)/10), bufferGPUValores.length-1);
+    bufferGeral = bufferGPUValores[idx];
+    bufferLoggerGeral = bufferLoggerValores[idx];
+  }
+
+  const antiRecuo = 100;
+  const auxMira = 100;
+  const estabilidade = 100;
+
+  let dpiMouse = mobilador ? Math.round(1000 + (dpiVal-500)/2) : 0;
+  let horizontal = mobilador ? 280 : 0;
+  let vertical = mobilador ? 310 : 0;
+
+  document.getElementById("resultado").innerHTML=`
+    <div class="card">
+      <strong>${selectCelular.value}</strong> <br>
+      Estilo: ${estilo} <br>
+      Modo: ${modo} <br>
+      ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` 
+                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geralFinal} <br>`}
+      🔴 RedDot: ${redDot} <br>
+      🔍 2x: ${x2} <br>
+      🔭 4x: ${x4} <br>
+      🎯 AWM: ${awm} <br>
+      👁 Olhadinha: ${olhadinha} <br><br>
+
+      ⚙️ Botão: ${botaoVal}%<br>
+      ${!isIphone ? `⚙️ Velocidade do Cursor: ${cursorVal}<br>` : ""}
+      ⚙️ Anti Recuo: ${antiRecuo}%<br>
+      ⚙️ Auxílio de Mira: ${auxMira}%<br>
+      ⚙️ Estabilidade: ${estabilidade}%<br>
+      ${!isIphone ? `⚙️ Buffer GPU: ${bufferGeral} KB<br>⚙️ Buffer Logger: ${bufferLoggerGeral} KB<br>` : ""}
+      ${mobilador ? `<br>🖱️ GG Mouse Pro<br>DPI Mouse: ${dpiMouse}<br>Horizontal: ${horizontal}<br>Vertical: ${vertical}` : ""}
     </div>
-  </div>
+  `;
+}
+
+// Botão GERAR
+document.getElementById("btnGerar").onclick = gerar;
+
+// Copiar
+function copiar(){
+  let texto = document.getElementById("resultado").innerText;
+  navigator.clipboard.writeText(texto);
+  alert("Copiado!");
+}
+
+// Inicializa
+atualizarConfigAndroid();
+</script>
 </body>
 </html>
