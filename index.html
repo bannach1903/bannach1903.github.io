@@ -112,27 +112,26 @@ function gerar(){
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
-  // Calculo sensibilidade base
+  // Base sensibilidade
   let base = 100;
   if(!isIphone) base += (dpiVal-500)/10;
   let geral = Math.round(base);
 
-  // Ajuste se for mobilador
-  let geralMobilador = modo==="mobilador" && !isIphone ? Math.round(geral/4) : geral;
+  // Ajuste Mobilador
+  let geralFinal = (modo==="mobilador" && !isIphone) ? Math.round(geral/4) : geral;
 
-  const redDot = Math.round(geralMobilador-2);
-  const x2 = Math.round(geralMobilador-8);
-  const x4 = Math.round(geralMobilador-15);
-  const awm = Math.round(geralMobilador-25);
-  const olhadinha = Math.round(geralMobilador+6);
+  const redDot = Math.round(geralFinal-2);
+  const x2 = Math.round(geralFinal-8);
+  const x4 = Math.round(geralFinal-15);
+  const awm = Math.round(geralFinal-25);
+  const olhadinha = Math.round(geralFinal+6);
 
-  // Ciclos para iPhone
+  // Ciclos iPhone
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
 
-  // Buffers Android calculados conforme a sensibilidade
-  const bufferGPUValores = [8192,16384,32768,65536]; // valores reais CPU/GPU
-  const bufferLoggerValores = [0,64,256,1024,4096,8192]; // valores em KB do Logger
-
+  // Buffers Android
+  const bufferGPUValores = [8192,16384,32768,65536];
+  const bufferLoggerValores = [0,64,256,1024,4096,8192];
   let bufferGeral = 0;
   let bufferLoggerGeral = 0;
   if(!isIphone){
@@ -151,7 +150,7 @@ function gerar(){
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
       ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` 
-                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geralMobilador} <br>`}
+                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geralFinal} <br>`}
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
       🔭 4x: ${x4} <br>
