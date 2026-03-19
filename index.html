@@ -61,7 +61,7 @@ const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Atualiza valores visuais dos sliders
+// Atualiza valores dos sliders
 dpi.oninput = ()=> { dpiValor.innerText = dpi.value; };
 cursor.oninput = ()=> { cursorValor.innerText = cursor.value; };
 botao.oninput = ()=> { botaoValor.innerText = botao.value; };
@@ -112,15 +112,19 @@ function gerar(){
   const isIphone = tipo.includes("iphone");
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
-  // Calculo sensibilidade
+  // Calculo sensibilidade base
   let base = 100;
   if(!isIphone) base += (dpiVal-500)/10;
-  const geral = Math.round(base);
-  const redDot = Math.round(geral-2);
-  const x2 = Math.round(geral-8);
-  const x4 = Math.round(geral-15);
-  const awm = Math.round(geral-25);
-  const olhadinha = Math.round(geral+6);
+  let geral = Math.round(base);
+
+  // Ajuste se for mobilador
+  let geralMobilador = modo==="mobilador" && !isIphone ? Math.round(geral/4) : geral;
+
+  const redDot = Math.round(geralMobilador-2);
+  const x2 = Math.round(geralMobilador-8);
+  const x4 = Math.round(geralMobilador-15);
+  const awm = Math.round(geralMobilador-25);
+  const olhadinha = Math.round(geralMobilador+6);
 
   // Ciclos para iPhone
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
@@ -129,12 +133,12 @@ function gerar(){
   const bufferGPUValores = [8192,16384,32768,65536]; // valores reais CPU/GPU
   const bufferLoggerValores = [0,64,256,1024,4096,8192]; // valores em KB do Logger
 
-  // Seleciona buffer proporcional
   let bufferGeral = 0;
   let bufferLoggerGeral = 0;
   if(!isIphone){
-    bufferGeral = bufferGPUValores[Math.min(Math.floor((geral-100)/10),bufferGPUValores.length-1)];
-    bufferLoggerGeral = bufferLoggerValores[Math.min(Math.floor((geral-100)/10),bufferLoggerValores.length-1)];
+    let idx = Math.min(Math.floor((geral-100)/10), bufferGPUValores.length-1);
+    bufferGeral = bufferGPUValores[idx];
+    bufferLoggerGeral = bufferLoggerValores[idx];
   }
 
   const antiRecuo = 100;
@@ -147,7 +151,7 @@ function gerar(){
       Estilo: ${estilo} <br>
       Modo: ${modo} <br>
       ${isIphone ? `🎯 Sensibilidade: ${geral} <br>🎯 Ciclos: ${ciclosVal} <br>` 
-                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geral} <br>`}
+                 : `DPI: ${dpiVal} <br>🎯 Sensibilidade: ${geralMobilador} <br>`}
       🔴 RedDot: ${redDot} <br>
       🔍 2x: ${x2} <br>
       🔭 4x: ${x4} <br>
