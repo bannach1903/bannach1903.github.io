@@ -160,9 +160,10 @@ const ciclosContainer = document.getElementById("ciclosContainer");
 const ciclos = document.getElementById("ciclos");
 const dpiContainer = document.getElementById("dpiContainer");
 
-// Atualiza sliders
-dpi.oninput = ()=> dpiValor.innerText = dpi.value;
-botao.oninput = ()=> botaoValor.innerText = botao.value;
+// Atualiza sliders e gera em tempo real
+dpi.oninput = ()=> { dpiValor.innerText = dpi.value; gerar(); };
+botao.oninput = ()=> { botaoValor.innerText = botao.value; gerar(); };
+ciclos.oninput = gerar;
 
 // Lista de celulares por marca
 const marcas = {
@@ -203,9 +204,6 @@ function atualizarConfigAndroid(){
 }
 
 selectCelular.onchange = atualizarConfigAndroid;
-dpi.oninput = gerar;
-botao.oninput = gerar;
-ciclos.onchange = gerar;
 
 // Gera cards
 function gerar(){
@@ -218,7 +216,6 @@ function gerar(){
   const bufferLogger = document.getElementById("bufferLogger").value;
 
   const isIphone = tipo.includes("iphone");
-
   const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
 
   // Valores fixos
