@@ -106,7 +106,7 @@ label{display:block; text-align:left; margin-left:5%;}
   <option value="capa">🎯 Mais Capa (HS)</option>
 </select>
 
-<p>DPI: <span id="dpiValor">600</span></p>
+<p id="dpiContainer">DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
 
 <p>Botão: <span id="botaoValor">50</span>%</p>
@@ -158,6 +158,7 @@ const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const ciclosContainer = document.getElementById("ciclosContainer");
 const ciclos = document.getElementById("ciclos");
+const dpiContainer = document.getElementById("dpiContainer");
 
 // Atualiza sliders
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
@@ -195,7 +196,7 @@ function atualizarConfigAndroid(){
   const tipo = selectCelular.value.toLowerCase();
   const isIphone = tipo.includes("iphone");
 
-  dpi.parentElement.style.display = isIphone ? "none" : "block";
+  dpiContainer.style.display = isIphone ? "none" : "block";
   ciclosContainer.style.display = isIphone ? "block" : "none";
 
   gerar();
@@ -211,12 +212,16 @@ function gerar(){
   const tipo = selectCelular.value.toLowerCase();
   const estilo = document.getElementById("estilo").value;
   const modo = document.getElementById("modo").value;
-  const dpiVal = parseInt(dpi.value);
   const botaoVal = parseInt(botao.value);
   const ciclosVal = parseInt(ciclos.value);
   const bufferGPU = document.getElementById("bufferGPU").value;
   const bufferLogger = document.getElementById("bufferLogger").value;
 
+  const isIphone = tipo.includes("iphone");
+
+  const dpiVal = isIphone ? "N/A" : parseInt(dpi.value);
+
+  // Valores fixos
   const geral = 100;
   const redDot = 98;
   const x2 = 92;
@@ -226,8 +231,6 @@ function gerar(){
   const antiRecuo = 100;
   const auxMira = 100;
   const estabilidade = 100;
-
-  const isIphone = tipo.includes("iphone");
 
   document.getElementById("resultado").innerHTML=`
     <div class="card">
@@ -252,6 +255,7 @@ function gerar(){
 }
 
 window.gerar = gerar;
+
 window.copiar = function(){
   let texto = document.getElementById("resultado").innerText;
   navigator.clipboard.writeText(texto);
