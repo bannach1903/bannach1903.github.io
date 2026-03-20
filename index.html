@@ -33,14 +33,21 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
   <option value="capa">🎯 Capa (HS)</option>
 </select>
 
+<!-- DPI -->
+<div id="dpiBox">
 <p>DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
+</div>
 
+<!-- BOTÃO -->
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
+<!-- CURSOR -->
+<div id="cursorBox">
 <p>Cursor: <span id="cursorValor">50</span></p>
 <input type="range" min="10" max="100" value="50" id="cursor">
+</div>
 
 <button onclick="gerar()">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
@@ -53,19 +60,14 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 // 🔥 LISTA COMPLETA
 const baseCelulares = {
-
   "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
   "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
   "Samsung A15 5G": 106,"Samsung S20 FE": 115,"Samsung S21": 118,
-
   "Motorola G23": 102,"Motorola G32": 104,"Motorola G52": 106,"Motorola G60": 108,
-
   "Redmi 9A": 90,"Redmi 10A": 93,"Redmi Note 10": 100,"Redmi Note 11": 105,
   "Redmi Note 12": 108,"Redmi Note 13 4G": 110,"Redmi 14C": 108,
-
   "POCO M3": 100,"POCO X3 Pro": 118,"POCO X5": 112,"POCO X6 Pro": 120,
   "POCO C75": 103,
-
   "iPhone XR": 110,"iPhone 11": 115,"iPhone 12": 118,"iPhone 13": 120
 };
 
@@ -82,6 +84,18 @@ dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
+// 🔥 DETECTAR IPHONE
+function verificarDispositivo(){
+  let cel = select.value.toLowerCase();
+  let isIphone = cel.includes("iphone");
+
+  document.getElementById("dpiBox").style.display = isIphone ? "none" : "block";
+  document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";
+}
+
+select.addEventListener("change", verificarDispositivo);
+verificarDispositivo();
+
 // GERAR
 function gerar(){
 
@@ -95,8 +109,14 @@ function gerar(){
 
   let base = baseCelulares[cel];
 
-  let ajusteDPI = (dpiVal - 600)/20;
-  let geral = base + ajusteDPI;
+  // ajuste inteligente DPI
+  if(dpiVal < 450){ base += 6; }
+  else if(dpiVal > 650){ base -= 4; }
+
+  let ajusteDPI = (dpiVal - 600)/50;
+  let ajusteCursor = (cursorVal - 50)/10;
+
+  let geral = base + ajusteDPI + ajusteCursor;
 
   if(estilo === "capa") geral -= 4;
 
@@ -105,12 +125,11 @@ function gerar(){
 
   let mouseConfig = "";
 
-  // 🔥 MOBILADOR INTEGRADO
   if(mobilador){
 
     let sensiBase = geral;
 
-    geralFinal = Math.round(sensiBase / 4);
+    geralFinal = Math.round(sensiBase / 5);
 
     let horizontal = Math.round(sensiBase * 1.0);
     let vertical = Math.round(sensiBase * 2.2);
@@ -123,7 +142,7 @@ function gerar(){
     if(sensiBase > 120) polling = "1000 Hz (limite)";
 
     mouseConfig = `
-    <br>🖱️ GG Mouse Pro (INTEGRADO)<br>
+    <br>🖱️ GG Mouse Pro<br>
     DPI Mouse: ${dpiMouse}<br>
     Polling Rate: ${polling}<br>
     Horizontal: ${horizontal}<br>
@@ -131,31 +150,17 @@ function gerar(){
     `;
   }
 
-  let redDot = geralFinal - 2;
-  let x2 = geralFinal - 8;
-  let x4 = geralFinal - 15;
-  let awm = geralFinal - 25;
+  let redDot = geralFinal - 3;
+  let x2 = geralFinal - 10;
+  let x4 = geralFinal - 18;
+  let awm = geralFinal - 30;
   let olhadinha = geralFinal + 6;
 
-  function limitar(v){
-    if(v < 0) return 0;
-    if(v > 200) return 200;
-    return Math.round(v);
-  }
-
-  geralFinal = limitar(geralFinal);
-  redDot = limitar(redDot);
-  x2 = limitar(x2);
-  x4 = limitar(x4);
-  awm = limitar(awm);
-  olhadinha = limitar(olhadinha);
-
-  // 🎯 CONTROLE 100%
   let auxMira = 100;
   let antiRecuo = 100;
   let precisao = 100;
 
-  // ⚙️ BUFFER AUTOMÁTICO REAL (SEM ESCOLHA)
+  // BUFFER AUTOMÁTICO
   let bufferLogger = "256 KB";
   let bufferGPU = "16.384 KB";
 
@@ -163,11 +168,11 @@ function gerar(){
     bufferLogger = "64 KB";
     bufferGPU = "8.192 KB";
   }
-  else if(geralFinal > 95 && geralFinal <= 110){
+  else if(geralFinal <= 110){
     bufferLogger = "256 KB";
     bufferGPU = "16.384 KB";
   }
-  else if(geralFinal > 110 && geralFinal <= 125){
+  else if(geralFinal <= 125){
     bufferLogger = "1 MB";
     bufferGPU = "32.768 KB";
   }
@@ -182,30 +187,29 @@ function gerar(){
   📱 ${cel}<br>
   🎮 Modo: ${modo}<br><br>
 
-  🎯 Geral: ${geralFinal}<br>
-  🔴 RedDot: ${redDot}<br>
-  🔍 2x: ${x2}<br>
-  🔭 4x: ${x4}<br>
-  🎯 AWM: ${awm}<br>
-  👁 Olhadinha: ${olhadinha}<br><br>
+  🎯 Geral: ${Math.round(geralFinal)}<br>
+  🔴 RedDot: ${Math.round(redDot)}<br>
+  🔍 2x: ${Math.round(x2)}<br>
+  🔭 4x: ${Math.round(x4)}<br>
+  🎯 AWM: ${Math.round(awm)}<br>
+  👁 Olhadinha: ${Math.round(olhadinha)}<br><br>
 
   ⚙️ Botão: ${botaoVal}%<br>
-  ⚙️ Cursor: ${cursorVal}<br><br>
+  ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
 
-  🎯 Auxílio de Mira: ${auxMira}%<br>
-  🔫 Anti Recuo: ${antiRecuo}%<br>
-  🎯 Precisão: ${precisao}%<br><br>
+  <br>🎯 Auxílio de Mira: 100%<br>
+  🔫 Anti Recuo: 100%<br>
+  🎯 Precisão: 100%<br><br>
 
   ⚙️ Buffer Logger: ${bufferLogger}<br>
   ⚙️ Buffer CPU: ${bufferGPU}<br>
 
   ${mouseConfig}
 
-  <br>⚠️ Ajuste fino: máximo ±5 pontos
+  <br>⚠️ Ajuste fino: ±5
   `;
 }
 
-// copiar
 function copiar(){
   navigator.clipboard.writeText(resultado.innerText);
   alert("Copiado!");
@@ -214,4 +218,4 @@ function copiar(){
 </script>
 
 </body>
-</html> 
+</html>
