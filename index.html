@@ -51,18 +51,22 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <script>
 
-// 🔥 BASE POR CELULAR
+// 🔥 LISTA COMPLETA
 const baseCelulares = {
-  "Samsung A10": 92,
-  "Samsung A12": 95,
-  "Samsung A13": 98,
-  "Samsung A23 5G": 105,
-  "Motorola G23": 102,
-  "Redmi Note 13 4G": 110,
-  "Redmi 14C": 108,
-  "POCO X3 Pro": 118,
+
+  "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
+  "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
+  "Samsung A15 5G": 106,"Samsung S20 FE": 115,"Samsung S21": 118,
+
+  "Motorola G23": 102,"Motorola G32": 104,"Motorola G52": 106,"Motorola G60": 108,
+
+  "Redmi 9A": 90,"Redmi 10A": 93,"Redmi Note 10": 100,"Redmi Note 11": 105,
+  "Redmi Note 12": 108,"Redmi Note 13 4G": 110,"Redmi 14C": 108,
+
+  "POCO M3": 100,"POCO X3 Pro": 118,"POCO X5": 112,"POCO X6 Pro": 120,
   "POCO C75": 103,
-  "iPhone 11": 115
+
+  "iPhone XR": 110,"iPhone 11": 115,"iPhone 12": 118,"iPhone 13": 120
 };
 
 const select = document.getElementById("celular");
@@ -97,7 +101,35 @@ function gerar(){
   if(estilo === "capa") geral -= 4;
 
   let mobilador = (modo === "mobilador");
-  let geralFinal = mobilador ? Math.round(geral / 4) : geral;
+  let geralFinal = geral;
+
+  let mouseConfig = "";
+
+  // 🔥 MOBILADOR INTEGRADO
+  if(mobilador){
+
+    let sensiBase = geral;
+
+    geralFinal = Math.round(sensiBase / 4);
+
+    let horizontal = Math.round(sensiBase * 1.0);
+    let vertical = Math.round(sensiBase * 2.2);
+
+    let dpiMouse = 800 + (dpiVal - 400);
+
+    let polling = "125 Hz";
+    if(sensiBase > 100) polling = "250 Hz";
+    if(sensiBase > 110) polling = "500 Hz";
+    if(sensiBase > 120) polling = "1000 Hz (limite)";
+
+    mouseConfig = `
+    <br>🖱️ GG Mouse Pro (INTEGRADO)<br>
+    DPI Mouse: ${dpiMouse}<br>
+    Polling Rate: ${polling}<br>
+    Horizontal: ${horizontal}<br>
+    Vertical: ${vertical}<br>
+    `;
+  }
 
   let redDot = geralFinal - 2;
   let x2 = geralFinal - 8;
@@ -118,51 +150,32 @@ function gerar(){
   awm = limitar(awm);
   olhadinha = limitar(olhadinha);
 
-  // 🎯 CONTROLE PRO
-  let auxMira = 95;
-  let antiRecuo = 96;
-  let precisao = 97;
+  // 🎯 CONTROLE 100%
+  let auxMira = 100;
+  let antiRecuo = 100;
+  let precisao = 100;
 
-  // ⚙️ BUFFER AUTOMÁTICO
-  let bufferGPU = 16384;
-  let bufferLogger = 256;
+  // ⚙️ BUFFER AUTOMÁTICO REAL (SEM ESCOLHA)
+  let bufferLogger = "256 KB";
+  let bufferGPU = "16.384 KB";
 
-  if(geralFinal < 100){
-    bufferGPU = 16384;
-    bufferLogger = 256;
-  } else if(geralFinal < 115){
-    bufferGPU = 32768;
-    bufferLogger = 1024;
-  } else{
-    bufferGPU = 65536;
-    bufferLogger = 4096;
+  if(geralFinal <= 95){
+    bufferLogger = "64 KB";
+    bufferGPU = "8.192 KB";
+  }
+  else if(geralFinal > 95 && geralFinal <= 110){
+    bufferLogger = "256 KB";
+    bufferGPU = "16.384 KB";
+  }
+  else if(geralFinal > 110 && geralFinal <= 125){
+    bufferLogger = "1 MB";
+    bufferGPU = "32.768 KB";
+  }
+  else{
+    bufferLogger = "4 MB";
+    bufferGPU = "65.536 KB";
   }
 
-  // 🖱️ GG MOUSE PRO
-  let mouseConfig = "";
-
-  if(mobilador){
-
-    let dpiMouse = 1200 + (dpiVal - 600);
-
-    let polling = "125 Hz";
-    if(geralFinal > 90) polling = "250 Hz";
-    if(geralFinal > 100) polling = "500 Hz";
-    if(geralFinal > 110) polling = "1000 Hz (limite)";
-
-    let horizontal = geralFinal * 2.2;
-    let vertical = geralFinal * 2.4;
-
-    mouseConfig = `
-    <br>🖱️ GG Mouse Pro<br>
-    DPI Mouse: ${Math.round(dpiMouse)}<br>
-    Polling Rate: ${polling}<br>
-    Horizontal: ${Math.round(horizontal)}<br>
-    Vertical: ${Math.round(vertical)}<br>
-    `;
-  }
-
-  // RESULTADO
   resultado.innerHTML = `
   🔥 CONFIG PRO EXTREMA 🔥<br><br>
 
@@ -183,8 +196,8 @@ function gerar(){
   🔫 Anti Recuo: ${antiRecuo}%<br>
   🎯 Precisão: ${precisao}%<br><br>
 
-  ⚙️ Buffer GPU: ${bufferGPU} KB<br>
-  ⚙️ Buffer Logger: ${bufferLogger} KB<br>
+  ⚙️ Buffer Logger: ${bufferLogger}<br>
+  ⚙️ Buffer CPU: ${bufferGPU}<br>
 
   ${mouseConfig}
 
@@ -201,4 +214,4 @@ function copiar(){
 </script>
 
 </body>
-</html>
+</html> 
