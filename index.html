@@ -4,64 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gerador PRO Sensibilidade FF - GG Mouse Pro</title>
-
 <style>
 body{margin:0;font-family:Arial;background:#121212;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
 h2{color:#ff4c4c;text-shadow:0 0 10px #ff0000;}
-
 .cards{display:flex;flex-direction:column;gap:15px;margin-top:20px;}
-
-.card{
-  background:#1a1a1a;
-  border-radius:10px;
-  padding:15px;
-  text-align:left;
-  transition:0.3s;
-  box-shadow:0 4px 10px rgba(0,0,0,0.5);
-}
-
-.card:hover{
-  transform: translateY(-5px);
-  box-shadow:0 8px 20px rgba(255,0,0,0.4);
-}
-
-select,input[type=range]{
-  width:90%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  font-size:16px;
-  background:#1f1f1f;
-  color:white;
-}
-
-button{
-  width:90%;
-  padding:15px;
-  margin:10px 0;
-  border:none;
-  border-radius:10px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  background:red;
-  color:white;
-}
-
-.buffer-box{
-  background:#1c1c1c;
-  padding:20px;
-  border-radius:12px;
-  margin-top:30px;
-  text-align:left;
-}
+.card{background:#1a1a1a;border-radius:10px;padding:15px;text-align:left;transition:0.3s;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+.card:hover{transform: translateY(-5px);box-shadow:0 8px 20px rgba(255,0,0,0.4);}
+select,input[type=range]{width:90%;margin:10px 0;padding:10px;border-radius:10px;border:none;font-size:16px;background:#1f1f1f;color:white;}
+button{width:90%;padding:15px;margin:10px 0;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;}
+button:hover{transform: translateY(-3px);box-shadow:0 4px 15px rgba(255,0,0,0.4);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#ff4c4c;border-radius:50%;cursor:pointer;box-shadow:0 0 5px rgba(255,0,0,0.7);transition:0.3s;}
+input[type=range]::-webkit-slider-thumb:hover{transform: scale(1.2);}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <h2>🔥 GERADOR PRO DE SENSI FF 🔥</h2>
@@ -87,152 +45,148 @@ button{
 <p id="cursorContainer">Velocidade do Cursor: <span id="cursorValor">50</span></p>
 <input type="range" min="10" max="100" value="50" id="cursor">
 
-<button onclick="gerar()">GERAR</button>
+<button id="btnGerar">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
-<div class="cards" id="resultado">Seu resultado aparecerá aqui...</div>
+<!-- BUFFER (EM CIMA DO RESULTADO) -->
+<div style="margin-top:20px;">
+  <h3>⚙️ Buffer</h3>
 
-<!-- BUFFER -->
-<div class="buffer-box">
-<h2>⚙️ Configuração de Buffer</h2>
+  <select id="bufferGlobal">
+    <option>Desativado</option>
+    <option>64 KB</option>
+    <option selected>256 KB</option>
+    <option>1 MB</option>
+    <option>4 MB</option>
+    <option>8 MB</option>
+  </select>
 
-<select id="bufferGlobal">
-  <option>Desativado</option>
-  <option>64 KB</option>
-  <option selected>256 KB</option>
-  <option>1 MB</option>
-  <option>4 MB</option>
-  <option>8 MB</option>
-</select>
+  <p>CPU</p>
 
-<h3>Tamanho por CPU</h3>
-<label><input type="radio" name="bufferCPU"> 8.192 KB</label>
-<label><input type="radio" name="bufferCPU" checked> 16.384 KB</label>
-<label><input type="radio" name="bufferCPU"> 32.768 KB</label>
-<label><input type="radio" name="bufferCPU"> 65.536 KB</label>
+  <label><input type="radio" name="bufferCPU"> 8.192 KB</label>
+  <label><input type="radio" name="bufferCPU" checked> 16.384 KB</label>
+  <label><input type="radio" name="bufferCPU"> 32.768 KB</label>
+  <label><input type="radio" name="bufferCPU"> 65.536 KB</label>
 </div>
+
+<div class="cards" id="resultado">Seu resultado aparecerá aqui...</div>
 
 </div>
 
 <script>
-
-// ELEMENTOS
 const selectCelular = document.getElementById("celular");
 const dpi = document.getElementById("dpi");
 const dpiValor = document.getElementById("dpiValor");
 const cursor = document.getElementById("cursor");
 const cursorValor = document.getElementById("cursorValor");
+const cursorContainer = document.getElementById("cursorContainer");
 const botao = document.getElementById("botao");
 const botaoValor = document.getElementById("botaoValor");
 const dpiContainer = document.getElementById("dpiContainer");
-const cursorContainer = document.getElementById("cursorContainer");
 
-// SLIDERS
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 
-// CELULARES ATUALIZADOS
+// LISTA DE CELULARES (COM OS NOVOS)
 const marcas = {
-  "Samsung":[
-    "A10","A12","A13","A03","A32","A34","A51","A54",
-    "A25 5G","A15 5G","A23 5G",
-    "S20 FE","S21","S22","S23","S24","M02","M12"
-  ],
-
-  "Motorola":[
-    "G23","G32","G52","G60","G84","E7","E13","G8 Play"
-  ],
-
-  "Redmi":[
-    "9A","10A","Note 10","Note 11","Note 12",
-    "Note 13 4G","Note 13 5G","14C",
-    "K60"
-  ],
-
-  "POCO":[
-    "M3","M5","X3 Pro","X5","X5 Pro","X6 Pro",
-    "F4","F5","C75"
-  ],
-
-  "Realme":[
-    "C11","C30","11","12","GT 3"
-  ],
-
-  "iPhone":[
-    "XR","11","12","13","14","15"
-  ],
-
-  "ROG":[
-    "Phone 6","Phone 7"
-  ],
-
-  "Asus":[
-    "Zenfone 10"
-  ],
-
-  "Xiaomi":[
-    "13 Pro"
-  ],
-
-  "OnePlus":[
-    "12"
-  ]
+  "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","A23 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
+  "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
+  "Redmi":["9A","10A","Note 10","Note 11","Note 12","Note 13 4G","Note 13 5G","14C","K60"],
+  "POCO":["M3","M5","X3 Pro","X5","X5 Pro","X6 Pro","F4","F5","C75"],
+  "Realme":["C11","C30","11","12","GT 3"],
+  "iPhone":["XR","11","12","13","14","15"],
+  "ROG":["Phone 6","Phone 7"],
+  "Asus":["Zenfone 10"],
+  "Xiaomi":["13 Pro"],
+  "OnePlus":["12"]
 };
 
-// PREENCHER SELECT
 for(const marca in marcas){
   let group = document.createElement("optgroup");
   group.label = marca;
-
   marcas[marca].forEach(aparelho=>{
     let option = document.createElement("option");
     option.value = marca+" "+aparelho;
     option.textContent = marca+" "+aparelho;
     group.appendChild(option);
   });
-
   selectCelular.appendChild(group);
 }
 
-// OCULTAR DPI EM IPHONE
-function atualizar(){
-  let isIphone = selectCelular.value.toLowerCase().includes("iphone");
-  dpiContainer.style.display = isIphone ? "none":"block";
-  cursorContainer.style.display = isIphone ? "none":"block";
+function atualizarConfigAndroid(){
+  const tipo = selectCelular.value.toLowerCase();
+  const isIphone = tipo.includes("iphone");
+  dpiContainer.style.display = isIphone ? "none" : "block";
+  cursorContainer.style.display = isIphone ? "none" : "block";
 }
-selectCelular.onchange = atualizar;
+selectCelular.onchange = atualizarConfigAndroid;
 
-// GERAR
+// 🔥 GERADOR COM BUFFER INFLUENCIANDO
 function gerar(){
-  let tipo = selectCelular.value.toLowerCase();
-  let modo = document.getElementById("modo").value;
+  const tipo = selectCelular.value.toLowerCase();
+  const modo = document.getElementById("modo").value;
+  const botaoVal = parseInt(botao.value);
+  const cursorVal = parseInt(cursor.value);
+  const isIphone = tipo.includes("iphone");
+  const dpiVal = isIphone ? 0 : parseInt(dpi.value);
+
+  let base = 100;
+  if(!isIphone) base += (dpiVal-500)/10;
+
+  let geral = Math.round(base);
+  let mobilador = (modo==="mobilador" && !isIphone);
+  let geralFinal = mobilador ? Math.round(geral/4) : geral;
+
+  // BUFFER INFLUÊNCIA
   let buffer = document.getElementById("bufferGlobal").value;
+  let ajusteBuffer = 0;
 
-  let isIphone = tipo.includes("iphone");
-  let dpiVal = isIphone ? 0 : parseInt(dpi.value);
+  if(buffer.includes("64")) ajusteBuffer = +5;
+  if(buffer.includes("256")) ajusteBuffer = 0;
+  if(buffer.includes("1 MB")) ajusteBuffer = -3;
+  if(buffer.includes("4 MB")) ajusteBuffer = -6;
+  if(buffer.includes("8 MB")) ajusteBuffer = -10;
 
-  let base = 100 + (dpiVal-500)/10;
-  let geral = modo==="mobilador" ? Math.round(base/4) : Math.round(base);
+  // CPU
+  let cpuRadios = document.getElementsByName("bufferCPU");
+  let cpuAjuste = 0;
 
-  document.getElementById("resultado").innerHTML = `
-  <div class="card">
-  ${selectCelular.value}<br><br>
-  Sensibilidade: ${geral}<br>
-  Botão: ${botao.value}%<br>
-  Cursor: ${cursor.value}<br>
-  Buffer: ${buffer}
-  </div>`;
+  cpuRadios.forEach(radio=>{
+    if(radio.checked){
+      let texto = radio.parentElement.innerText;
+      if(texto.includes("8.192")) cpuAjuste = +3;
+      if(texto.includes("16.384")) cpuAjuste = 0;
+      if(texto.includes("32.768")) cpuAjuste = -3;
+      if(texto.includes("65.536")) cpuAjuste = -6;
+    }
+  });
+
+  let sensiFinal = geralFinal + ajusteBuffer + cpuAjuste;
+
+  if(sensiFinal < 0) sensiFinal = 0;
+  if(sensiFinal > 200) sensiFinal = 200;
+
+  document.getElementById("resultado").innerHTML=`
+    <div class="card">
+      <strong>${selectCelular.value}</strong><br>
+      Sensibilidade Base: ${geralFinal}<br>
+      🎯 Sensibilidade Final: ${sensiFinal}<br><br>
+      Botão: ${botaoVal}%<br>
+      Cursor: ${cursorVal}<br>
+      ⚙️ Buffer: ${buffer}
+    </div>
+  `;
 }
 
-// COPIAR
+document.getElementById("btnGerar").onclick = gerar;
+
 function copiar(){
- navigator.clipboard.writeText(resultado.innerText);
- alert("Copiado!");
+  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
+  alert("Copiado!");
 }
 
-atualizar();
-
+atualizarConfigAndroid();
 </script>
 
 </body>
