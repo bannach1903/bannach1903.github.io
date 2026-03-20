@@ -67,7 +67,7 @@ botao.oninput = ()=> { botaoValor.innerText = botao.value; };
 
 // Celulares
 const marcas = {
-  "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
+  "Samsung":["A10","A12","A13","A03","A32","A34","A51","A54","A25 5G","A15 5G","A23 5G","S20 FE","S21","S22","S23","S24","M02","M12"],
   "Motorola":["G23","G32","G52","G60","G84","E7","E13","G8 Play"],
   "Redmi":["9A","10A","Note 10","Note 11","Note 12","Note 13 4G","Note 13 5G","K60","14C"],
   "POCO":["M3","M5","X3 Pro","X5","X5 Pro","X6 Pro","F4","F5","C75"],
@@ -118,23 +118,29 @@ function gerar(){
   let mobilador = (modo==="mobilador" && !isIphone);
   let geralFinal = mobilador ? Math.round(geral/4) : geral;
 
-  const redDot = Math.round(geralFinal-2);
-  const x2 = Math.round(geralFinal-8);
-  const x4 = Math.round(geralFinal-15);
+  // 🔥 BUFFER INTELIGENTE
+  let bufferGeral = 0;
+  let bufferLoggerGeral = 0;
+  let ajusteBuffer = 0;
+
+  if(!isIphone){
+    bufferGeral = Math.round(8000 + (geral * 200));
+    bufferLoggerGeral = Math.round(64 + (geral * 20));
+
+    // Influência direta na sensibilidade
+    ajusteBuffer = Math.round(bufferGeral / 10000);
+  }
+
+  // Sensi final com buffer
+  geralFinal += ajusteBuffer;
+
+  const redDot = Math.round(geralFinal-2 + ajusteBuffer);
+  const x2 = Math.round(geralFinal-8 + ajusteBuffer);
+  const x4 = Math.round(geralFinal-15 + ajusteBuffer);
   const awm = Math.round(geralFinal-25);
   const olhadinha = Math.round(geralFinal+6);
 
   const ciclosVal = isIphone ? Math.round(geral/10) : "N/A";
-
-  const bufferGPUValores = [8192,16384,32768,65536];
-  const bufferLoggerValores = [64,256,1024,4096,8192];
-  let bufferGeral = 0;
-  let bufferLoggerGeral = 0;
-  if(!isIphone){
-    let idx = Math.min(Math.floor((geral-100)/10), bufferGPUValores.length-1);
-    bufferGeral = bufferGPUValores[idx];
-    bufferLoggerGeral = bufferLoggerValores[idx];
-  }
 
   const antiRecuo = 100;
   const auxMira = 100;
