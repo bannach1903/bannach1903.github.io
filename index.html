@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador PRO FF Calibrado</title>
+<title>GERADOR PRO FF EXTREMO</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
-.container{padding:20px;}
+.container{padding:20px;max-width:500px;margin:auto;}
+h2{color:red;text-shadow:0 0 10px #ff0000;}
 select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
 button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
 .resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;}
-h2{color:red;}
 </style>
 </head>
 
@@ -19,19 +19,31 @@ h2{color:red;}
 
 <div class="container">
 
-<h2>🔥 SENSI PRO CALIBRADA 🔥</h2>
+<h2>🔥 GERADOR PRO EXTREMO 🔥</h2>
+
+<select id="modo">
+  <option value="mobile">📱 Mobile</option>
+  <option value="mobilador">🖱️ Mobilador (GG Mouse Pro)</option>
+</select>
 
 <select id="celular"></select>
 
 <select id="estilo">
-<option value="equilibrado">⚖️ Equilibrado</option>
-<option value="capa">🎯 Capa (HS)</option>
+  <option value="equilibrado">⚖️ Equilibrado</option>
+  <option value="capa">🎯 Capa (HS)</option>
 </select>
 
 <p>DPI: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
 
+<p>Botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
+
+<p>Cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+
 <button onclick="gerar()">GERAR</button>
+<button onclick="copiar()">COPIAR</button>
 
 <div class="resultado" id="resultado"></div>
 
@@ -39,7 +51,7 @@ h2{color:red;}
 
 <script>
 
-// 🔥 BASE POR CELULAR (CALIBRADO)
+// 🔥 BASE POR CELULAR
 const baseCelulares = {
   "Samsung A10": 92,
   "Samsung A12": 95,
@@ -55,38 +67,43 @@ const baseCelulares = {
 
 const select = document.getElementById("celular");
 
-// preencher lista
 for(let cel in baseCelulares){
   let option = document.createElement("option");
   option.textContent = cel;
   select.appendChild(option);
 }
 
-// slider
+// sliders
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
+botao.oninput = ()=> botaoValor.innerText = botao.value;
+cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-// gerar
+// GERAR
 function gerar(){
 
   let cel = select.value;
   let estilo = document.getElementById("estilo").value;
-  let dpiVal = parseInt(dpi.value);
+  let modo = document.getElementById("modo").value;
 
-  // BASE DO CELULAR
+  let dpiVal = parseInt(dpi.value);
+  let botaoVal = parseInt(botao.value);
+  let cursorVal = parseInt(cursor.value);
+
   let base = baseCelulares[cel];
 
-  // ajuste fino (micro ajuste)
   let ajusteDPI = (dpiVal - 600)/20;
-
   let geral = base + ajusteDPI;
 
   if(estilo === "capa") geral -= 4;
 
-  let redDot = geral - 2;
-  let x2 = geral - 8;
-  let x4 = geral - 15;
-  let awm = geral - 25;
-  let olhadinha = geral + 6;
+  let mobilador = (modo === "mobilador");
+  let geralFinal = mobilador ? Math.round(geral / 4) : geral;
+
+  let redDot = geralFinal - 2;
+  let x2 = geralFinal - 8;
+  let x4 = geralFinal - 15;
+  let awm = geralFinal - 25;
+  let olhadinha = geralFinal + 6;
 
   function limitar(v){
     if(v < 0) return 0;
@@ -94,26 +111,26 @@ function gerar(){
     return Math.round(v);
   }
 
-  geral = limitar(geral);
+  geralFinal = limitar(geralFinal);
   redDot = limitar(redDot);
   x2 = limitar(x2);
   x4 = limitar(x4);
   awm = limitar(awm);
   olhadinha = limitar(olhadinha);
 
-  // 🔥 CONTROLE PRO
+  // 🎯 CONTROLE PRO
   let auxMira = 95;
   let antiRecuo = 96;
   let precisao = 97;
 
-  // ⚙️ BUFFER INTELIGENTE
+  // ⚙️ BUFFER AUTOMÁTICO
   let bufferGPU = 16384;
   let bufferLogger = 256;
 
-  if(geral < 100){
+  if(geralFinal < 100){
     bufferGPU = 16384;
     bufferLogger = 256;
-  } else if(geral < 115){
+  } else if(geralFinal < 115){
     bufferGPU = 32768;
     bufferLogger = 1024;
   } else{
@@ -121,27 +138,64 @@ function gerar(){
     bufferLogger = 4096;
   }
 
+  // 🖱️ GG MOUSE PRO
+  let mouseConfig = "";
+
+  if(mobilador){
+
+    let dpiMouse = 1200 + (dpiVal - 600);
+
+    let polling = "125 Hz";
+    if(geralFinal > 90) polling = "250 Hz";
+    if(geralFinal > 100) polling = "500 Hz";
+    if(geralFinal > 110) polling = "1000 Hz (limite)";
+
+    let horizontal = geralFinal * 2.2;
+    let vertical = geralFinal * 2.4;
+
+    mouseConfig = `
+    <br>🖱️ GG Mouse Pro<br>
+    DPI Mouse: ${Math.round(dpiMouse)}<br>
+    Polling Rate: ${polling}<br>
+    Horizontal: ${Math.round(horizontal)}<br>
+    Vertical: ${Math.round(vertical)}<br>
+    `;
+  }
+
+  // RESULTADO
   resultado.innerHTML = `
-  🔥 CONFIG PRO PRONTA 🔥<br><br>
+  🔥 CONFIG PRO EXTREMA 🔥<br><br>
 
-  📱 ${cel}<br><br>
+  📱 ${cel}<br>
+  🎮 Modo: ${modo}<br><br>
 
-  🎯 Geral: ${geral}<br>
+  🎯 Geral: ${geralFinal}<br>
   🔴 RedDot: ${redDot}<br>
   🔍 2x: ${x2}<br>
   🔭 4x: ${x4}<br>
   🎯 AWM: ${awm}<br>
   👁 Olhadinha: ${olhadinha}<br><br>
 
+  ⚙️ Botão: ${botaoVal}%<br>
+  ⚙️ Cursor: ${cursorVal}<br><br>
+
   🎯 Auxílio de Mira: ${auxMira}%<br>
   🔫 Anti Recuo: ${antiRecuo}%<br>
   🎯 Precisão: ${precisao}%<br><br>
 
   ⚙️ Buffer GPU: ${bufferGPU} KB<br>
-  ⚙️ Buffer Logger: ${bufferLogger} KB<br><br>
+  ⚙️ Buffer Logger: ${bufferLogger} KB<br>
 
-  ⚠️ Ajuste fino: aumente/diminua no máximo 5 pontos se necessário
+  ${mouseConfig}
+
+  <br>⚠️ Ajuste fino: máximo ±5 pontos
   `;
+}
+
+// copiar
+function copiar(){
+  navigator.clipboard.writeText(resultado.innerText);
+  alert("Copiado!");
 }
 
 </script>
