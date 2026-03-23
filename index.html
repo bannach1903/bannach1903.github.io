@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GERADOR PRO FF EXTREMO</title>
-
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
@@ -33,17 +32,9 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
   <option value="capa">🎯 Capa (HS)</option>
 </select>
 
-<!-- DPI -->
-<div id="dpiBox">
-<p>DPI: <span id="dpiValor">600</span></p>
-<input type="range" min="300" max="800" value="600" id="dpi">
-</div>
-
-<!-- BOTÃO -->
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
-<!-- CURSOR -->
 <div id="cursorBox">
 <p>Cursor: <span id="cursorValor">50</span></p>
 <input type="range" min="10" max="100" value="50" id="cursor">
@@ -57,8 +48,7 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 </div>
 
 <script>
-
-// 🔥 LISTA COMPLETA
+// Lista completa de celulares
 const baseCelulares = {
   "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
   "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
@@ -72,7 +62,6 @@ const baseCelulares = {
 };
 
 const select = document.getElementById("celular");
-
 for(let cel in baseCelulares){
   let option = document.createElement("option");
   option.textContent = cel;
@@ -80,134 +69,76 @@ for(let cel in baseCelulares){
 }
 
 // sliders
-dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-// 🔥 DETECTAR IPHONE
+// Detectar iPhone
 function verificarDispositivo(){
   let cel = select.value.toLowerCase();
   let isIphone = cel.includes("iphone");
-
-  document.getElementById("dpiBox").style.display = isIphone ? "none" : "block";
   document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";
 }
-
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// GERAR
-function gerar(){
+// Função gerarMobilador (Sensi jogo = 0, DPI automática)
+function gerarMobilador(base){
+    let sensiJogo = 0;
+    let dpiValores = [500,800,1000,1200,1600];
+    let dpiMouse;
+    if(base <= 100) dpiMouse = dpiValores[0];
+    else if(base <= 110) dpiMouse = dpiValores[1];
+    else if(base <= 120) dpiMouse = dpiValores[2];
+    else if(base <= 130) dpiMouse = dpiValores[3];
+    else dpiMouse = dpiValores[4];
 
+    let horizontal = base;
+    let vertical = Math.round(base * 2.2);
+
+    return {sensiJogo,dpiMouse,horizontal,vertical,polling:"500 Hz"};
+}
+
+// Função gerar
+function gerar(){
   let cel = select.value;
   let estilo = document.getElementById("estilo").value;
   let modo = document.getElementById("modo").value;
-
-  let dpiVal = parseInt(dpi.value);
   let botaoVal = parseInt(botao.value);
   let cursorVal = parseInt(cursor.value);
-
   let base = baseCelulares[cel];
 
-  // ajuste inteligente DPI
-  if(dpiVal < 450){ base += 6; }
-  else if(dpiVal > 650){ base -= 4; }
-
-  let ajusteDPI = (dpiVal - 600)/50;
-  let ajusteCursor = (cursorVal - 50)/10;
-
-  let geral = base + ajusteDPI + ajusteCursor;
-
-  if(estilo === "capa") geral -= 4;
-
-  let mobilador = (modo === "mobilador");
-  let geralFinal = geral;
-
   let mouseConfig = "";
-
-  if(mobilador){
-
-    let sensiBase = geral;
-
-    geralFinal = Math.round(sensiBase / 5);
-
-    let horizontal = Math.round(sensiBase * 1.0);
-    let vertical = Math.round(sensiBase * 2.2);
-
-    let dpiMouse = 800 + (dpiVal - 400);
-
-    let polling = "125 Hz";
-    if(sensiBase > 100) polling = "250 Hz";
-    if(sensiBase > 110) polling = "500 Hz";
-    if(sensiBase > 120) polling = "1000 Hz (limite)";
-
-    mouseConfig = `
-    <br>🖱️ GG Mouse Pro<br>
-    DPI Mouse: ${dpiMouse}<br>
-    Polling Rate: ${polling}<br>
-    Horizontal: ${horizontal}<br>
-    Vertical: ${vertical}<br>
-    `;
+  if(modo === "mobilador"){
+      let config = gerarMobilador(base);
+      mouseConfig = `
+      <br>🖱️ GG Mouse Pro<br>
+      DPI Mouse: ${config.dpiMouse}<br>
+      Polling Rate: ${config.polling}<br>
+      Horizontal: ${config.horizontal}<br>
+      Vertical: ${config.vertical}<br>
+      `;
   }
 
-  let redDot = geralFinal - 3;
-  let x2 = geralFinal - 10;
-  let x4 = geralFinal - 18;
-  let awm = geralFinal - 30;
-  let olhadinha = geralFinal + 6;
-
-  // valores fixos de auxílios
-  let auxMira = 100;
-  let antiRecuo = 100;
-  let precisao = 100;
-
-  // BUFFER AUTOMÁTICO
-  let bufferLogger = "256 KB";
-  let bufferGPU = "16.384 KB";
-
-  if(geralFinal <= 95){
-    bufferLogger = "64 KB";
-    bufferGPU = "8.192 KB";
-  }
-  else if(geralFinal <= 110){
-    bufferLogger = "256 KB";
-    bufferGPU = "16.384 KB";
-  }
-  else if(geralFinal <= 125){
-    bufferLogger = "1 MB";
-    bufferGPU = "32.768 KB";
-  }
-  else{
-    bufferLogger = "4 MB";
-    bufferGPU = "65.536 KB";
-  }
+  let redDot = 0 - 3;
+  let x2 = 0 - 10;
+  let x4 = 0 - 18;
+  let awm = 0 - 30;
+  let olhadinha = 0 + 6;
 
   resultado.innerHTML = `
   🔥 CONFIG PRO EXTREMA 🔥<br><br>
-
   📱 ${cel}<br>
   🎮 Modo: ${modo}<br><br>
-
-  🎯 Geral: ${Math.round(geralFinal)}<br>
-  🔴 RedDot: ${Math.round(redDot)}<br>
-  🔍 2x: ${Math.round(x2)}<br>
-  🔭 4x: ${Math.round(x4)}<br>
-  🎯 AWM: ${Math.round(awm)}<br>
-  👁 Olhadinha: ${Math.round(olhadinha)}<br><br>
-
+  Sensibilidade do Jogo: 0<br><br>
+  🔴 RedDot: ${redDot}<br>
+  🔍 2x: ${x2}<br>
+  🔭 4x: ${x4}<br>
+  🎯 AWM: ${awm}<br>
+  👁 Olhadinha: ${olhadinha}<br><br>
   ⚙️ Botão: ${botaoVal}%<br>
   ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
-
-  <br>🎯 Auxílio de Mira: ${auxMira}%<br>
-  🔫 Anti Recuo: ${antiRecuo}%<br>
-  🎯 Precisão: ${precisao}%<br><br>
-
-  ⚙️ Buffer Logger: ${bufferLogger}<br>
-  ⚙️ Buffer CPU: ${bufferGPU}<br>
-
   ${mouseConfig}
-
-  <br>⚠️ Ajuste fino: ±5
+  ⚠️ Ajuste fino: ±5
   `;
 }
 
@@ -215,7 +146,6 @@ function copiar(){
   navigator.clipboard.writeText(resultado.innerText);
   alert("Copiado!");
 }
-
 </script>
 
 </body>
