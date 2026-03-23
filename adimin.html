@@ -2,43 +2,77 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Site Protegido por Key</title>
+<title>Painel Admin - FF PRO</title>
 <style>
-body {background:#0f0f0f; color:white; font-family:Arial; text-align:center; padding-top:50px;}
+body {background:#0f0f0f; color:white; font-family:Arial; text-align:center; padding-top:30px;}
 input, button {padding:10px; margin:10px; border-radius:8px; border:none; font-size:16px;}
 button {background:red; color:white; font-weight:bold; cursor:pointer;}
 button:hover {opacity:0.8;}
-#conteudo {display:none; margin-top:30px;}
+.box {background:#1a1a1a; padding:15px; margin:10px; border-radius:10px;}
 </style>
 </head>
 <body>
 
-<h2>Digite a Key para entrar</h2>
-<input type="text" id="keyInput" placeholder="Digite sua key">
-<button type="button" id="btnLogin">Entrar</button>
+<h2>🔥 PAINEL ADMIN 🔥</h2>
 
-<div id="conteudo">
-  <h2>🔥 Bem-vindo! 🔥</h2>
-  <p>Você entrou no site com sucesso.</p>
+<div class="box">
+  <h3>Gerar Nova Key Infinita</h3>
+  <button id="btnGerarKey">GERAR KEY</button>
+  <p id="novaKey"></p>
+</div>
+
+<div class="box">
+  <h3>Keys Criadas</h3>
+  <div id="lista"></div>
 </div>
 
 <script>
-// Lista de keys válidas
-const keys = ["X7bP9kL2Qf", "19032008"];
+// 🔑 Proteção do admin
+const minhaKey = "X7bP9kL2Qf"; // key de acesso ao admin
+const userKey = prompt("Digite a Key para acessar o admin:");
+if(userKey !== minhaKey){
+    alert("Key incorreta! Saindo...");
+    window.location.href = "index.html"; // redireciona para login
+}
 
-// Registrar o clique do botão depois que a página carregar
-window.onload = function() {
-    const btn = document.getElementById("btnLogin");
-    btn.addEventListener("click", function() {
-        const input = document.getElementById("keyInput").value.trim();
-        if(keys.includes(input)){
-            alert("Key correta! Bem-vindo.");
-            document.getElementById("conteudo").style.display = "block";
-        } else {
-            alert("Key incorreta!");
-        }
+// 🔹 Função para gerar key aleatória infinita
+function gerarKey(){
+    return "FFPRO-" + Math.random().toString(36).substring(2,6).toUpperCase() + "-" + Math.random().toString(36).substring(2,6).toUpperCase();
+}
+
+// 🔹 Criar key infinita e salvar no localStorage
+document.getElementById("btnGerarKey").addEventListener("click", () => {
+    const key = gerarKey();
+    const expira = null; // key infinita
+
+    let keys = JSON.parse(localStorage.getItem("keys")) || [];
+    keys.push({id:key, status:"ativo", expira:expira, criado_em:Date.now()});
+    localStorage.setItem("keys", JSON.stringify(keys));
+
+    document.getElementById("novaKey").innerText = "KEY: " + key;
+    carregarKeys();
+});
+
+// 🔹 Listar keys
+function carregarKeys(){
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+    const keys = JSON.parse(localStorage.getItem("keys")) || [];
+
+    keys.forEach(k => {
+        const cor = k.status === "ativo" ? "lime" : "red";
+        lista.innerHTML += `
+          <div class="box">
+            🔑 ${k.id}<br>
+            Status: <span style="color:${cor}">${k.status}</span><br>
+            Expira: ${k.expira ? new Date(k.expira).toLocaleDateString() : '∞'}<br>
+          </div>
+        `;
     });
 }
+
+// Carregar keys ao abrir
+carregarKeys();
 </script>
 
 </body>
