@@ -10,7 +10,7 @@ body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center
 h2{color:red;text-shadow:0 0 10px #ff0000;}
 select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
 button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
-.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;}
+.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;text-align:left;}
 </style>
 </head>
 
@@ -18,7 +18,7 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <div class="container">
 
-<h2>🔥 GERADOR PRO EXTREMO 🔥</h2>
+<h2>🔥 GERADOR PRO FF EXTREMO 🔥</h2>
 
 <select id="modo">
   <option value="mobile">📱 Mobile</option>
@@ -27,25 +27,10 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <select id="celular"></select>
 
-<select id="estilo">
-  <option value="equilibrado">⚖️ Equilibrado</option>
-  <option value="capa">🎯 Capa (HS)</option>
-</select>
-
-<!-- DPI -->
+<!-- DPI do jogo -->
 <div id="dpiBox">
 <p>DPI do Jogo: <span id="dpiValor">600</span></p>
 <input type="range" min="300" max="800" value="600" id="dpi">
-</div>
-
-<!-- BOTÃO -->
-<p>Botão: <span id="botaoValor">50</span>%</p>
-<input type="range" min="20" max="100" value="50" id="botao">
-
-<!-- CURSOR -->
-<div id="cursorBox">
-<p>Cursor: <span id="cursorValor">50</span></p>
-<input type="range" min="10" max="100" value="50" id="cursor">
 </div>
 
 <button onclick="gerar()">GERAR</button>
@@ -76,104 +61,63 @@ for(let cel in baseCelulares){
   select.appendChild(option);
 }
 
-// sliders
-const dpi = document.getElementById("dpi");
-const dpiValor = document.getElementById("dpiValor");
+// Sliders
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 
-const botao = document.getElementById("botao");
-const botaoValor = document.getElementById("botaoValor");
-botao.oninput = ()=> botaoValor.innerText = botao.value;
+// Detectar mobilador
+const modoSelect = document.getElementById("modo");
+modoSelect.addEventListener("change",()=>{
+  if(modoSelect.value==="mobilador"){
+    document.getElementById("dpiBox").style.display = "none";
+  }else{
+    document.getElementById("dpiBox").style.display = "block";
+  }
+});
 
-const cursor = document.getElementById("cursor");
-const cursorValor = document.getElementById("cursorValor");
-cursor.oninput = ()=> cursorValor.innerText = cursor.value;
-
-// Detectar iPhone
-function verificarDispositivo(){
-  let cel = select.value.toLowerCase();
-  let isIphone = cel.includes("iphone");
-  document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";
-}
-select.addEventListener("change", verificarDispositivo);
-verificarDispositivo();
-
-// Função gerarMobilador (Sensi jogo = 0, DPI do mouse automática)
-function gerarMobilador(base){
-    let sensiJogo = 0;
-    let dpiValores = [500,800,1000,1200,1600];
-    let dpiMouse;
-    if(base <= 100) dpiMouse = dpiValores[0];
-    else if(base <= 110) dpiMouse = dpiValores[1];
-    else if(base <= 120) dpiMouse = dpiValores[2];
-    else if(base <= 130) dpiMouse = dpiValores[3];
-    else dpiMouse = dpiValores[4];
-
-    let horizontal = base;
-    let vertical = Math.round(base * 2.2);
-
-    return {sensiJogo,dpiMouse,horizontal,vertical,polling:"500 Hz"};
-}
-
-// Função gerar
+// GERAR
 function gerar(){
-  let cel = select.value;
-  let estilo = document.getElementById("estilo").value;
-  let modo = document.getElementById("modo").value;
-  let dpiVal = parseInt(dpi.value);
-  let botaoVal = parseInt(botao.value);
-  let cursorVal = parseInt(cursor.value);
-  let base = baseCelulares[cel];
+  const cel = select.value;
+  const modo = modoSelect.value;
 
-  let mouseConfig = "";
-  if(modo === "mobilador"){
-      let config = gerarMobilador(base);
-      mouseConfig = `
-      <br>🖱️ GG Mouse Pro<br>
-      DPI Mouse: ${config.dpiMouse}<br>
-      Polling Rate: ${config.polling}<br>
-      Horizontal: ${config.horizontal}<br>
-      Vertical: ${config.vertical}<br>
-      `;
+  let resultadoTexto = `📱 ${cel}<br>🎮 Modo: ${modo}<br><br>`;
+
+  if(modo==="mobilador"){
+    // Sensibilidade do jogo
+    const sensiJogo = 0;
+
+    // Calcular DPI do mouse GG automaticamente conforme base do mobilador
+    // Base arbitrária de mobilador para cálculo
+    const baseMobilador = 112; // você pode ajustar conforme preferir
+
+    let dpiMouse;
+    if(baseMobilador <= 100) dpiMouse = 500;
+    else if(baseMobilador <= 110) dpiMouse = 800;
+    else if(baseMobilador <= 120) dpiMouse = 1000;
+    else if(baseMobilador <= 130) dpiMouse = 1200;
+    else dpiMouse = 1600;
+
+    resultadoTexto += `🖱️ GG Mouse Pro<br>`;
+    resultadoTexto += `DPI Mouse: ${dpiMouse}<br>`;
+    resultadoTexto += `Horizontal: 0<br>`;
+    resultadoTexto += `Vertical: 0<br>`;
+    resultadoTexto += `Polling Rate: 500 Hz<br><br>`;
+    resultadoTexto += `🎯 Geral: 0<br>🔴 RedDot: 0<br>🔍 2x: 0<br>🔭 4x: 0<br>🎯 AWM: 0<br>👁 Olhadinha: 0<br><br>`;
+    resultadoTexto += `🎯 Auxílio de Mira: 100%<br>🔫 Anti Recuo: 100%<br>🎯 Precisão: 100%<br>`;
+
+  }else{
+    const dpiVal = dpi.value;
+    resultadoTexto += `DPI do Jogo: ${dpiVal}<br>`;
+    resultadoTexto += `🎯 Geral: 0<br>🔴 RedDot: 0<br>🔍 2x: 0<br>🔭 4x: 0<br>🎯 AWM: 0<br>👁 Olhadinha: 0<br><br>`;
+    resultadoTexto += `🎯 Auxílio de Mira: 100%<br>🔫 Anti Recuo: 100%<br>🎯 Precisão: 100%<br>`;
   }
 
-  let redDot = 0 - 3;
-  let x2 = 0 - 10;
-  let x4 = 0 - 18;
-  let awm = 0 - 30;
-  let olhadinha = 0 + 6;
-
-  // valores fixos de auxílios
-  let auxMira = 100;
-  let antiRecuo = 100;
-  let precisao = 100;
-
-  resultado.innerHTML = `
-  🔥 CONFIG PRO EXTREMA 🔥<br><br>
-  📱 ${cel}<br>
-  🎮 Modo: ${modo}<br><br>
-  🎯 Sensibilidade do Jogo: 0<br>
-  ⚙️ DPI do Jogo: ${dpiVal}<br><br>
-  🔴 RedDot: ${redDot}<br>
-  🔍 2x: ${x2}<br>
-  🔭 4x: ${x4}<br>
-  🎯 AWM: ${awm}<br>
-  👁 Olhadinha: ${olhadinha}<br><br>
-  ⚙️ Botão: ${botaoVal}%<br>
-  ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
-  🎯 Auxílio de Mira: ${auxMira}%<br>
-  🔫 Anti Recuo: ${antiRecuo}%<br>
-  🎯 Precisão: ${precisao}%<br>
-  ${mouseConfig}
-  ⚠️ Ajuste fino: ±5
-  `;
+  document.getElementById("resultado").innerHTML = resultadoTexto;
 }
 
 function copiar(){
-  navigator.clipboard.writeText(resultado.innerText);
+  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
   alert("Copiado!");
 }
 </script>
-
 </body>
 </html>
