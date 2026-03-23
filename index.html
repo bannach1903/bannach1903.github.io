@@ -32,9 +32,17 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
   <option value="capa">🎯 Capa (HS)</option>
 </select>
 
+<!-- DPI -->
+<div id="dpiBox">
+<p>DPI do Jogo: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+</div>
+
+<!-- BOTÃO -->
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
 
+<!-- CURSOR -->
 <div id="cursorBox">
 <p>Cursor: <span id="cursorValor">50</span></p>
 <input type="range" min="10" max="100" value="50" id="cursor">
@@ -48,7 +56,7 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 </div>
 
 <script>
-// Lista completa de celulares
+// Lista de celulares
 const baseCelulares = {
   "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
   "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
@@ -69,7 +77,16 @@ for(let cel in baseCelulares){
 }
 
 // sliders
+const dpi = document.getElementById("dpi");
+const dpiValor = document.getElementById("dpiValor");
+dpi.oninput = ()=> dpiValor.innerText = dpi.value;
+
+const botao = document.getElementById("botao");
+const botaoValor = document.getElementById("botaoValor");
 botao.oninput = ()=> botaoValor.innerText = botao.value;
+
+const cursor = document.getElementById("cursor");
+const cursorValor = document.getElementById("cursorValor");
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
 // Detectar iPhone
@@ -81,7 +98,7 @@ function verificarDispositivo(){
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// Função gerarMobilador (Sensi jogo = 0, DPI automática)
+// Função gerarMobilador (Sensi jogo = 0, DPI do mouse automática)
 function gerarMobilador(base){
     let sensiJogo = 0;
     let dpiValores = [500,800,1000,1200,1600];
@@ -103,6 +120,7 @@ function gerar(){
   let cel = select.value;
   let estilo = document.getElementById("estilo").value;
   let modo = document.getElementById("modo").value;
+  let dpiVal = parseInt(dpi.value);
   let botaoVal = parseInt(botao.value);
   let cursorVal = parseInt(cursor.value);
   let base = baseCelulares[cel];
@@ -125,11 +143,17 @@ function gerar(){
   let awm = 0 - 30;
   let olhadinha = 0 + 6;
 
+  // valores fixos de auxílios
+  let auxMira = 100;
+  let antiRecuo = 100;
+  let precisao = 100;
+
   resultado.innerHTML = `
   🔥 CONFIG PRO EXTREMA 🔥<br><br>
   📱 ${cel}<br>
   🎮 Modo: ${modo}<br><br>
-  Sensibilidade do Jogo: 0<br><br>
+  🎯 Sensibilidade do Jogo: 0<br>
+  ⚙️ DPI do Jogo: ${dpiVal}<br><br>
   🔴 RedDot: ${redDot}<br>
   🔍 2x: ${x2}<br>
   🔭 4x: ${x4}<br>
@@ -137,6 +161,9 @@ function gerar(){
   👁 Olhadinha: ${olhadinha}<br><br>
   ⚙️ Botão: ${botaoVal}%<br>
   ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
+  🎯 Auxílio de Mira: ${auxMira}%<br>
+  🔫 Anti Recuo: ${antiRecuo}%<br>
+  🎯 Precisão: ${precisao}%<br>
   ${mouseConfig}
   ⚠️ Ajuste fino: ±5
   `;
