@@ -1,1 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Painel Admin - FF PRO</title>
 
+<style>
+body{background:#0f0f0f;color:white;font-family:Arial;text-align:center;}
+input,button{padding:10px;margin:10px;border-radius:8px;border:none;}
+button{background:red;color:white;font-weight:bold;}
+.box{background:#1a1a1a;padding:15px;margin:10px;border-radius:10px;}
+</style>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+</head>
+
+<body>
+
+<h2>🔥 PAINEL ADMIN 🔥</h2>
+
+<div class="box">
+  <h3>Gerar Nova Key</h3>
+  <input id="dias" placeholder="Dias (ex: 30)">
+  <button onclick="criarKey()">GERAR KEY</button>
+  <p id="novaKey"></p>
+</div>
+
+<div class="box">
+  <h3>Keys Criadas</h3>
+  <div id="lista"></div>
+</div>
+
+<script>
+
+// 🔥 CONFIG FIREBASE (MESMO DO APP)
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_PROJECT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 🔑 GERAR KEY FORTE
+function gerarKey(){
+  return "FFPRO-" + Math.random().toString(36).substring(2,6).toUpperCase() +
+         "-" + Math.random().toString(36).substring(2,6).toUpperCase();
+}
+
+// 🔥 CRIAR KEY
+async function criarKey(){
+
+  let dias = parseInt(document.getElementById("dias").value);
+
+  if(!dias){
+    alert("Digite os dias");
+    return;
+  }
+
+  let key = gerarKey();
+
+  let expira = Date.now() + (dias * 24 * 60 * 60 * 1000);
+
+  await db.collection("keys").doc(key).set({
+    device_id: null,
+    ip: null,
+    status: "ativo",
+    expira: expira,
+    criado_em: Date.now()
+  });
+
+  document.getElementById("novaKey").innerText = "KEY: " + key;
+
+  carregarKeys();
+}
+
+// 📋 LISTAR KEYS
+async function carregarKeys(){
+
+  let lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  let snapshot = await db.collection("keys").get();
+
+  snapshot.forEach(doc => {
+    let data = doc.data();
+
+    lista.innerHTML += `
+      <div class="box">
+        🔑 ${doc.id}<br>
+        Status: ${data.status}<br>
+      </div>
+    `;
+  });
+}
+
+// carregar ao abrir
+carregarKeys();
+
+</script>
+
+</body>
+</html>
