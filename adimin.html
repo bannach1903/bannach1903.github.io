@@ -2,96 +2,37 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Painel Admin - FF PRO (Local)</title>
+<title>Teste Login</title>
 <style>
 body{background:#0f0f0f;color:white;font-family:Arial;text-align:center;}
 input,button{padding:10px;margin:10px;border-radius:8px;border:none;font-size:16px;}
 button{background:red;color:white;font-weight:bold;cursor:pointer;}
 button:hover{opacity:0.8;}
-.box{background:#1a1a1a;padding:15px;margin:10px;border-radius:10px;}
-#login-section{padding:50px;}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-section">
-  <h2>🔥 ACESSO ADMIN 🔥</h2>
-  <input type="password" id="keyInput" placeholder="Digite sua key">
-  <button type="button" id="btnLogin">Entrar</button>
-</div>
+<h2>🔥 LOGIN TESTE 🔥</h2>
+<input type="password" id="keyInput" placeholder="Digite sua key">
+<button type="button" id="btnLogin">Entrar</button>
 
-<!-- PAINEL ADMIN -->
 <div id="painel" style="display:none;">
-  <h2>🔥 PAINEL ADMIN 🔥</h2>
-
-  <div class="box">
-    <h3>Gerar Nova Key</h3>
-    <button type="button" id="btnGerarKey">GERAR KEY INFINITA</button>
-    <p id="novaKey"></p>
-  </div>
-
-  <div class="box">
-    <h3>Keys Criadas</h3>
-    <div id="lista"></div>
-  </div>
+  <h2>Painel Funcionando!</h2>
+  <p>Se você está vendo isso, a key funcionou!</p>
 </div>
 
 <script>
-// 🔑 Key de login
 const minhaKey = "X7bP9kL2Qf";
 
-// 🔹 Login seguro
-const btnLogin = document.getElementById("btnLogin");
-btnLogin.addEventListener("click", () => {
-    const input = document.getElementById("keyInput").value.trim();
-    if(input === minhaKey){
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("painel").style.display = "block";
-        carregarKeys();
-    } else {
-        alert("Key incorreta!");
-    }
+document.getElementById("btnLogin").addEventListener("click", () => {
+  const key = document.getElementById("keyInput").value.trim();
+  if(key === minhaKey){
+    alert("Key correta!");
+    document.getElementById("painel").style.display = "block";
+  } else {
+    alert("Key incorreta!");
+  }
 });
-
-// 🔹 Gerar key aleatória infinita
-function gerarKey(){
-  return "FFPRO-" +
-    Math.random().toString(36).substring(2,6).toUpperCase() + "-" +
-    Math.random().toString(36).substring(2,6).toUpperCase();
-}
-
-// 🔹 Gerar key e salvar localStorage
-const btnGerarKey = document.getElementById("btnGerarKey");
-btnGerarKey.addEventListener("click", () => {
-    const key = gerarKey();
-    const expira = null; // key infinita
-
-    let keys = JSON.parse(localStorage.getItem("keys")) || [];
-    keys.push({id: key, status:"ativo", expira: expira, criado_em: Date.now()});
-    localStorage.setItem("keys", JSON.stringify(keys));
-
-    document.getElementById("novaKey").innerText = "KEY: " + key;
-    carregarKeys();
-});
-
-// 🔹 Listar keys
-function carregarKeys(){
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
-    const keys = JSON.parse(localStorage.getItem("keys")) || [];
-
-    keys.forEach(k => {
-        const cor = k.status === "ativo" ? "lime" : "red";
-        lista.innerHTML += `
-          <div class="box">
-            🔑 ${k.id}<br>
-            Status: <span style="color:${cor}">${k.status}</span><br>
-            Expira: ${k.expira ? new Date(k.expira).toLocaleDateString() : '∞'}<br>
-          </div>
-        `;
-    });
-}
 </script>
 
 </body>
