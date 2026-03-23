@@ -18,7 +18,8 @@ button:hover{opacity:0.8;}
 <div id="login-section">
   <h2>🔥 ACESSO ADMIN 🔥</h2>
   <input type="password" id="keyInput" placeholder="Digite sua key">
-  <button onclick="verificarKey()">Entrar</button>
+  <!-- ADICIONE type="button" PARA GARANTIR QUE NÃO ENVIA FORM -->
+  <button type="button" onclick="verificarKey()">Entrar</button>
 </div>
 
 <!-- PAINEL ADMIN -->
@@ -28,7 +29,7 @@ button:hover{opacity:0.8;}
   <div class="box">
     <h3>Gerar Nova Key</h3>
     <input id="dias" placeholder="Dias (ex: 30)">
-    <button onclick="criarKey()">GERAR KEY</button>
+    <button type="button" onclick="criarKey()">GERAR KEY</button>
     <p id="novaKey"></p>
   </div>
 
