@@ -2,37 +2,43 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Teste Login</title>
+<title>Site Protegido por Key</title>
 <style>
-body{background:#0f0f0f;color:white;font-family:Arial;text-align:center;}
-input,button{padding:10px;margin:10px;border-radius:8px;border:none;font-size:16px;}
-button{background:red;color:white;font-weight:bold;cursor:pointer;}
-button:hover{opacity:0.8;}
+body {background:#0f0f0f; color:white; font-family:Arial; text-align:center; padding-top:50px;}
+input, button {padding:10px; margin:10px; border-radius:8px; border:none; font-size:16px;}
+button {background:red; color:white; font-weight:bold; cursor:pointer;}
+button:hover {opacity:0.8;}
+#conteudo {display:none; margin-top:30px;}
 </style>
 </head>
 <body>
 
-<h2>🔥 LOGIN TESTE 🔥</h2>
-<input type="password" id="keyInput" placeholder="Digite sua key">
+<h2>Digite a Key para entrar</h2>
+<input type="text" id="keyInput" placeholder="Digite sua key">
 <button type="button" id="btnLogin">Entrar</button>
 
-<div id="painel" style="display:none;">
-  <h2>Painel Funcionando!</h2>
-  <p>Se você está vendo isso, a key funcionou!</p>
+<div id="conteudo">
+  <h2>🔥 Bem-vindo! 🔥</h2>
+  <p>Você entrou no site com sucesso.</p>
 </div>
 
 <script>
-const minhaKey = "X7bP9kL2Qf";
+// Lista de keys válidas
+const keys = ["X7bP9kL2Qf", "19032008"];
 
-document.getElementById("btnLogin").addEventListener("click", () => {
-  const key = document.getElementById("keyInput").value.trim();
-  if(key === minhaKey){
-    alert("Key correta!");
-    document.getElementById("painel").style.display = "block";
-  } else {
-    alert("Key incorreta!");
-  }
-});
+// Registrar o clique do botão depois que a página carregar
+window.onload = function() {
+    const btn = document.getElementById("btnLogin");
+    btn.addEventListener("click", function() {
+        const input = document.getElementById("keyInput").value.trim();
+        if(keys.includes(input)){
+            alert("Key correta! Bem-vindo.");
+            document.getElementById("conteudo").style.display = "block";
+        } else {
+            alert("Key incorreta!");
+        }
+    });
+}
 </script>
 
 </body>
