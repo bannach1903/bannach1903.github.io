@@ -18,7 +18,7 @@ button:hover{opacity:0.8;}
 <div id="login-section">
   <h2>🔥 ACESSO ADMIN 🔥</h2>
   <input type="password" id="keyInput" placeholder="Digite sua key">
-  <button id="btnLogin">Entrar</button>
+  <button type="button" id="btnLogin">Entrar</button>
 </div>
 
 <!-- PAINEL ADMIN -->
@@ -27,8 +27,7 @@ button:hover{opacity:0.8;}
 
   <div class="box">
     <h3>Gerar Nova Key</h3>
-    <input id="dias" placeholder="Dias (ex: 30)">
-    <button id="btnGerarKey">GERAR KEY</button>
+    <button type="button" id="btnGerarKey">GERAR KEY INFINITA</button>
     <p id="novaKey"></p>
   </div>
 
@@ -39,13 +38,14 @@ button:hover{opacity:0.8;}
 </div>
 
 <script>
-// 🔑 KEY DE LOGIN
-const minhaKey = "X7bP9kL2Qf"; // ← key de acesso
+// 🔑 Key de login
+const minhaKey = "X7bP9kL2Qf";
 
-// 🔹 Login
-document.getElementById("btnLogin").addEventListener("click", function(){
-    const key = document.getElementById("keyInput").value.trim();
-    if(key === minhaKey){
+// 🔹 Login seguro
+const btnLogin = document.getElementById("btnLogin");
+btnLogin.addEventListener("click", () => {
+    const input = document.getElementById("keyInput").value.trim();
+    if(input === minhaKey){
         document.getElementById("login-section").style.display = "none";
         document.getElementById("painel").style.display = "block";
         carregarKeys();
@@ -54,53 +54,41 @@ document.getElementById("btnLogin").addEventListener("click", function(){
     }
 });
 
-// 🔹 Gerar key aleatória
+// 🔹 Gerar key aleatória infinita
 function gerarKey(){
   return "FFPRO-" +
     Math.random().toString(36).substring(2,6).toUpperCase() + "-" +
     Math.random().toString(36).substring(2,6).toUpperCase();
 }
 
-// 🔹 Criar key (localStorage)
-document.getElementById("btnGerarKey").addEventListener("click", function(){
-    let dias = parseInt(document.getElementById("dias").value);
-    if(!dias){
-        alert("Digite os dias");
-        return;
-    }
-
-    let key = gerarKey();
-    let expira = Date.now() + (dias * 86400000); // validade em ms
+// 🔹 Gerar key e salvar localStorage
+const btnGerarKey = document.getElementById("btnGerarKey");
+btnGerarKey.addEventListener("click", () => {
+    const key = gerarKey();
+    const expira = null; // key infinita
 
     let keys = JSON.parse(localStorage.getItem("keys")) || [];
-
-    keys.push({
-        id: key,
-        status: "ativo",
-        expira: expira,
-        criado_em: Date.now()
-    });
-
+    keys.push({id: key, status:"ativo", expira: expira, criado_em: Date.now()});
     localStorage.setItem("keys", JSON.stringify(keys));
+
     document.getElementById("novaKey").innerText = "KEY: " + key;
     carregarKeys();
 });
 
 // 🔹 Listar keys
 function carregarKeys(){
-    let lista = document.getElementById("lista");
+    const lista = document.getElementById("lista");
     lista.innerHTML = "";
-
-    let keys = JSON.parse(localStorage.getItem("keys")) || [];
+    const keys = JSON.parse(localStorage.getItem("keys")) || [];
 
     keys.forEach(k => {
-        let cor = k.status === "ativo" ? "lime" : "red";
+        const cor = k.status === "ativo" ? "lime" : "red";
         lista.innerHTML += `
-            <div class="box">
-                🔑 ${k.id}<br>
-                Status: <span style="color:${cor}">${k.status}</span><br>
-                Expira: ${new Date(k.expira).toLocaleDateString()}<br>
-            </div>
+          <div class="box">
+            🔑 ${k.id}<br>
+            Status: <span style="color:${cor}">${k.status}</span><br>
+            Expira: ${k.expira ? new Date(k.expira).toLocaleDateString() : '∞'}<br>
+          </div>
         `;
     });
 }
