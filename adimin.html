@@ -2,107 +2,110 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Painel Admin - FF PRO</title>
+<title>Painel Admin - FF PRO (Local)</title>
 
 <style>
 body{background:#0f0f0f;color:white;font-family:Arial;text-align:center;}
 input,button{padding:10px;margin:10px;border-radius:8px;border:none;}
 button{background:red;color:white;font-weight:bold;cursor:pointer;}
 .box{background:#1a1a1a;padding:15px;margin:10px;border-radius:10px;}
+#login-section{padding:50px;}
 </style>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
 </head>
 
 <body>
 
-<h2>🔥 PAINEL ADMIN 🔥</h2>
-
-<div class="box">
-  <h3>Gerar Nova Key</h3>
-  <input id="dias" placeholder="Dias (ex: 30)">
-  <button onclick="criarKey()">GERAR KEY</button>
-  <p id="novaKey"></p>
+<!-- LOGIN -->
+<div id="login-section">
+  <h2>🔥 ACESSO ADMIN 🔥</h2>
+  <input type="password" id="keyInput" placeholder="Digite sua key">
+  <button onclick="verificarKey()">Entrar</button>
 </div>
 
-<div class="box">
-  <h3>Keys Criadas</h3>
-  <div id="lista"></div>
+<!-- PAINEL ADMIN -->
+<div id="painel" style="display:none;">
+  <h2>🔥 PAINEL ADMIN 🔥</h2>
+
+  <div class="box">
+    <h3>Gerar Nova Key</h3>
+    <input id="dias" placeholder="Dias (ex: 30)">
+    <button onclick="criarKey()">GERAR KEY</button>
+    <p id="novaKey"></p>
+  </div>
+
+  <div class="box">
+    <h3>Keys Criadas</h3>
+    <div id="lista"></div>
+  </div>
 </div>
 
 <script>
+// 🔑 LOGIN POR KEY
+const minhaKey = "X7bP9kL2Qf"; // ← Key de acesso
 
-// 🔥 CONFIG FIREBASE (MESMO DO APP)
-const firebaseConfig = {
-  apiKey: "SUA_KEY",
-  authDomain: "SEU_DOMINIO",
-  projectId: "SEU_PROJECT_ID"
-};
+function verificarKey(){
+  const key = document.getElementById("keyInput").value;
+  if(key === minhaKey){
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("painel").style.display = "block";
+    carregarKeys();
+  } else {
+    alert("Key incorreta!");
+  }
+}
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// 🔑 GERAR KEY (MELHORADO)
+// 🔑 GERAR KEY
 function gerarKey(){
   return "FFPRO-" +
     Math.random().toString(36).substring(2,6).toUpperCase() + "-" +
     Math.random().toString(36).substring(2,6).toUpperCase();
 }
 
-// 🔥 CRIAR KEY
-async function criarKey(){
-
+// 🔥 CRIAR KEY (localStorage)
+function criarKey(){
   let dias = parseInt(document.getElementById("dias").value);
-
   if(!dias){
     alert("Digite os dias");
     return;
   }
 
   let key = gerarKey();
-  let expira = Date.now() + (dias * 86400000);
+  let expira = Date.now() + (dias * 86400000); // validade em ms
 
-  await db.collection("keys").doc(key).set({
-    device_id: null,
-    ip: null,
+  // Pega lista existente ou cria nova
+  let keys = JSON.parse(localStorage.getItem("keys")) || [];
+
+  keys.push({
+    id: key,
     status: "ativo",
     expira: expira,
     criado_em: Date.now()
   });
 
-  document.getElementById("novaKey").innerText = "KEY: " + key;
+  localStorage.setItem("keys", JSON.stringify(keys));
 
+  document.getElementById("novaKey").innerText = "KEY: " + key;
   carregarKeys();
 }
 
 // 📋 LISTAR KEYS
-async function carregarKeys(){
-
+function carregarKeys(){
   let lista = document.getElementById("lista");
   lista.innerHTML = "";
 
-  let snapshot = await db.collection("keys").get();
+  let keys = JSON.parse(localStorage.getItem("keys")) || [];
 
-  snapshot.forEach(doc => {
-
-    let data = doc.data();
-    let cor = data.status === "ativo" ? "lime" : "red";
-
+  keys.forEach(k => {
+    let cor = k.status === "ativo" ? "lime" : "red";
     lista.innerHTML += `
       <div class="box">
-        🔑 ${doc.id}<br>
-        Status: <span style="color:${cor}">${data.status}</span><br>
+        🔑 ${k.id}<br>
+        Status: <span style="color:${cor}">${k.status}</span><br>
+        Expira: ${new Date(k.expira).toLocaleDateString()}<br>
       </div>
     `;
   });
 }
-
-// carregar ao abrir
-carregarKeys();
-
 </script>
 
 </body>
