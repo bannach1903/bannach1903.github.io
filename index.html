@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GERADOR PRO FF EXTREMO</title>
+<title>GERADOR PRO FF ULTRA</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
@@ -12,12 +12,28 @@ h2{color:red;text-shadow:0 0 10px #ff0000;}
 select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
 button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
 .resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;}
+.hidden{display:none;}
 </style>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
 </head>
 
 <body>
 
 <div class="container">
+
+<!-- LOGIN -->
+<div id="login">
+<h2>🔐 ATIVAR ACESSO</h2>
+<input id="key" placeholder="Digite sua KEY">
+<button onclick="logar()">Entrar</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
 
 <h2>🔥 GERADOR PRO EXTREMO 🔥</h2>
 
@@ -56,9 +72,97 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 </div>
 
+</div>
+
 <script>
 
-// 🔥 LISTA COMPLETA
+// 🔥 CONFIG FIREBASE (COLOQUE O SEU)
+const firebaseConfig = {
+  apiKey: "SUA_KEY",
+  authDomain: "SEU_DOMINIO",
+  projectId: "SEU_PROJECT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 📱 DEVICE ID
+function getDeviceId(){
+  let id = localStorage.getItem("device_id");
+  if(!id){
+    id = Math.random().toString(36).substring(2);
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
+
+// 🌐 IP
+async function getIP(){
+  try{
+    let res = await fetch("https://api.ipify.org?format=json");
+    let data = await res.json();
+    return data.ip;
+  }catch{
+    return "erro";
+  }
+}
+
+// 🔐 LOGIN
+async function logar(){
+
+  let key = document.getElementById("key").value.trim();
+  let device = getDeviceId();
+  let ip = await getIP();
+
+  let ref = db.collection("keys").doc(key);
+  let doc = await ref.get();
+
+  if(!doc.exists){
+    alert("❌ Key inválida");
+    return;
+  }
+
+  let data = doc.data();
+
+  if(data.expira && Date.now() > data.expira){
+    alert("⏳ Key expirada");
+    return;
+  }
+
+  if(data.status === "bloqueado"){
+    alert("🚫 Conta bloqueada");
+    return;
+  }
+
+  if(!data.device_id){
+    await ref.update({ device_id: device, ip: ip });
+  }
+  else if(data.device_id !== device || data.ip !== ip){
+    await ref.update({ status: "bloqueado" });
+    alert("🚫 Compartilhamento detectado!");
+    return;
+  }
+
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  verificar(key, device, ip);
+}
+
+// 🔄 VERIFICAÇÃO
+function verificar(key, device, ip){
+  setInterval(async () => {
+    let doc = await db.collection("keys").doc(key).get();
+    let data = doc.data();
+
+    if(data.status !== "ativo" || data.device_id !== device || data.ip !== ip){
+      alert("🚫 Acesso bloqueado!");
+      location.reload();
+    }
+  }, 8000);
+}
+
+// 🔥 LISTA DE CELULARES
 const baseCelulares = {
   "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
   "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
@@ -84,23 +188,23 @@ dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-// 🔥 DETECTAR IPHONE
+// detectar iphone
 function verificarDispositivo(){
   let cel = select.value.toLowerCase();
   let isIphone = cel.includes("iphone");
 
-  document.getElementById("dpiBox").style.display = isIphone ? "none" : "block";
-  document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";
+  dpiBox.style.display = isIphone ? "none" : "block";
+  cursorBox.style.display = isIphone ? "none" : "block";
 }
 
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// GERAR
+// GERADOR COMPLETO
 function gerar(){
 
   let cel = select.value;
-  let estilo = document.getElementById("estilo").value;
+  let estilo = estilo = document.getElementById("estilo").value;
   let modo = document.getElementById("modo").value;
 
   let dpiVal = parseInt(dpi.value);
@@ -109,46 +213,14 @@ function gerar(){
 
   let base = baseCelulares[cel];
 
-  // ajuste inteligente DPI
   if(dpiVal < 450){ base += 6; }
   else if(dpiVal > 650){ base -= 4; }
 
-  let ajusteDPI = (dpiVal - 600)/50;
-  let ajusteCursor = (cursorVal - 50)/10;
-
-  let geral = base + ajusteDPI + ajusteCursor;
+  let geral = base + ((dpiVal - 600)/50) + ((cursorVal - 50)/10);
 
   if(estilo === "capa") geral -= 4;
 
-  let mobilador = (modo === "mobilador");
-  let geralFinal = geral;
-
-  let mouseConfig = "";
-
-  if(mobilador){
-
-    let sensiBase = geral;
-
-    geralFinal = Math.round(sensiBase / 5);
-
-    let horizontal = Math.round(sensiBase * 1.0);
-    let vertical = Math.round(sensiBase * 2.2);
-
-    let dpiMouse = 800 + (dpiVal - 400);
-
-    let polling = "125 Hz";
-    if(sensiBase > 100) polling = "250 Hz";
-    if(sensiBase > 110) polling = "500 Hz";
-    if(sensiBase > 120) polling = "1000 Hz (limite)";
-
-    mouseConfig = `
-    <br>🖱️ GG Mouse Pro<br>
-    DPI Mouse: ${dpiMouse}<br>
-    Polling Rate: ${polling}<br>
-    Horizontal: ${horizontal}<br>
-    Vertical: ${vertical}<br>
-    `;
-  }
+  let geralFinal = modo === "mobilador" ? Math.round(geral/5) : geral;
 
   let redDot = geralFinal - 3;
   let x2 = geralFinal - 10;
@@ -156,57 +228,15 @@ function gerar(){
   let awm = geralFinal - 30;
   let olhadinha = geralFinal + 6;
 
-  let auxMira = 100;
-  let antiRecuo = 100;
-  let precisao = 100;
-
-  // BUFFER AUTOMÁTICO
-  let bufferLogger = "256 KB";
-  let bufferGPU = "16.384 KB";
-
-  if(geralFinal <= 95){
-    bufferLogger = "64 KB";
-    bufferGPU = "8.192 KB";
-  }
-  else if(geralFinal <= 110){
-    bufferLogger = "256 KB";
-    bufferGPU = "16.384 KB";
-  }
-  else if(geralFinal <= 125){
-    bufferLogger = "1 MB";
-    bufferGPU = "32.768 KB";
-  }
-  else{
-    bufferLogger = "4 MB";
-    bufferGPU = "65.536 KB";
-  }
-
   resultado.innerHTML = `
   🔥 CONFIG PRO EXTREMA 🔥<br><br>
-
   📱 ${cel}<br>
-  🎮 Modo: ${modo}<br><br>
-
   🎯 Geral: ${Math.round(geralFinal)}<br>
   🔴 RedDot: ${Math.round(redDot)}<br>
   🔍 2x: ${Math.round(x2)}<br>
   🔭 4x: ${Math.round(x4)}<br>
   🎯 AWM: ${Math.round(awm)}<br>
-  👁 Olhadinha: ${Math.round(olhadinha)}<br><br>
-
-  ⚙️ Botão: ${botaoVal}%<br>
-  ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
-
-  <br>🎯 Auxílio de Mira: 100%<br>
-  🔫 Anti Recuo: 100%<br>
-  🎯 Precisão: 100%<br><br>
-
-  ⚙️ Buffer Logger: ${bufferLogger}<br>
-  ⚙️ Buffer CPU: ${bufferGPU}<br>
-
-  ${mouseConfig}
-
-  <br>⚠️ Ajuste fino: ±5
+  👁 Olhadinha: ${Math.round(olhadinha)}
   `;
 }
 
