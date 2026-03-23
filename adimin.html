@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Painel Admin - FF PRO (Local)</title>
-
 <style>
 body{background:#0f0f0f;color:white;font-family:Arial;text-align:center;}
 input,button{padding:10px;margin:10px;border-radius:8px;border:none;}
 button{background:red;color:white;font-weight:bold;cursor:pointer;}
+button:hover{opacity:0.8;}
 .box{background:#1a1a1a;padding:15px;margin:10px;border-radius:10px;}
 #login-section{padding:50px;}
 </style>
 </head>
-
 <body>
 
 <!-- LOGIN -->
@@ -40,11 +39,11 @@ button{background:red;color:white;font-weight:bold;cursor:pointer;}
 </div>
 
 <script>
-// 🔑 LOGIN POR KEY
-const minhaKey = "X7bP9kL2Qf"; // ← Key de acesso
+// 🔑 KEY DE LOGIN
+const minhaKey = "X7bP9kL2Qf"; // ← Key para acessar o painel
 
 function verificarKey(){
-  const key = document.getElementById("keyInput").value;
+  const key = document.getElementById("keyInput").value.trim(); // remove espaços extras
   if(key === minhaKey){
     document.getElementById("login-section").style.display = "none";
     document.getElementById("painel").style.display = "block";
@@ -54,14 +53,14 @@ function verificarKey(){
   }
 }
 
-// 🔑 GERAR KEY
+// 🔑 GERAR KEY ALEATÓRIA
 function gerarKey(){
   return "FFPRO-" +
     Math.random().toString(36).substring(2,6).toUpperCase() + "-" +
     Math.random().toString(36).substring(2,6).toUpperCase();
 }
 
-// 🔥 CRIAR KEY (localStorage)
+// 🔥 CRIAR KEY (LOCALSTORAGE)
 function criarKey(){
   let dias = parseInt(document.getElementById("dias").value);
   if(!dias){
@@ -72,7 +71,6 @@ function criarKey(){
   let key = gerarKey();
   let expira = Date.now() + (dias * 86400000); // validade em ms
 
-  // Pega lista existente ou cria nova
   let keys = JSON.parse(localStorage.getItem("keys")) || [];
 
   keys.push({
@@ -83,7 +81,6 @@ function criarKey(){
   });
 
   localStorage.setItem("keys", JSON.stringify(keys));
-
   document.getElementById("novaKey").innerText = "KEY: " + key;
   carregarKeys();
 }
