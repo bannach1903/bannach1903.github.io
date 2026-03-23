@@ -156,6 +156,7 @@ function gerar(){
   let awm = geralFinal - 30;
   let olhadinha = geralFinal + 6;
 
+  // valores fixos de auxílios
   let auxMira = 100;
   let antiRecuo = 100;
   let precisao = 100;
@@ -197,9 +198,9 @@ function gerar(){
   ⚙️ Botão: ${botaoVal}%<br>
   ${!cel.toLowerCase().includes("iphone") ? `⚙️ Cursor: ${cursorVal}<br>` : ""}
 
-  <br>🎯 Auxílio de Mira: 100%<br>
-  🔫 Anti Recuo: 100%<br>
-  🎯 Precisão: 100%<br><br>
+  <br>🎯 Auxílio de Mira: ${auxMira}%<br>
+  🔫 Anti Recuo: ${antiRecuo}%<br>
+  🎯 Precisão: ${precisao}%<br><br>
 
   ⚙️ Buffer Logger: ${bufferLogger}<br>
   ⚙️ Buffer CPU: ${bufferGPU}<br>
