@@ -34,6 +34,16 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <input type="range" min="300" max="800" value="600" id="dpi">
 </div>
 
+<!-- Sensibilidade do Mobilador -->
+<div id="sensiBox">
+<p>Modo de sensibilidade (Mobilador):</p>
+<select id="sensiModo">
+  <option value="baixa">Baixa</option>
+  <option value="media">Média</option>
+  <option value="alta">Alta</option>
+</select>
+</div>
+
 <!-- BOTÃO -->
 <p>Tamanho do botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
@@ -87,20 +97,19 @@ function verificarDispositivo(){
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// Função para gerar mobilador automaticamente
+// Função para gerar mobilador com modos
 function gerarMobilador(){
-    let dpiValores = [500,800,1000,1200,1600];
-    let base = 112; // Valor base do mobilador
-    let dpiMouse = dpiValores[2]; // 1000 padrão
-    let horizontal = 0;
-    let vertical = 0;
-    let polling = "500 Hz";
+    const modo = document.getElementById("sensiModo").value;
+    let dpiMouse;
+    if(modo === "baixa") dpiMouse = 500;
+    else if(modo === "media") dpiMouse = 1000;
+    else dpiMouse = 1600; // alta
 
     return {
         dpiMouse,
-        horizontal,
-        vertical,
-        polling,
+        horizontal: 0,
+        vertical: 0,
+        polling: "500 Hz",
         geral: 0,
         redDot: 0,
         x2: 0,
@@ -110,13 +119,13 @@ function gerarMobilador(){
     };
 }
 
-// GERA CONFIGURAÇÃO
+// Gera configuração
 function gerar(){
-  let cel = select.value;
-  let modo = document.getElementById("modo").value;
-  let dpiVal = parseInt(dpi.value);
-  let botaoVal = parseInt(botao.value);
-  let cursorVal = parseInt(cursor.value);
+  const cel = select.value;
+  const modo = document.getElementById("modo").value;
+  const dpiVal = parseInt(dpi.value);
+  const botaoVal = parseInt(botao.value);
+  const cursorVal = parseInt(cursor.value);
 
   let resultadoHTML = `<strong>📱 Celular:</strong> ${cel}<br>`;
   resultadoHTML += `<strong>🎮 Modo:</strong> ${modo}<br><br>`;
@@ -125,7 +134,7 @@ function gerar(){
   let mouseConfig = "";
 
   if(modo === "mobilador"){
-    let configMobilador = gerarMobilador();
+    const configMobilador = gerarMobilador();
     mouseConfig += `🖱️ GG Mouse Pro<br>`;
     mouseConfig += `DPI Mouse: ${configMobilador.dpiMouse}<br>`;
     mouseConfig += `Horizontal: ${configMobilador.horizontal}<br>`;
@@ -142,7 +151,7 @@ function gerar(){
     resultadoHTML += mouseConfig;
   }
 
-  // Sensibilidade do jogo sempre 0
+  // Sensibilidade do jogo
   resultadoHTML += `Geral: ${geral}<br>`;
   resultadoHTML += `RedDot: ${redDot}<br>`;
   resultadoHTML += `2x: ${x2}<br>`;
@@ -163,6 +172,7 @@ function gerar(){
   resultado.innerHTML = resultadoHTML;
 }
 
+// Copiar resultado
 function copiar(){
   navigator.clipboard.writeText(resultado.innerText);
   alert("Copiado!");
