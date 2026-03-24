@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GERADOR PRO FF EXTREMO</title>
-
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
 .container{padding:20px;max-width:500px;margin:auto;}
@@ -14,11 +13,8 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 .resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;text-align:left;}
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <h2>🔥 GERADOR PRO EXTREMO 🔥</h2>
 
 <select id="modo">
@@ -27,6 +23,12 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 </select>
 
 <select id="celular"></select>
+
+<select id="sensi">
+  <option value="baixa">Sensibilidade Baixa</option>
+  <option value="media">Sensibilidade Média</option>
+  <option value="alta">Sensibilidade Alta</option>
+</select>
 
 <!-- DPI do celular -->
 <div id="dpiBox">
@@ -48,7 +50,6 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <button onclick="copiar()">COPIAR</button>
 
 <div class="resultado" id="resultado"></div>
-
 </div>
 
 <script>
@@ -72,7 +73,7 @@ for(let cel in baseCelulares){
   select.appendChild(option);
 }
 
-// Sliders
+// sliders
 dpi.oninput = ()=> dpiValor.innerText = dpi.value;
 botao.oninput = ()=> botaoValor.innerText = botao.value;
 cursor.oninput = ()=> cursorValor.innerText = cursor.value;
@@ -87,57 +88,67 @@ function verificarDispositivo(){
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// Função para gerar dados do Mobilador
-function gerarMobilador(){
+// Gerar GG Mouse Pro
+function gerarMobilador(sensi){
     // Sensibilidade do jogo sempre 0
     let sensiJogo = 0;
+    // DPI do mouse baseada na "sensi" escolhida
+    let dpiValores = [500,800,1000,1200,1600];
+    let dpiMouse = 1000; // padrão
+    if(sensi==="baixa") dpiMouse = 500;
+    else if(sensi==="media") dpiMouse = 1000;
+    else if(sensi==="alta") dpiMouse = 1600;
 
-    // Valores de DPI do mouse possíveis
-    let dpiValores = [500, 800, 1000, 1200, 1600];
-
-    // DPI do mouse gerada conforme "sensiJogo" (como é 0, pegamos média)
-    let dpiMouse = dpiValores[2]; // 1000 como padrão
-
-    return {
-        sensiJogo: sensiJogo,
-        dpiMouse: dpiMouse,
-        horizontal: 0,
-        vertical: 0,
-        polling: "500 Hz"
-    };
+    return {sensiJogo:0,dpiMouse:dpiMouse,horizontal:0,vertical:0,polling:"500 Hz"};
 }
 
-// Gerar configuração
+// Função para gerar Mobile
+function gerarMobile(sensi){
+  let base = 100;
+  if(sensi==="baixa") base = 90;
+  else if(sensi==="media") base = 105;
+  else if(sensi==="alta") base = 120;
+
+  return {
+    geral: base,
+    redDot: base - 3,
+    x2: base - 10,
+    x4: base - 18,
+    awm: base - 30,
+    olhadinha: base + 6
+  };
+}
+
+// Função principal
 function gerar(){
   const cel = select.value;
   const modo = document.getElementById("modo").value;
+  const sensi = document.getElementById("sensi").value;
   const dpiVal = parseInt(dpi.value);
   const botaoVal = parseInt(botao.value);
   const cursorVal = parseInt(cursor.value);
 
   let resultadoHTML = `<strong>📱 Celular:</strong> ${cel}<br>`;
-  resultadoHTML += `<strong>🎮 Modo:</strong> ${modo}<br><br>`;
+  resultadoHTML += `<strong>🎮 Modo:</strong> ${modo}<br>`;
+  resultadoHTML += `<strong>🎚 Sensibilidade:</strong> ${sensi}<br><br>`;
 
-  let geral=0, redDot=0, x2=0, x4=0, awm=0, olhadinha=0;
-  let mouseConfig = "";
-
-  if(modo === "mobilador"){
-    const configMobilador = gerarMobilador();
-    mouseConfig += `🖱️ GG Mouse Pro<br>`;
-    mouseConfig += `DPI Mouse: ${configMobilador.dpiMouse}<br>`;
-    mouseConfig += `Horizontal: ${configMobilador.horizontal}<br>`;
-    mouseConfig += `Vertical: ${configMobilador.vertical}<br>`;
-    mouseConfig += `Polling Rate: ${configMobilador.polling}<br><br>`;
-    resultadoHTML += mouseConfig;
+  if(modo==="mobilador"){
+    const config = gerarMobilador(sensi);
+    resultadoHTML += `🖱️ GG Mouse Pro<br>`;
+    resultadoHTML += `DPI Mouse: ${config.dpiMouse}<br>`;
+    resultadoHTML += `Horizontal: ${config.horizontal}<br>`;
+    resultadoHTML += `Vertical: ${config.vertical}<br>`;
+    resultadoHTML += `Polling Rate: ${config.polling}<br><br>`;
+    resultadoHTML += `Geral: 0<br>RedDot: 0<br>2x: 0<br>4x: 0<br>AWM: 0<br>Olhadinha: 0<br><br>`;
+  } else {
+    const config = gerarMobile(sensi);
+    resultadoHTML += `Geral: ${config.geral}<br>`;
+    resultadoHTML += `RedDot: ${config.redDot}<br>`;
+    resultadoHTML += `2x: ${config.x2}<br>`;
+    resultadoHTML += `4x: ${config.x4}<br>`;
+    resultadoHTML += `AWM: ${config.awm}<br>`;
+    resultadoHTML += `Olhadinha: ${config.olhadinha}<br><br>`;
   }
-
-  // Sensibilidade do jogo sempre 0
-  resultadoHTML += `Geral: 0<br>`;
-  resultadoHTML += `RedDot: 0<br>`;
-  resultadoHTML += `2x: 0<br>`;
-  resultadoHTML += `4x: 0<br>`;
-  resultadoHTML += `AWM: 0<br>`;
-  resultadoHTML += `Olhadinha: 0<br><br>`;
 
   // Auxílios sempre 100%
   resultadoHTML += `Auxílio de Mira: 100%<br>`;
@@ -149,15 +160,14 @@ function gerar(){
   resultadoHTML += `Velocidade do cursor: ${cursorVal}<br>`;
   resultadoHTML += `Tamanho do botão: ${botaoVal}<br>`;
 
-  resultado.innerHTML = resultadoHTML;
+  document.getElementById("resultado").innerHTML = resultadoHTML;
 }
 
 // Copiar resultado
 function copiar(){
-  navigator.clipboard.writeText(resultado.innerText);
+  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
   alert("Copiado!");
 }
 </script>
-
 </body>
 </html>
