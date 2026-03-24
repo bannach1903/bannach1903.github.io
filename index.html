@@ -34,16 +34,6 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <input type="range" min="300" max="800" value="600" id="dpi">
 </div>
 
-<!-- Sensibilidade do Mobilador -->
-<div id="sensiBox">
-<p>Modo de sensibilidade (Mobilador):</p>
-<select id="sensiModo">
-  <option value="baixa">Baixa</option>
-  <option value="media">Média</option>
-  <option value="alta">Alta</option>
-</select>
-</div>
-
 <!-- BOTÃO -->
 <p>Tamanho do botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
@@ -97,29 +87,27 @@ function verificarDispositivo(){
 select.addEventListener("change", verificarDispositivo);
 verificarDispositivo();
 
-// Função para gerar mobilador com modos
+// Função para gerar dados do Mobilador
 function gerarMobilador(){
-    const modo = document.getElementById("sensiModo").value;
-    let dpiMouse;
-    if(modo === "baixa") dpiMouse = 500;
-    else if(modo === "media") dpiMouse = 1000;
-    else dpiMouse = 1600; // alta
+    // Sensibilidade do jogo sempre 0
+    let sensiJogo = 0;
+
+    // Valores de DPI do mouse possíveis
+    let dpiValores = [500, 800, 1000, 1200, 1600];
+
+    // DPI do mouse gerada conforme "sensiJogo" (como é 0, pegamos média)
+    let dpiMouse = dpiValores[2]; // 1000 como padrão
 
     return {
-        dpiMouse,
+        sensiJogo: sensiJogo,
+        dpiMouse: dpiMouse,
         horizontal: 0,
         vertical: 0,
-        polling: "500 Hz",
-        geral: 0,
-        redDot: 0,
-        x2: 0,
-        x4: 0,
-        awm: 0,
-        olhadinha: 0
+        polling: "500 Hz"
     };
 }
 
-// Gera configuração
+// Gerar configuração
 function gerar(){
   const cel = select.value;
   const modo = document.getElementById("modo").value;
@@ -140,24 +128,16 @@ function gerar(){
     mouseConfig += `Horizontal: ${configMobilador.horizontal}<br>`;
     mouseConfig += `Vertical: ${configMobilador.vertical}<br>`;
     mouseConfig += `Polling Rate: ${configMobilador.polling}<br><br>`;
-
-    geral = configMobilador.geral;
-    redDot = configMobilador.redDot;
-    x2 = configMobilador.x2;
-    x4 = configMobilador.x4;
-    awm = configMobilador.awm;
-    olhadinha = configMobilador.olhadinha;
-
     resultadoHTML += mouseConfig;
   }
 
-  // Sensibilidade do jogo
-  resultadoHTML += `Geral: ${geral}<br>`;
-  resultadoHTML += `RedDot: ${redDot}<br>`;
-  resultadoHTML += `2x: ${x2}<br>`;
-  resultadoHTML += `4x: ${x4}<br>`;
-  resultadoHTML += `AWM: ${awm}<br>`;
-  resultadoHTML += `Olhadinha: ${olhadinha}<br><br>`;
+  // Sensibilidade do jogo sempre 0
+  resultadoHTML += `Geral: 0<br>`;
+  resultadoHTML += `RedDot: 0<br>`;
+  resultadoHTML += `2x: 0<br>`;
+  resultadoHTML += `4x: 0<br>`;
+  resultadoHTML += `AWM: 0<br>`;
+  resultadoHTML += `Olhadinha: 0<br><br>`;
 
   // Auxílios sempre 100%
   resultadoHTML += `Auxílio de Mira: 100%<br>`;
