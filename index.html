@@ -1,202 +1,206 @@
-<html lang="pt-br">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>GERADOR PRO FF EXTREMO</title>  
-<style>  
-body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}  
-.container{padding:20px;max-width:500px;margin:auto;}  
-h2{color:red;text-shadow:0 0 10px #ff0000;}  
-select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}  
-button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}  
-.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;text-align:left;}  
-</style>  
-</head>  
-<body>  
-<div class="container">  
-<h2>🔥 GERADOR PRO EXTREMO 🔥</h2>  
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GERADOR PRO FF EXTREMO</title>
 
-<select id="modo">  
-  <option value="mobile">📱 Mobile</option>  
-  <option value="mobilador">🖱️ Mobilador (GG Mouse Pro)</option>  
-</select>  
+<style>
+body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
+.container{padding:20px;max-width:500px;margin:auto;}
+h2{color:red;text-shadow:0 0 10px #ff0000;}
+select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
+button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
+.resultado{background:#1a1a1a;padding:15px;margin-top:15px;border-radius:10px;text-align:left;}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 LOGIN -->
+<div id="login" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
+  <h1 style="color:red;">BANNACH SENSI 🔥</h1>
+  
+  <input id="senha" type="password" placeholder="Digite a senha"
+  style="padding:10px;margin:10px;border:none;border-radius:5px;">
+  
+  <button onclick="entrar()"
+  style="padding:10px 20px;background:red;color:white;border:none;border-radius:5px;">
+  ENTRAR
+  </button>
+</div>
+
+<!-- 🔥 SEU SITE -->
+<div class="container">
+<h2>🔥 GERADOR PRO EXTREMO 🔥</h2>
+
+<select id="modo">
+  <option value="mobile">📱 Mobile</option>
+  <option value="mobilador">🖱️ Mobilador (GG Mouse Pro)</option>
+</select>
 
 <select id="celular"></select>
 
-<select id="sensi">  
-  <option value="baixa">Sensibilidade Baixa</option>  
-  <option value="media">Sensibilidade Média</option>  
-  <option value="alta">Sensibilidade Alta</option>  
-</select>  
+<select id="sensi">
+  <option value="baixa">Sensibilidade Baixa</option>
+  <option value="media">Sensibilidade Média</option>
+  <option value="alta">Sensibilidade Alta</option>
+</select>
 
-<div id="dpiBox">  
-<p>DPI do celular: <span id="dpiValor">600</span></p>  
-<input type="range" min="300" max="800" value="600" id="dpi">  
-</div>  
+<div id="dpiBox">
+<p>DPI do celular: <span id="dpiValor">600</span></p>
+<input type="range" min="300" max="800" value="600" id="dpi">
+</div>
 
-<p>Tamanho do botão: <span id="botaoValor">50</span>%</p>  
-<input type="range" min="20" max="100" value="50" id="botao">  
+<p>Tamanho do botão: <span id="botaoValor">50</span>%</p>
+<input type="range" min="20" max="100" value="50" id="botao">
 
-<div id="cursorBox">  
-<p>Velocidade do cursor: <span id="cursorValor">50</span></p>  
-<input type="range" min="10" max="100" value="50" id="cursor">  
-</div>  
+<div id="cursorBox">
+<p>Velocidade do cursor: <span id="cursorValor">50</span></p>
+<input type="range" min="10" max="100" value="50" id="cursor">
+</div>
 
 <button onclick="gerar()">GERAR</button>
 <button onclick="copiar()">COPIAR</button>
 
-<div class="resultado" id="resultado"></div>  
-</div>  
+<div class="resultado" id="resultado"></div>
+</div>
 
-<script>  
+<script>
 
-const baseCelulares = {  
-  "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,  
-  "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,  
-  "Samsung A15 5G": 106,"Samsung S20 FE": 115,"Samsung S21": 118,  
-  "Motorola G23": 102,"Motorola G32": 104,"Motorola G52": 106,"Motorola G60": 108,  
-  "Redmi 9A": 90,"Redmi 10A": 93,"Redmi Note 10": 100,"Redmi Note 11": 105,  
-  "Redmi Note 12": 108,"Redmi Note 13 4G": 110,"Redmi 14C": 108,  
-  "POCO M3": 100,"POCO X3 Pro": 118,"POCO X5": 112,"POCO X6 Pro": 120,  
-  "POCO C75": 103,  
-  "iPhone XR": 110,"iPhone 11": 115,"iPhone 12": 118,"iPhone 13": 120  
-};  
+// 🔐 CONFIG LOGIN
+const SENHA = "bannachsensipro";
 
-const select = document.getElementById("celular");  
-for(let cel in baseCelulares){  
-  let option = document.createElement("option");  
-  option.textContent = cel;  
-  select.appendChild(option);  
-}  
+function getDeviceId(){
+  let id = localStorage.getItem("device_id");
+  if(!id){
+    id = Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("device_id", id);
+  }
+  return id;
+}
 
-dpi.oninput = ()=> dpiValor.innerText = dpi.value;  
-botao.oninput = ()=> botaoValor.innerText = botao.value;  
-cursor.oninput = ()=> cursorValor.innerText = cursor.value;  
+function entrar(){
+  var s = document.getElementById("senha").value;
+  var device = getDeviceId();
 
-function verificarDispositivo(){  
-  let cel = select.value.toLowerCase();  
-  let isIphone = cel.includes("iphone");  
-  document.getElementById("dpiBox").style.display = isIphone ? "none" : "block";  
-  document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";  
-}  
-select.addEventListener("change", verificarDispositivo);  
-verificarDispositivo();  
+  if(s === SENHA){
+    let savedDevice = localStorage.getItem("device_autorizado");
 
-// 🔥 MOBILADOR ESTÁVEL COM JOGO ZERADO
-function gerarMobilador(sensi){  
+    if(!savedDevice){
+      localStorage.setItem("device_autorizado", device);
+      liberar();
+    } 
+    else if(savedDevice === device){
+      liberar();
+    } 
+    else {
+      alert("Acesso bloqueado! Já está em outro dispositivo.");
+    }
 
-    let dpiMouse = 1000;  
-    let horizontal = 120;  
-    let vertical = 200;  
+  } else {
+    alert("Senha incorreta!");
+  }
+}
 
-    if(sensi==="baixa"){  
-        dpiMouse = 800;  
-        horizontal = 115;  
-        vertical = 180;  
-    }  
-    else if(sensi==="media"){  
-        dpiMouse = 1000;  
-        horizontal = 125;  
-        vertical = 200;  
-    }  
-    else if(sensi==="alta"){  
-        dpiMouse = 1200;  
-        horizontal = 135;  
-        vertical = 220;  
-    }  
+function liberar(){
+  document.getElementById("login").style.display = "none";
+  localStorage.setItem("logado","sim");
+}
 
-    return {  
-        dpiMouse,  
-        horizontal,  
-        vertical,  
-        polling:"500 Hz",  
+if(localStorage.getItem("logado") === "sim"){
+  document.getElementById("login").style.display = "none";
+}
 
-        // JOGO 0 NO MOBILADOR
-        geral: 0,  
-        redDot: 0,  
-        x2: 0,  
-        x4: 0,  
-        awm: 0,  
-        olhadinha: 0  
-    };  
-}  
+// 🔥 SEU SISTEMA
+const baseCelulares = {
+  "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
+  "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
+  "Samsung A15 5G": 106,"Samsung S20 FE": 115,"Samsung S21": 118,
+  "Motorola G23": 102,"Motorola G32": 104,"Motorola G52": 106,"Motorola G60": 108,
+  "Redmi 9A": 90,"Redmi 10A": 93,"Redmi Note 10": 100,"Redmi Note 11": 105,
+  "Redmi Note 12": 108,"Redmi Note 13 4G": 110,"Redmi 14C": 108,
+  "POCO M3": 100,"POCO X3 Pro": 118,"POCO X5": 112,"POCO X6 Pro": 120,
+  "POCO C75": 103,
+  "iPhone XR": 110,"iPhone 11": 115,"iPhone 12": 118,"iPhone 13": 120
+};
 
-// 📱 MOBILE AJUSTADO PELO CELULAR
-function gerarMobile(sensi, celular){  
+const select = document.getElementById("celular");
+for(let cel in baseCelulares){
+  let option = document.createElement("option");
+  option.textContent = cel;
+  select.appendChild(option);
+}
 
-  let base = baseCelulares[celular] || 100;  
+dpi.oninput = ()=> dpiValor.innerText = dpi.value;
+botao.oninput = ()=> botaoValor.innerText = botao.value;
+cursor.oninput = ()=> cursorValor.innerText = cursor.value;
 
-  if(sensi==="baixa") base -= 10;  
-  if(sensi==="alta") base += 10;  
+function verificarDispositivo(){
+  let cel = select.value.toLowerCase();
+  let isIphone = cel.includes("iphone");
+  document.getElementById("dpiBox").style.display = isIphone ? "none" : "block";
+  document.getElementById("cursorBox").style.display = isIphone ? "none" : "block";
+}
+select.addEventListener("change", verificarDispositivo);
+verificarDispositivo();
 
-  return {  
-    geral: base,  
-    redDot: base - 3,  
-    x2: base - 10,  
-    x4: base - 18,  
-    awm: base - 30,  
-    olhadinha: base + 6  
-  };  
-}  
+function gerarMobilador(sensi){
+    let dpiMouse = sensi==="baixa"?800:sensi==="alta"?1200:1000;
+    let horizontal = sensi==="baixa"?115:sensi==="alta"?135:125;
+    let vertical = sensi==="baixa"?180:sensi==="alta"?220:200;
 
-function gerar(){  
+    return {
+        dpiMouse,horizontal,vertical,polling:"500 Hz",
+        geral:0,redDot:0,x2:0,x4:0,awm:0,olhadinha:0
+    };
+}
 
-  const cel = select.value;  
-  const modo = document.getElementById("modo").value;  
-  const sensi = document.getElementById("sensi").value;  
-  const dpiVal = parseInt(dpi.value);  
-  const botaoVal = parseInt(botao.value);  
-  const cursorVal = parseInt(cursor.value);  
+function gerarMobile(sensi, celular){
+  let base = baseCelulares[celular] || 100;
+  if(sensi==="baixa") base -= 10;
+  if(sensi==="alta") base += 10;
 
-  let resultadoHTML = `<strong>📱 Celular:</strong> ${cel}<br>`;  
-  resultadoHTML += `<strong>🎮 Modo:</strong> ${modo}<br>`;  
-  resultadoHTML += `<strong>🎚 Sensibilidade:</strong> ${sensi}<br><br>`;  
+  return {
+    geral: base,
+    redDot: base - 3,
+    x2: base - 10,
+    x4: base - 18,
+    awm: base - 30,
+    olhadinha: base + 6
+  };
+}
 
-  if(modo==="mobilador"){  
+function gerar(){
+  const cel = select.value;
+  const modo = document.getElementById("modo").value;
+  const sensi = document.getElementById("sensi").value;
+  const dpiVal = parseInt(dpi.value);
+  const botaoVal = parseInt(botao.value);
+  const cursorVal = parseInt(cursor.value);
 
-    const config = gerarMobilador(sensi);  
+  let resultadoHTML = `<strong>📱 Celular:</strong> ${cel}<br>`;
+  resultadoHTML += `<strong>🎮 Modo:</strong> ${modo}<br>`;
+  resultadoHTML += `<strong>🎚 Sensibilidade:</strong> ${sensi}<br><br>`;
 
-    resultadoHTML += `🖱️ GG Mouse Pro<br>`;  
-    resultadoHTML += `DPI Mouse: ${config.dpiMouse}<br>`;  
-    resultadoHTML += `Horizontal: ${config.horizontal}<br>`;  
-    resultadoHTML += `Vertical: ${config.vertical}<br>`;  
-    resultadoHTML += `Polling Rate: ${config.polling}<br><br>`;  
+  if(modo==="mobilador"){
+    const config = gerarMobilador(sensi);
+    resultadoHTML += `🖱️ DPI Mouse: ${config.dpiMouse}<br>Horizontal: ${config.horizontal}<br>Vertical: ${config.vertical}<br><br>`;
+  } else {
+    const config = gerarMobile(sensi, cel);
+    resultadoHTML += `Geral: ${config.geral}<br>RedDot: ${config.redDot}<br>2x: ${config.x2}<br>4x: ${config.x4}<br>AWM: ${config.awm}<br>Olhadinha: ${config.olhadinha}<br><br>`;
+  }
 
-    resultadoHTML += `Geral: 0<br>`;  
-    resultadoHTML += `RedDot: 0<br>`;  
-    resultadoHTML += `2x: 0<br>`;  
-    resultadoHTML += `4x: 0<br>`;  
-    resultadoHTML += `AWM: 0<br>`;  
-    resultadoHTML += `Olhadinha: 0<br><br>`;  
+  resultadoHTML += `Auxílio: 100%<br>Anti Recuo: 100%<br>Precisão: 100%<br><br>`;
+  resultadoHTML += `DPI: ${dpiVal}<br>Cursor: ${cursorVal}<br>Botão: ${botaoVal}`;
 
-  } else {  
+  document.getElementById("resultado").innerHTML = resultadoHTML;
+}
 
-    const config = gerarMobile(sensi, cel);  
+function copiar(){
+  navigator.clipboard.writeText(document.getElementById("resultado").innerText);
+  alert("Copiado!");
+}
 
-    resultadoHTML += `Geral: ${config.geral}<br>`;  
-    resultadoHTML += `RedDot: ${config.redDot}<br>`;  
-    resultadoHTML += `2x: ${config.x2}<br>`;  
-    resultadoHTML += `4x: ${config.x4}<br>`;  
-    resultadoHTML += `AWM: ${config.awm}<br>`;  
-    resultadoHTML += `Olhadinha: ${config.olhadinha}<br><br>`;  
-  }  
-
-  resultadoHTML += `Auxílio de Mira: 100%<br>`;  
-  resultadoHTML += `Anti Recuo: 100%<br>`;  
-  resultadoHTML += `Precisão: 100%<br><br>`;  
-
-  resultadoHTML += `DPI do celular: ${dpiVal}<br>`;  
-  resultadoHTML += `Velocidade do cursor: ${cursorVal}<br>`;  
-  resultadoHTML += `Tamanho do botão: ${botaoVal}<br>`;  
-
-  document.getElementById("resultado").innerHTML = resultadoHTML;  
-}  
-
-function copiar(){  
-  navigator.clipboard.writeText(document.getElementById("resultado").innerText);  
-  alert("Copiado!");  
-}  
-
-</script>  
-</body>  
+</script>
+</body>
 </html>
