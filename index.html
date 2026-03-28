@@ -16,12 +16,9 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <body>
 
-<!-- 🔐 LOGIN -->
 <div id="login" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
   <h1 style="color:red;">BANNACH SENSI 🔥</h1>
-  
   <input id="senha" type="password" placeholder="Digite a senha">
-  
   <button onclick="entrar()">ENTRAR</button>
 </div>
 
@@ -147,12 +144,23 @@ for(let m in marcas){
   select.appendChild(g);
 }
 
-// DPI AUTOMÁTICA
-function gerarDPI(s){
-  if(s==="baixa") return 400;
-  if(s==="media") return 600;
-  if(s==="alta") return 800;
-  return 600;
+// 🔥 DPI INTELIGENTE (CELULAR + SENSI)
+function gerarDPI(sensi, celular){
+  let base = baseCelulares[celular] || 100;
+
+  let dpiBase;
+  if(sensi === "baixa") dpiBase = 400;
+  else if(sensi === "media") dpiBase = 600;
+  else if(sensi === "alta") dpiBase = 800;
+  else dpiBase = 600;
+
+  let ajuste = (base - 100) * 2;
+  let dpiFinal = dpiBase + ajuste;
+
+  if(dpiFinal < 300) dpiFinal = 300;
+  if(dpiFinal > 800) dpiFinal = 800;
+
+  return Math.round(dpiFinal);
 }
 
 // AUTO GERAR
@@ -162,13 +170,13 @@ function autoGerar(){
   if(!cel) return;
 
   let config=gerarMobile(sensi,cel);
-
-  let dpiAuto=gerarDPI(sensi);
-  let dpiFinal = dpi.value != 600 ? dpi.value : dpiAuto;
+  let dpiAuto=gerarDPI(sensi, cel);
 
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
   html+=`Geral:${config.geral}<br>RedDot:${config.redDot}<br>2x:${config.x2}<br>4x:${config.x4}<br>AWM:${config.awm}<br>Olhadinha:${config.olhadinha}<br><br>`;
-  html+=`DPI:${dpiFinal}<br>Cursor:${cursor.value}<br>Botão:${botao.value}`;
+  html+=`Auxílio: 100%<br>Anti Recuo: 100%<br>Precisão: 100%<br><br>`;
+  html+=`DPI recomendada: ${dpiAuto}<br>`;
+  html+=`DPI atual: ${dpi.value}<br>Cursor:${cursor.value}<br>Botão:${botao.value}`;
 
   resultado.innerHTML=html;
 }
@@ -184,7 +192,7 @@ dpi.oninput=()=>dpiValor.innerText=dpi.value;
 botao.oninput=()=>botaoValor.innerText=botao.value;
 cursor.oninput=()=>cursorValor.innerText=cursor.value;
 
-// FUNÇÕES ORIGINAIS (mantidas)
+// ORIGINAL
 function gerarMobile(s,c){
   let base=baseCelulares[c]||100;
   if(s==="baixa") base-=10;
