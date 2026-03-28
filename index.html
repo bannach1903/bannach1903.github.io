@@ -121,7 +121,7 @@ const baseCelulares = {
 
 const select = document.getElementById("celular");
 
-// ORGANIZAR POR MARCA
+// MARCAS
 const marcas = {"Samsung":[],"Motorola":[],"Xiaomi":[],"POCO":[],"iPhone":[]};
 
 for(let cel in baseCelulares){
@@ -144,23 +144,29 @@ for(let m in marcas){
   select.appendChild(g);
 }
 
-// 🔥 DPI INTELIGENTE (CELULAR + SENSI)
+// 🔥 DPI DINÂMICA REAL
 function gerarDPI(sensi, celular){
   let base = baseCelulares[celular] || 100;
 
-  let dpiBase;
-  if(sensi === "baixa") dpiBase = 400;
-  else if(sensi === "media") dpiBase = 600;
-  else if(sensi === "alta") dpiBase = 800;
-  else dpiBase = 600;
+  let dpi;
 
-  let ajuste = (base - 100) * 2;
-  let dpiFinal = dpiBase + ajuste;
+  if(sensi === "baixa"){
+    dpi = base * 3.5;
+  }
+  else if(sensi === "media"){
+    dpi = base * 5;
+  }
+  else if(sensi === "alta"){
+    dpi = base * 6.5;
+  }
+  else{
+    dpi = base * 5;
+  }
 
-  if(dpiFinal < 300) dpiFinal = 300;
-  if(dpiFinal > 800) dpiFinal = 800;
+  if(dpi < 300) dpi = 300;
+  if(dpi > 800) dpi = 800;
 
-  return Math.round(dpiFinal);
+  return Math.round(dpi);
 }
 
 // AUTO GERAR
