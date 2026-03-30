@@ -146,24 +146,15 @@ for(let m in marcas){
   select.appendChild(g);
 }
 
-// 🔥 DPI DINÂMICA REAL
+// DPI
 function gerarDPI(sensi, celular){
   let base = baseCelulares[celular] || 100;
-
   let dpi;
 
-  if(sensi === "baixa"){
-    dpi = base * 3.5;
-  }
-  else if(sensi === "media"){
-    dpi = base * 5;
-  }
-  else if(sensi === "alta"){
-    dpi = base * 6.5;
-  }
-  else{
-    dpi = base * 5;
-  }
+  if(sensi === "baixa") dpi = base * 3.5;
+  else if(sensi === "media") dpi = base * 5;
+  else if(sensi === "alta") dpi = base * 6.5;
+  else dpi = base * 5;
 
   if(dpi < 300) dpi = 300;
   if(dpi > 800) dpi = 800;
@@ -171,47 +162,60 @@ function gerarDPI(sensi, celular){
   return Math.round(dpi);
 }
 
-// 🔥 NOVO: HORIZONTAL E VERTICAL
+// MOBILE
 function gerarHV(sensi){
-  let h, v;
+  let h,v;
 
-  if(sensi === "baixa"){
-    h = random(110,150);
-    v = random(200,260);
-  }
+  if(sensi==="baixa"){h=random(110,150);v=random(200,260);}
+  if(sensi==="media"){h=random(140,190);v=random(240,320);}
+  if(sensi==="alta"){h=random(180,260);v=random(300,420);}
 
-  if(sensi === "media"){
-    h = random(140,190);
-    v = random(240,320);
-  }
-
-  if(sensi === "alta"){
-    h = random(180,260);
-    v = random(300,420);
-  }
-
-  return {horizontal:h, vertical:v};
+  return{horizontal:h,vertical:v};
 }
 
-// 🔥 RANDOM
-function random(min, max){
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+// 🔥 MOBILADOR
+function gerarHVMobilador(sensi){
+  let h,v;
+
+  if(sensi==="baixa"){h=random(60,100);v=random(120,180);}
+  if(sensi==="media"){h=random(80,130);v=random(160,220);}
+  if(sensi==="alta"){h=random(100,160);v=random(200,280);}
+
+  return{horizontal:h,vertical:v};
+}
+
+// RANDOM
+function random(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
 }
 
 // AUTO GERAR
 function autoGerar(){
   let cel=select.value;
   let sensi=document.getElementById("sensi").value;
+  let modo=document.getElementById("modo").value;
   if(!cel) return;
 
   let config=gerarMobile(sensi,cel);
   let dpiAuto=gerarDPI(sensi, cel);
-  let hv = gerarHV(sensi);
+
+  let hv;
+  if(modo==="mobilador"){
+    hv=gerarHVMobilador(sensi);
+  }else{
+    hv=gerarHV(sensi);
+  }
 
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
 
   html+=`🎯 Horizontal:${hv.horizontal}<br>`;
   html+=`🎯 Vertical:${hv.vertical}<br><br>`;
+
+  if(modo==="mobilador"){
+    html+=`🖱️ MODO MOBILADOR (GG MOUSE)<br>`;
+    html+=`🎮 Jogo: 0 (mínimo)<br>`;
+    html+=`🖱️ Mapeador: ${random(120,200)}<br><br>`;
+  }
 
   html+=`Geral:${config.geral}<br>RedDot:${config.redDot}<br>2x:${config.x2}<br>4x:${config.x4}<br>AWM:${config.awm}<br>Olhadinha:${config.olhadinha}<br><br>`;
   html+=`Auxílio: 100%<br>Anti Recuo: 100%<br>Precisão: 100%<br><br>`;
@@ -240,9 +244,7 @@ function gerarMobile(s,c){
   return{geral:base,redDot:base-3,x2:base-10,x4:base-18,awm:base-30,olhadinha:base+6};
 }
 
-function gerar(){
-  autoGerar();
-}
+function gerar(){autoGerar();}
 
 function copiar(){
   navigator.clipboard.writeText(resultado.innerText);
