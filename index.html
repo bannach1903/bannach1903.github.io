@@ -145,14 +145,21 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// 🔥 DPI AUTOMÁTICA (SÓ VALORES PRO)
-function gerarDPI(sensi){
+// 📱 DPI MOBILE
+function gerarDPIMobile(sensi){
   let lista;
+  if(sensi==="baixa") lista=[500];
+  if(sensi==="media") lista=[500,800];
+  if(sensi==="alta") lista=[800,1000];
+  return lista[Math.floor(Math.random()*lista.length)];
+}
 
-  if(sensi==="baixa") lista=[500,800];
-  if(sensi==="media") lista=[800,1000,1200];
-  if(sensi==="alta") lista=[1000,1200,1600];
-
+// 🖱️ DPI MOBILADOR
+function gerarDPIMobilador(sensi){
+  let lista;
+  if(sensi==="baixa") lista=[800,1000];
+  if(sensi==="media") lista=[1000,1200];
+  if(sensi==="alta") lista=[1200,1600];
   return lista[Math.floor(Math.random()*lista.length)];
 }
 
@@ -193,7 +200,10 @@ function autoGerar(){
   if(!cel) return;
 
   let config=gerarMobile(sensi,cel);
-  let dpiAuto=gerarDPI(sensi);
+
+  let dpiAuto = modo==="mobilador"
+    ? gerarDPIMobilador(sensi)
+    : gerarDPIMobile(sensi);
 
   let hv = modo==="mobilador" ? gerarHVMobilador(sensi) : gerarHV(sensi);
 
