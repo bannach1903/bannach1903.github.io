@@ -38,16 +38,7 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
   <option value="alta">Sensibilidade Alta</option>
 </select>
 
-<div id="dpiBox">
-<p>DPI selecionada:</p>
-<select id="dpi">
-  <option value="500">DPI 500</option>
-  <option value="800" selected>DPI 800</option>
-  <option value="1000">DPI 1000</option>
-  <option value="1200">DPI 1200</option>
-  <option value="1600">DPI 1600</option>
-</select>
-</div>
+<p>DPI automática:</p>
 
 <p>Botão: <span id="botaoValor">50</span>%</p>
 <input type="range" min="20" max="100" value="50" id="botao">
@@ -154,19 +145,15 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// DPI (auto recomendada continua normal)
-function gerarDPI(sensi, celular){
-  let base = baseCelulares[celular] || 100;
-  let dpi;
+// 🔥 DPI AUTOMÁTICA (SÓ VALORES PRO)
+function gerarDPI(sensi){
+  let lista;
 
-  if(sensi === "baixa") dpi = base * 3.5;
-  else if(sensi === "media") dpi = base * 5;
-  else if(sensi === "alta") dpi = base * 6.5;
+  if(sensi==="baixa") lista=[500,800];
+  if(sensi==="media") lista=[800,1000,1200];
+  if(sensi==="alta") lista=[1000,1200,1600];
 
-  if(dpi < 300) dpi = 300;
-  if(dpi > 800) dpi = 800;
-
-  return Math.round(dpi);
+  return lista[Math.floor(Math.random()*lista.length)];
 }
 
 // MOBILE
@@ -190,13 +177,6 @@ function gerarGGMouseProReal(sensi){
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// DPI PRO
-function gerarDPIMobilador(sensi){
-  if(sensi==="baixa") return random(1000,1300);
-  if(sensi==="media") return random(1200,1500);
-  if(sensi==="alta") return random(1400,1800);
-}
-
 // ORIGINAL
 function gerarMobile(s,c){
   let base=baseCelulares[c]||100;
@@ -213,7 +193,7 @@ function autoGerar(){
   if(!cel) return;
 
   let config=gerarMobile(sensi,cel);
-  let dpiAuto=gerarDPI(sensi, cel);
+  let dpiAuto=gerarDPI(sensi);
 
   let hv = modo==="mobilador" ? gerarHVMobilador(sensi) : gerarHV(sensi);
 
@@ -223,19 +203,17 @@ function autoGerar(){
 
   if(modo==="mobilador"){
     let gg=gerarGGMouseProReal(sensi);
-    let dpiPro=gerarDPIMobilador(sensi);
 
     html+=`🖱️ MODO MOBILADOR PRO 🔥<br>`;
     html+=`🎮 Jogo: 0<br>`;
     html+=`🖱️ GG Mouse Pro:<br>`;
     html+=`➡️ Horizontal: ${gg.horizontal}<br>`;
-    html+=`➡️ Vertical: ${gg.vertical}<br>`;
-    html+=`⚡ DPI PRO: ${dpiPro}<br><br>`;
+    html+=`➡️ Vertical: ${gg.vertical}<br><br>`;
   }
 
   html+=`Geral:${config.geral}<br>RedDot:${config.redDot}<br>2x:${config.x2}<br>4x:${config.x4}<br>AWM:${config.awm}<br>Olhadinha:${config.olhadinha}<br><br>`;
-  html+=`DPI recomendada: ${dpiAuto}<br>`;
-  html+=`DPI atual: ${dpi.value}<br>Cursor:${cursor.value}<br>Botão:${botao.value}`;
+  html+=`DPI automática: ${dpiAuto}<br>`;
+  html+=`Cursor:${cursor.value}<br>Botão:${botao.value}`;
 
   resultado.innerHTML=html;
 }
@@ -243,7 +221,6 @@ function autoGerar(){
 // EVENTOS
 document.getElementById("sensi").addEventListener("change", autoGerar);
 select.addEventListener("change", autoGerar);
-dpi.onchange=()=>autoGerar();
 botao.addEventListener("input", autoGerar);
 cursor.addEventListener("input", autoGerar);
 
