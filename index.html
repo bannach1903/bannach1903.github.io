@@ -171,6 +171,33 @@ function gerarDPI(sensi, celular){
   return Math.round(dpi);
 }
 
+// 🔥 NOVO: HORIZONTAL E VERTICAL
+function gerarHV(sensi){
+  let h, v;
+
+  if(sensi === "baixa"){
+    h = random(110,150);
+    v = random(200,260);
+  }
+
+  if(sensi === "media"){
+    h = random(140,190);
+    v = random(240,320);
+  }
+
+  if(sensi === "alta"){
+    h = random(180,260);
+    v = random(300,420);
+  }
+
+  return {horizontal:h, vertical:v};
+}
+
+// 🔥 RANDOM
+function random(min, max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // AUTO GERAR
 function autoGerar(){
   let cel=select.value;
@@ -179,8 +206,13 @@ function autoGerar(){
 
   let config=gerarMobile(sensi,cel);
   let dpiAuto=gerarDPI(sensi, cel);
+  let hv = gerarHV(sensi);
 
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
+
+  html+=`🎯 Horizontal:${hv.horizontal}<br>`;
+  html+=`🎯 Vertical:${hv.vertical}<br><br>`;
+
   html+=`Geral:${config.geral}<br>RedDot:${config.redDot}<br>2x:${config.x2}<br>4x:${config.x4}<br>AWM:${config.awm}<br>Olhadinha:${config.olhadinha}<br><br>`;
   html+=`Auxílio: 100%<br>Anti Recuo: 100%<br>Precisão: 100%<br><br>`;
   html+=`DPI recomendada: ${dpiAuto}<br>`;
