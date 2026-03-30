@@ -39,8 +39,14 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 </select>
 
 <div id="dpiBox">
-<p>DPI: <span id="dpiValor">600</span></p>
-<input type="range" min="300" max="2000" value="600" id="dpi">
+<p>DPI selecionada:</p>
+<select id="dpi">
+  <option value="500">DPI 500</option>
+  <option value="800" selected>DPI 800</option>
+  <option value="1000">DPI 1000</option>
+  <option value="1200">DPI 1200</option>
+  <option value="1600">DPI 1600</option>
+</select>
 </div>
 
 <p>Botão: <span id="botaoValor">50</span>%</p>
@@ -148,7 +154,7 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// DPI
+// DPI (auto recomendada continua normal)
 function gerarDPI(sensi, celular){
   let base = baseCelulares[celular] || 100;
   let dpi;
@@ -177,14 +183,14 @@ function gerarHVMobilador(sensi){
   if(sensi==="alta") return{horizontal:random(100,160),vertical:random(200,280)};
 }
 
-// 🔥 GG MOUSE PRO
+// GG MOUSE PRO
 function gerarGGMouseProReal(sensi){
   if(sensi==="baixa") return{horizontal:random(250,320),vertical:random(220,300)};
   if(sensi==="media") return{horizontal:random(300,380),vertical:random(280,360)};
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// 🔥 DPI PRO
+// DPI PRO
 function gerarDPIMobilador(sensi){
   if(sensi==="baixa") return random(1000,1300);
   if(sensi==="media") return random(1200,1500);
@@ -237,11 +243,10 @@ function autoGerar(){
 // EVENTOS
 document.getElementById("sensi").addEventListener("change", autoGerar);
 select.addEventListener("change", autoGerar);
-dpi.addEventListener("input", autoGerar);
+dpi.onchange=()=>autoGerar();
 botao.addEventListener("input", autoGerar);
 cursor.addEventListener("input", autoGerar);
 
-dpi.oninput=()=>dpiValor.innerText=dpi.value;
 botao.oninput=()=>botaoValor.innerText=botao.value;
 cursor.oninput=()=>cursorValor.innerText=cursor.value;
 
