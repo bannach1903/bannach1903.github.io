@@ -145,21 +145,21 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// 📱 DPI MOBILE
+// DPI MOBILE
 function gerarDPIMobile(sensi){
   if(sensi==="baixa") return [411,480,560,640,700][random(0,4)];
   if(sensi==="media") return [600,700,800,900,960][random(0,4)];
   if(sensi==="alta") return [800,960,1100,1200,1440][random(0,4)];
 }
 
-// 🖱️ DPI MOUSE
+// DPI MOUSE
 function gerarDPIMouse(sensi){
   if(sensi==="baixa") return [400,600,800][random(0,2)];
   if(sensi==="media") return [800,1000,1200][random(0,2)];
   if(sensi==="alta") return [1200,1600][random(0,1)];
 }
 
-// GG MOUSE PRO
+// GG MOUSE
 function gerarGGMouseProReal(sensi){
   if(sensi==="baixa") return{horizontal:random(250,320),vertical:random(220,300)};
   if(sensi==="media") return{horizontal:random(300,380),vertical:random(280,360)};
@@ -207,7 +207,9 @@ function autoGerar(){
     let gg=gerarGGMouseProReal(sensi);
 
     html+=`🖱️ MODO MOBILADOR PRO 🔥<br>`;
-    html+=`🖱️ DPI Mouse: ${mouse}<br><br>`;
+    html+=`🖱️ DPI Mouse: ${mouse}<br>`;
+    html+=`🎮 Sensi jogo: 0<br><br>`; // 🔥 ADICIONADO AQUI
+
     html+=`GG Mouse Pro:<br>`;
     html+=`➡️ Horizontal: ${gg.horizontal}<br>`;
     html+=`➡️ Vertical: ${gg.vertical}<br>`;
