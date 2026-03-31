@@ -100,7 +100,7 @@ if(localStorage.getItem("logado") === "sim"){
   document.getElementById("login").style.display = "none";
 }
 
-// BASE
+// BASE CELULARES
 const baseCelulares = {
   "Samsung A10": 92,"Samsung A12": 95,"Samsung A13": 98,"Samsung A23 5G": 105,
   "Samsung A32": 108,"Samsung A34": 110,"Samsung A51": 107,"Samsung A54": 112,
@@ -117,7 +117,7 @@ const baseCelulares = {
 
 const select = document.getElementById("celular");
 
-// MARCAS
+// LISTA CELULARES
 const marcas = {"Samsung":[],"Motorola":[],"Xiaomi":[],"POCO":[],"iPhone":[]};
 
 for(let cel in baseCelulares){
@@ -145,53 +145,39 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// 📱 DPI MOBILE (411 → 1440)
+// 📱 DPI MOBILE
 function gerarDPIMobile(sensi){
-  let lista;
-  if(sensi==="baixa") lista=[411,480,560,640,700];
-  if(sensi==="media") lista=[600,700,800,900,960];
-  if(sensi==="alta") lista=[800,960,1100,1200,1440];
-  return lista[Math.floor(Math.random()*lista.length)];
+  if(sensi==="baixa") return [411,480,560,640,700][random(0,4)];
+  if(sensi==="media") return [600,700,800,900,960][random(0,4)];
+  if(sensi==="alta") return [800,960,1100,1200,1440][random(0,4)];
 }
 
-// 🖱️ DPI MOBILADOR
-function gerarDPIMobilador(sensi){
-  if(sensi==="baixa") return [800,1000][random(0,1)];
-  if(sensi==="media") return [1000,1200][random(0,1)];
+// 🖱️ DPI MOUSE
+function gerarDPIMouse(sensi){
+  if(sensi==="baixa") return [400,600,800][random(0,2)];
+  if(sensi==="media") return [800,1000,1200][random(0,2)];
   if(sensi==="alta") return [1200,1600][random(0,1)];
 }
 
-// GG MOUSE
+// GG MOUSE PRO
 function gerarGGMouseProReal(sensi){
   if(sensi==="baixa") return{horizontal:random(250,320),vertical:random(220,300)};
   if(sensi==="media") return{horizontal:random(300,380),vertical:random(280,360)};
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// 🔥 SENSI EXATA POR CELULAR
+// SENSI POR CELULAR
 function gerarMobilePorCelular(sensi, celular){
-
   let base = 150;
 
   if(celular.includes("Samsung")) base += 10;
-  if(celular.includes("Moto") || celular.includes("Motorola")) base += 5;
+  if(celular.includes("Motorola")) base += 5;
   if(celular.includes("Redmi") || celular.includes("POCO")) base -= 10;
   if(celular.includes("iPhone")) base -= 20;
 
-  if(celular.includes("A10") || celular.includes("9A")) base += 15;
-  if(celular.includes("A54") || celular.includes("X6 Pro") || celular.includes("iPhone 13")) base -= 10;
-
-  if(sensi==="baixa"){
-    return{geral:base-20,redDot:base-25,x2:base-35,x4:base-50,awm:base-70,olhadinha:base+10};
-  }
-
-  if(sensi==="media"){
-    return{geral:base,redDot:base-5,x2:base-15,x4:base-30,awm:base-50,olhadinha:base+20};
-  }
-
-  if(sensi==="alta"){
-    return{geral:base+20,redDot:base+15,x2:base,x4:base-15,awm:base-35,olhadinha:base+40};
-  }
+  if(sensi==="baixa") return{geral:base-20,redDot:base-25,x2:base-35,x4:base-50,awm:base-70,olhadinha:base+10};
+  if(sensi==="media") return{geral:base,redDot:base-5,x2:base-15,x4:base-30,awm:base-50,olhadinha:base+20};
+  if(sensi==="alta") return{geral:base+20,redDot:base+15,x2:base,x4:base-15,awm:base-35,olhadinha:base+40};
 }
 
 // AUTO GERAR
@@ -201,33 +187,33 @@ function autoGerar(){
   let modo=document.getElementById("modo").value;
   if(!cel) return;
 
-  let config=gerarMobilePorCelular(sensi, cel);
-
-  let dpiAuto = modo==="mobilador"
-    ? gerarDPIMobilador(sensi)
-    : gerarDPIMobile(sensi);
-
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
 
+  if(modo==="mobile"){
+    let config=gerarMobilePorCelular(sensi, cel);
+    let dpi=gerarDPIMobile(sensi);
+
+    html+=`Geral:${config.geral}<br>`;
+    html+=`RedDot:${config.redDot}<br>`;
+    html+=`2x:${config.x2}<br>`;
+    html+=`4x:${config.x4}<br>`;
+    html+=`AWM:${config.awm}<br>`;
+    html+=`Olhadinha:${config.olhadinha}<br><br>`;
+    html+=`📱 DPI Mobile: ${dpi}<br>`;
+  }
+
   if(modo==="mobilador"){
+    let mouse=gerarDPIMouse(sensi);
     let gg=gerarGGMouseProReal(sensi);
 
     html+=`🖱️ MODO MOBILADOR PRO 🔥<br>`;
-    html+=`🎮 Jogo: 0<br>`;
-    html+=`🖱️ GG Mouse Pro:<br>`;
+    html+=`🖱️ DPI Mouse: ${mouse}<br><br>`;
+    html+=`GG Mouse Pro:<br>`;
     html+=`➡️ Horizontal: ${gg.horizontal}<br>`;
-    html+=`➡️ Vertical: ${gg.vertical}<br><br>`;
+    html+=`➡️ Vertical: ${gg.vertical}<br>`;
   }
 
-  html+=`Geral:${config.geral}<br>`;
-  html+=`RedDot:${config.redDot}<br>`;
-  html+=`2x:${config.x2}<br>`;
-  html+=`4x:${config.x4}<br>`;
-  html+=`AWM:${config.awm}<br>`;
-  html+=`Olhadinha:${config.olhadinha}<br><br>`;
-
-  html+=`DPI automática: ${dpiAuto}<br>`;
-  html+=`Cursor:${cursor.value}<br>`;
+  html+=`<br>Cursor:${cursor.value}<br>`;
   html+=`Botão:${botao.value}`;
 
   resultado.innerHTML=html;
