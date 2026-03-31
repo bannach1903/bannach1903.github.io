@@ -163,14 +163,14 @@ function gerarDPIMobilador(sensi){
   return lista[Math.floor(Math.random()*lista.length)];
 }
 
-// MOBILE
+// MOBILE HV
 function gerarHV(sensi){
   if(sensi==="baixa") return{horizontal:random(110,150),vertical:random(200,260)};
   if(sensi==="media") return{horizontal:random(140,190),vertical:random(240,320)};
   if(sensi==="alta") return{horizontal:random(180,260),vertical:random(300,420)};
 }
 
-// MOBILADOR
+// MOBILADOR HV
 function gerarHVMobilador(sensi){
   if(sensi==="baixa") return{horizontal:random(60,100),vertical:random(120,180)};
   if(sensi==="media") return{horizontal:random(80,130),vertical:random(160,220)};
@@ -184,12 +184,22 @@ function gerarGGMouseProReal(sensi){
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// ORIGINAL
+// 🔥 MOBILE BASE 200 CALIBRADA
 function gerarMobile(s,c){
-  let base=baseCelulares[c]||100;
-  if(s==="baixa") base-=10;
-  if(s==="alta") base+=10;
-  return{geral:base,redDot:base-3,x2:base-10,x4:base-18,awm:base-30,olhadinha:base+6};
+
+  let base = 200;
+
+  if(s==="baixa"){
+    return{geral:180,redDot:170,x2:150,x4:130,awm:100,olhadinha:220};
+  }
+
+  if(s==="media"){
+    return{geral:200,redDot:190,x2:170,x4:150,awm:120,olhadinha:230};
+  }
+
+  if(s==="alta"){
+    return{geral:220,redDot:210,x2:190,x4:170,awm:140,olhadinha:240};
+  }
 }
 
 // AUTO GERAR
