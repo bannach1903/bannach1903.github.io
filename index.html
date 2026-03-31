@@ -145,82 +145,49 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// 📱 DPI MOBILE
+// DPI
 function gerarDPIMobile(sensi){
-  let lista;
-  if(sensi==="baixa") lista=[500];
-  if(sensi==="media") lista=[500,800];
-  if(sensi==="alta") lista=[800,1000];
-  return lista[Math.floor(Math.random()*lista.length)];
+  if(sensi==="baixa") return 500;
+  if(sensi==="media") return [500,800][random(0,1)];
+  if(sensi==="alta") return [800,1000][random(0,1)];
 }
 
-// 🖱️ DPI MOBILADOR
 function gerarDPIMobilador(sensi){
-  let lista;
-  if(sensi==="baixa") lista=[800,1000];
-  if(sensi==="media") lista=[1000,1200];
-  if(sensi==="alta") lista=[1200,1600];
-  return lista[Math.floor(Math.random()*lista.length)];
+  if(sensi==="baixa") return [800,1000][random(0,1)];
+  if(sensi==="media") return [1000,1200][random(0,1)];
+  if(sensi==="alta") return [1200,1600][random(0,1)];
 }
 
-// MOBILE HV
-function gerarHV(sensi){
-  if(sensi==="baixa") return{horizontal:random(110,150),vertical:random(200,260)};
-  if(sensi==="media") return{horizontal:random(140,190),vertical:random(240,320)};
-  if(sensi==="alta") return{horizontal:random(180,260),vertical:random(300,420)};
-}
-
-// MOBILADOR HV
-function gerarHVMobilador(sensi){
-  if(sensi==="baixa") return{horizontal:random(60,100),vertical:random(120,180)};
-  if(sensi==="media") return{horizontal:random(80,130),vertical:random(160,220)};
-  if(sensi==="alta") return{horizontal:random(100,160),vertical:random(200,280)};
-}
-
-// GG MOUSE PRO
+// GG MOUSE
 function gerarGGMouseProReal(sensi){
   if(sensi==="baixa") return{horizontal:random(250,320),vertical:random(220,300)};
   if(sensi==="media") return{horizontal:random(300,380),vertical:random(280,360)};
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// 🔥 MOBILE BASE 200 CALIBRADA
-function gerarMobile(s,c){
-
-  let base = 200;
-
-  if(s==="baixa"){
-    return{geral:180,redDot:170,x2:150,x4:130,awm:100,olhadinha:220};
-  }
-
-  if(s==="media"){
-    return{geral:200,redDot:190,x2:170,x4:150,awm:120,olhadinha:230};
-  }
-
-  if(s==="alta"){
-    return{geral:220,redDot:210,x2:190,x4:170,awm:140,olhadinha:240};
-  }
+// 🔥 MOBILE BASE 200
+function gerarMobile(s){
+  if(s==="baixa") return{geral:180,redDot:170,x2:150,x4:130,awm:100,olhadinha:220};
+  if(s==="media") return{geral:200,redDot:190,x2:170,x4:150,awm:120,olhadinha:230};
+  if(s==="alta") return{geral:220,redDot:210,x2:190,x4:170,awm:140,olhadinha:240};
 }
 
-// AUTO GERAR
+// AUTO GERAR (CORRIGIDO)
 function autoGerar(){
   let cel=select.value;
   let sensi=document.getElementById("sensi").value;
   let modo=document.getElementById("modo").value;
   if(!cel) return;
 
-  let config=gerarMobile(sensi,cel);
+  let config=gerarMobile(sensi);
 
   let dpiAuto = modo==="mobilador"
     ? gerarDPIMobilador(sensi)
     : gerarDPIMobile(sensi);
 
-  let hv = modo==="mobilador" ? gerarHVMobilador(sensi) : gerarHV(sensi);
-
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
-  html+=`🎯 Horizontal:${hv.horizontal}<br>`;
-  html+=`🎯 Vertical:${hv.vertical}<br><br>`;
 
+  // 🔥 AGORA SÓ MOSTRA NO MOBILADOR
   if(modo==="mobilador"){
     let gg=gerarGGMouseProReal(sensi);
 
@@ -231,14 +198,20 @@ function autoGerar(){
     html+=`➡️ Vertical: ${gg.vertical}<br><br>`;
   }
 
-  html+=`Geral:${config.geral}<br>RedDot:${config.redDot}<br>2x:${config.x2}<br>4x:${config.x4}<br>AWM:${config.awm}<br>Olhadinha:${config.olhadinha}<br><br>`;
+  html+=`Geral:${config.geral}<br>`;
+  html+=`RedDot:${config.redDot}<br>`;
+  html+=`2x:${config.x2}<br>`;
+  html+=`4x:${config.x4}<br>`;
+  html+=`AWM:${config.awm}<br>`;
+  html+=`Olhadinha:${config.olhadinha}<br><br>`;
+
   html+=`DPI automática: ${dpiAuto}<br>`;
-  html+=`Cursor:${cursor.value}<br>Botão:${botao.value}`;
+  html+=`Cursor:${cursor.value}<br>`;
+  html+=`Botão:${botao.value}`;
 
   resultado.innerHTML=html;
 }
 
-// EVENTOS
 document.getElementById("sensi").addEventListener("change", autoGerar);
 select.addEventListener("change", autoGerar);
 botao.addEventListener("input", autoGerar);
