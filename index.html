@@ -145,13 +145,27 @@ function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// DPI
+// 📱 DPI MOBILE (411 → 1440)
 function gerarDPIMobile(sensi){
-  if(sensi==="baixa") return 500;
-  if(sensi==="media") return [500,800][random(0,1)];
-  if(sensi==="alta") return [800,1000][random(0,1)];
+
+  let lista;
+
+  if(sensi==="baixa"){
+    lista = [411, 480, 560, 640, 700];
+  }
+
+  if(sensi==="media"){
+    lista = [600, 700, 800, 900, 960];
+  }
+
+  if(sensi==="alta"){
+    lista = [800, 960, 1100, 1200, 1440];
+  }
+
+  return lista[Math.floor(Math.random()*lista.length)];
 }
 
+// 🖱️ DPI MOBILADOR
 function gerarDPIMobilador(sensi){
   if(sensi==="baixa") return [800,1000][random(0,1)];
   if(sensi==="media") return [1000,1200][random(0,1)];
@@ -165,14 +179,14 @@ function gerarGGMouseProReal(sensi){
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// 🔥 MOBILE BASE 200
+// 🔥 SENSI BASE 200 CONTROLADA
 function gerarMobile(s){
-  if(s==="baixa") return{geral:180,redDot:170,x2:150,x4:130,awm:100,olhadinha:220};
-  if(s==="media") return{geral:200,redDot:190,x2:170,x4:150,awm:120,olhadinha:230};
-  if(s==="alta") return{geral:220,redDot:210,x2:190,x4:170,awm:140,olhadinha:240};
+  if(s==="baixa") return{geral:120,redDot:115,x2:105,x4:95,awm:80,olhadinha:135};
+  if(s==="media") return{geral:150,redDot:145,x2:135,x4:120,awm:100,olhadinha:165};
+  if(s==="alta") return{geral:180,redDot:175,x2:160,x4:140,awm:120,olhadinha:200};
 }
 
-// AUTO GERAR (CORRIGIDO)
+// AUTO GERAR
 function autoGerar(){
   let cel=select.value;
   let sensi=document.getElementById("sensi").value;
@@ -187,7 +201,6 @@ function autoGerar(){
 
   let html=`📱 ${cel}<br>🎚 ${sensi}<br><br>`;
 
-  // 🔥 AGORA SÓ MOSTRA NO MOBILADOR
   if(modo==="mobilador"){
     let gg=gerarGGMouseProReal(sensi);
 
