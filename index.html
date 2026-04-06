@@ -130,16 +130,12 @@ function entrar(){
   }
 }
 
-// LIBERAR
+// ✅ LIBERAR (SEM SALVAR LOGIN)
 function liberar(){
   document.getElementById("login").style.display = "none";
-  localStorage.setItem("logado","sim");
 }
 
-// AUTO LOGIN
-if(localStorage.getItem("logado") === "sim"){
-  document.getElementById("login").style.display = "none";
-}
+// ❌ REMOVIDO AUTO LOGIN
 
 // ================= RESTO DO SEU SISTEMA =================
 
