@@ -16,8 +16,9 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <body>
 
+<!-- LOGIN -->
 <div id="login" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f0f;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
-  <h1 style="color:red;">BANNACH SENSI 🔥</h1>
+  <h1 style="color:red;">SENSI PRO 🔥</h1>
   <input id="senha" type="password" placeholder="Digite a senha">
   <button onclick="entrar()">ENTRAR</button>
 </div>
@@ -56,9 +57,15 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <script>
 
-// LOGIN
-const SENHA = "bannachsensipro";
+// 🔒 BLOQUEIO PERMANENTE
+if(localStorage.getItem("bloqueado") === "sim"){
+  document.body.innerHTML = "<h1 style='color:red;text-align:center;'>🚫 ACESSO BLOQUEADO</h1>";
+}
 
+// 🔐 SENHA
+const SENHA = "sensipro";
+
+// GERAR ID DO DISPOSITIVO
 function getDeviceId(){
   let id = localStorage.getItem("device_id");
   if(!id){
@@ -68,11 +75,41 @@ function getDeviceId(){
   return id;
 }
 
+// 🔥 DETECTA BURLA
+window.onload = function(){
+  let device = getDeviceId();
+
+  if(localStorage.getItem("device_autorizado") && 
+     localStorage.getItem("device_autorizado") !== device){
+    
+    localStorage.setItem("bloqueado","sim");
+    location.reload();
+  }
+}
+
+// LOGIN
 function entrar(){
   var s = document.getElementById("senha").value;
   var device = getDeviceId();
 
+  if(localStorage.getItem("bloqueado") === "sim"){
+    alert("Dispositivo bloqueado!");
+    return;
+  }
+
+  let ultimoLogin = localStorage.getItem("ultimo_login");
+
+  if(ultimoLogin && ultimoLogin !== s){
+    localStorage.setItem("bloqueado","sim");
+    alert("Tentativa de troca detectada! Dispositivo bloqueado.");
+    location.reload();
+    return;
+  }
+
   if(s === SENHA){
+
+    localStorage.setItem("ultimo_login", s);
+
     let savedDevice = localStorage.getItem("device_autorizado");
 
     if(!savedDevice){
@@ -83,7 +120,9 @@ function entrar(){
       liberar();
     } 
     else {
-      alert("Acesso bloqueado!");
+      localStorage.setItem("bloqueado","sim");
+      alert("Acesso negado! Conta usada em outro aparelho.");
+      location.reload();
     }
 
   } else {
@@ -91,14 +130,18 @@ function entrar(){
   }
 }
 
+// LIBERAR
 function liberar(){
   document.getElementById("login").style.display = "none";
   localStorage.setItem("logado","sim");
 }
 
+// AUTO LOGIN
 if(localStorage.getItem("logado") === "sim"){
   document.getElementById("login").style.display = "none";
 }
+
+// ================= RESTO DO SEU SISTEMA =================
 
 // BASE CELULARES
 const baseCelulares = {
@@ -108,9 +151,7 @@ const baseCelulares = {
   "Samsung S20 FE": 115,"Samsung S21": 118,
   "Moto G05": 102,"Moto G53": 110,"Redmi Note 9S": 108,
   "Motorola G23": 102,"Motorola G32": 104,"Motorola G52": 106,"Motorola G60": 108,
-
   "Motorola Moto G54 5G": 110,
-
   "Redmi 9A": 90,"Redmi 10A": 93,"Redmi Note 10": 100,"Redmi Note 11": 105,
   "Redmi Note 12": 108,"Redmi Note 13 4G": 110,"Redmi 14C": 108,
   "POCO M3": 100,"POCO X3 Pro": 118,"POCO X5": 112,"POCO X6 Pro": 120,
@@ -120,7 +161,7 @@ const baseCelulares = {
 
 const select = document.getElementById("celular");
 
-// LISTA CELULARES
+// ORGANIZA MARCAS
 const marcas = {"Samsung":[],"Motorola":[],"Xiaomi":[],"POCO":[],"iPhone":[]};
 
 for(let cel in baseCelulares){
@@ -143,33 +184,29 @@ for(let m in marcas){
   select.appendChild(g);
 }
 
-// RANDOM
+// FUNÇÕES
 function random(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-// DPI MOBILE
 function gerarDPIMobile(sensi){
   if(sensi==="baixa") return [411,480,560,640,700][random(0,4)];
   if(sensi==="media") return [600,700,800,900,960][random(0,4)];
   if(sensi==="alta") return [800,960,1100,1200,1440][random(0,4)];
 }
 
-// DPI MOUSE
 function gerarDPIMouse(sensi){
   if(sensi==="baixa") return [400,600,800][random(0,2)];
   if(sensi==="media") return [800,1000,1200][random(0,2)];
   if(sensi==="alta") return [1200,1600][random(0,1)];
 }
 
-// GG MOUSE
 function gerarGGMouseProReal(sensi){
   if(sensi==="baixa") return{horizontal:random(250,320),vertical:random(220,300)};
   if(sensi==="media") return{horizontal:random(300,380),vertical:random(280,360)};
   if(sensi==="alta") return{horizontal:random(350,450),vertical:random(320,420)};
 }
 
-// SENSI POR CELULAR
 function gerarMobilePorCelular(sensi, celular){
   let base = 150;
 
@@ -183,7 +220,7 @@ function gerarMobilePorCelular(sensi, celular){
   if(sensi==="alta") return{geral:base+20,redDot:base+15,x2:base,x4:base-15,awm:base-35,olhadinha:base+40};
 }
 
-// AUTO GERAR
+// GERAR RESULTADO
 function autoGerar(){
   let cel=select.value;
   let sensi=document.getElementById("sensi").value;
@@ -212,8 +249,6 @@ function autoGerar(){
     html+=`🖱️ MODO MOBILADOR PRO 🔥<br>`;
     html+=`🖱️ DPI Mouse: ${mouse}<br>`;
     html+=`🎮 Sensi jogo: 0<br><br>`;
-
-    html+=`GG Mouse Pro:<br>`;
     html+=`➡️ Horizontal: ${gg.horizontal}<br>`;
     html+=`➡️ Vertical: ${gg.vertical}<br>`;
   }
