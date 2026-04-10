@@ -30,9 +30,9 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <select id="celular"></select>
 
 <select id="sensi">
-<option value="baixa">Baixa</option>
-<option value="media">Média</option>
-<option value="alta">Alta</option>
+<option value="baixa">Baixa (Precisão)</option>
+<option value="media">Média (Equilibrada)</option>
+<option value="alta">Alta (Rush/Capa)</option>
 </select>
 
 <button onclick="gerar()">GERAR</button>
@@ -53,7 +53,7 @@ alert("Senha incorreta");
 }
 }
 
-// 📱 CELULARES POR MARCA
+// 📱 CELULARES
 const marcas = {
 
 "Samsung":[
@@ -88,7 +88,7 @@ const marcas = {
 
 const select = document.getElementById("celular");
 
-// criar lista organizada
+// criar lista
 for(let marca in marcas){
 let group = document.createElement("optgroup");
 group.label = marca;
@@ -102,7 +102,7 @@ group.appendChild(option);
 select.appendChild(group);
 }
 
-// 🎯 GERADOR
+// 🎯 GERADOR COMPLETO
 function gerar(){
 
 let cel = select.value;
@@ -118,19 +118,37 @@ if(cel.includes("POCO")) base-=10;
 if(cel.includes("Realme")) base-=8;
 if(cel.includes("iPhone")) base-=15;
 
-// tipo de sensi
-if(tipo==="baixa") base-=20;
-if(tipo==="alta") base+=10;
+// 🎯 ESTILO REAL
+let geral, red, x2, x4, awm, olha;
 
-// 🎯 sensibilidade
-let geral=base;
-let red=base-10;
-let x2=base-25;
-let x4=base-40;
-let awm=base-60;
-let olha=base+10;
+if(tipo==="baixa"){
+  geral = base - 10;
+  red   = base - 25;
+  x2    = base - 40;
+  x4    = base - 55;
+  awm   = base - 75;
+  olha  = base;
+}
 
-// 🔥 botão e velocidade automático
+if(tipo==="media"){
+  geral = base;
+  red   = base - 10;
+  x2    = base - 25;
+  x4    = base - 40;
+  awm   = base - 60;
+  olha  = base + 10;
+}
+
+if(tipo==="alta"){
+  geral = base + 10;
+  red   = base + 5;
+  x2    = base - 10;
+  x4    = base - 25;
+  awm   = base - 45;
+  olha  = base + 25;
+}
+
+// 🔥 BOTÃO E VELOCIDADE
 let botao=55,vel=50;
 
 if(cel.includes("Samsung")){botao=60;vel=55;}
@@ -139,9 +157,25 @@ if(cel.includes("Redmi")||cel.includes("POCO")){botao=50;vel=48;}
 if(cel.includes("Realme")){botao=52;vel=50;}
 if(cel.includes("iPhone")){botao=45;vel=40;}
 
-// 📱 resultado
+// 🎯 DPI POR ESTILO
+let dpi = 700;
+
+if(tipo==="baixa"){
+  dpi = Math.floor(Math.random()*(600-390)+390);
+}
+
+if(tipo==="media"){
+  dpi = Math.floor(Math.random()*(800-600)+600);
+}
+
+if(tipo==="alta"){
+  dpi = Math.floor(Math.random()*(1440-800)+800);
+}
+
+// 📱 RESULTADO
 let html=`
-📱 ${cel}<br><br>
+📱 ${cel}<br>
+🎮 Estilo: ${tipo.toUpperCase()}<br><br>
 
 🎯 Geral: ${geral}<br>
 🎯 RedDot: ${red}<br>
@@ -154,9 +188,7 @@ let html=`
 ⚡ Velocidade: ${vel}<br>
 `;
 
-// ❌ iPhone sem DPI
 if(!cel.includes("iPhone")){
-let dpi=Math.floor(Math.random()*(900-600)+600);
 html+=`📱 DPI: ${dpi}`;
 }
 
