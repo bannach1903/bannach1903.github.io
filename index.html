@@ -95,7 +95,14 @@ group.label = marca;
 
 marcas[marca].forEach(modelo=>{
 let option = document.createElement("option");
-option.textContent = marca + " " + modelo;
+
+// ✅ CORREÇÃO DO REDMI DUPLICADO
+if(marca === "Xiaomi / Redmi"){
+  option.textContent = modelo;
+}else{
+  option.textContent = marca + " " + modelo;
+}
+
 group.appendChild(option);
 });
 
