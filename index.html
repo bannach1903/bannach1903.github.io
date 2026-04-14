@@ -17,7 +17,6 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <body>
 
-<!-- LOGIN -->
 <div id="login" style="position:fixed;width:100%;height:100%;background:#0f0f0f;display:flex;justify-content:center;align-items:center;flex-direction:column;">
 <h1 style="color:red;">SENSI PRO 🔥</h1>
 <input id="senha" type="password" placeholder="Digite a senha">
@@ -26,8 +25,6 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <div class="container">
 <h2>🔥 GERADOR PRO EXTREMO 2026 🔥</h2>
-
-<input type="text" id="buscar" placeholder="🔍 Buscar celular...">
 
 <select id="modo">
 <option value="mobile">📱 Mobile</option>
@@ -62,52 +59,15 @@ alert("Senha incorreta");
 }
 }
 
-// VARIAÇÃO
-function variacao(valor){
-return valor + Math.floor(Math.random()*11 - 5);
-}
-
-function limitar(v){
-if(v > 200) return 200;
-if(v < 0) return 0;
-return v;
-}
-
 // CELULARES
 const marcas = {
-
-"Samsung":[
-"A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54",
-"S20 FE","S21","S22","S23","S24"
-],
-
-"Motorola":[
-"G22","G23","G31","G32","G35 5G","G41","G42","G52","G53","G54","G60","G73",
-"Edge 20","Edge 30 Neo","Edge 40"
-],
-
-"Xiaomi / Redmi":[
-"Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C",
-"Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12",
-"Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"
-],
-
-"POCO":[
-"M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"
-],
-
-"Realme":[
-"C30","C31","C35","C51","C53","C55",
-"Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"
-],
-
-"iPhone":[
-"XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"
-]
-
+"Samsung":["A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54","S20 FE","S21","S22","S23","S24"],
+"Motorola":["G22","G23","G31","G32","G35 5G","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30 Neo","Edge 40"],
+"Xiaomi / Redmi":["Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C","Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12","Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"],
+"POCO":["M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"],
+"Realme":["C30","C31","C35","C51","C53","C55","Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"],
+"iPhone":["XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"]
 };
-
-const select = document.getElementById("celular");
 
 for(let marca in marcas){
 let group=document.createElement("optgroup");
@@ -119,24 +79,10 @@ option.textContent = (marca==="Xiaomi / Redmi") ? modelo : marca+" "+modelo;
 group.appendChild(option);
 });
 
-select.appendChild(group);
+celular.appendChild(group);
 }
 
-// BUSCA
-const buscarInput = document.getElementById("buscar");
-const selectCelular = document.getElementById("celular");
-
-buscarInput.addEventListener("input", function(){
-let filtro = this.value.toLowerCase();
-let options = selectCelular.querySelectorAll("option");
-
-options.forEach(opt => {
-let texto = opt.textContent.toLowerCase();
-opt.style.display = texto.includes(filtro) ? "" : "none";
-});
-});
-
-// GERADOR
+// GERAR
 function gerar(){
 
 let cel=celular.value;
@@ -147,59 +93,49 @@ let base=170;
 
 // ajustes
 if(cel.includes("Samsung")) base+=5;
-if(cel.includes("Motorola")) base+=0;
 if(cel.includes("Redmi")) base-=5;
 if(cel.includes("POCO")) base-=10;
 if(cel.includes("Realme")) base-=8;
 if(cel.includes("iPhone")) base-=15;
-
-// anti lag
-if(cel.includes("A10")||cel.includes("Redmi 9A")){
-base -= 10;
-}
-
-// ajuste específico G35
-if(cel.includes("G35")){
-base += 2;
-}
+if(cel.includes("A10")||cel.includes("Redmi 9A")) base-=10;
+if(cel.includes("G35")) base+=2;
 
 let html=`📱 ${cel}<br>🎮 ${tipo.toUpperCase()}<br><br>`;
 
 // MOBILE
 if(modo==="mobile"){
 
+function variacao(v){ return v + Math.floor(Math.random()*11 - 5); }
+
 let geral,red,x2,x4,awm,olha;
 
-if(tipo==="baixa"){
-geral=base-10;red=base-25;x2=base-40;x4=base-55;awm=base-75;olha=base;
-}
-if(tipo==="media"){
-geral=base;red=base-10;x2=base-25;x4=base-40;awm=base-60;olha=base+10;
-}
-if(tipo==="alta"){
-geral=base+10;red=base+5;x2=base-10;x4=base-25;awm=base-45;olha=base+25;
-}
-if(tipo==="capa"){
-geral=base+15;red=base+20;x2=base+5;x4=base-10;awm=base-30;olha=base+35;
-}
+if(tipo==="baixa"){geral=base-10;red=base-25;x2=base-40;x4=base-55;awm=base-75;olha=base;}
+if(tipo==="media"){geral=base;red=base-10;x2=base-25;x4=base-40;awm=base-60;olha=base+10;}
+if(tipo==="alta"){geral=base+10;red=base+5;x2=base-10;x4=base-25;awm=base-45;olha=base+25;}
+if(tipo==="capa"){geral=base+15;red=base+20;x2=base+5;x4=base-10;awm=base-30;olha=base+35;}
 
-// variação real
-geral=limitar(variacao(geral));
-red=limitar(variacao(red));
-x2=limitar(variacao(x2));
-x4=limitar(variacao(x4));
-awm=limitar(variacao(awm));
-olha=limitar(variacao(olha));
+geral=variacao(geral);
+red=variacao(red);
+x2=variacao(x2);
+x4=variacao(x4);
+awm=variacao(awm);
+olha=variacao(olha);
 
-// botão e velocidade
-let botao=55,vel=50;
-if(cel.includes("Samsung")){botao=60;vel=55;}
-if(cel.includes("Motorola")){botao=58;vel=52;}
-if(cel.includes("Redmi")||cel.includes("POCO")){botao=50;vel=48;}
-if(cel.includes("Realme")){botao=52;vel=50;}
-if(cel.includes("iPhone")){botao=45;vel=40;}
+// 🔥 BOTÃO + VELOCIDADE INTELIGENTE
+let botao=55;
+let vel;
 
-// DPI
+if(tipo==="baixa") vel=Math.floor(Math.random()*10+30);
+if(tipo==="media") vel=Math.floor(Math.random()*10+45);
+if(tipo==="alta") vel=Math.floor(Math.random()*10+60);
+if(tipo==="capa") vel=Math.floor(Math.random()*10+70);
+
+if(cel.includes("Samsung")) botao=60;
+if(cel.includes("Motorola")) botao=58;
+if(cel.includes("Redmi")||cel.includes("POCO")) botao=50;
+if(cel.includes("Realme")) botao=52;
+if(cel.includes("iPhone")) botao=45;
+
 let dpi;
 if(tipo==="baixa") dpi=Math.floor(Math.random()*(600-390)+390);
 if(tipo==="media") dpi=Math.floor(Math.random()*(800-600)+600);
@@ -221,8 +157,50 @@ if(!cel.includes("iPhone")) html+=`📱 DPI:${dpi}`;
 
 // MOBILADOR
 if(modo==="mobilador"){
-let dpiMouse=[800,1000,1200][Math.floor(Math.random()*3)];
-html+=`🖱️ DPI:${dpiMouse}<br>🎮 Sensi:0`;
+
+let dpiMouse;
+if(tipo==="baixa") dpiMouse=[600,800,1000][Math.floor(Math.random()*3)];
+if(tipo==="media") dpiMouse=[800,1000,1200][Math.floor(Math.random()*3)];
+if(tipo==="alta"||tipo==="capa") dpiMouse=[1200,1600][Math.floor(Math.random()*2)];
+
+let horizontal,vertical;
+
+if(tipo==="baixa"){horizontal=Math.floor(Math.random()*40+260);vertical=Math.floor(Math.random()*40+230);}
+if(tipo==="media"){horizontal=Math.floor(Math.random()*60+300);vertical=Math.floor(Math.random()*60+280);}
+if(tipo==="alta"){horizontal=Math.floor(Math.random()*80+340);vertical=Math.floor(Math.random()*70+310);}
+if(tipo==="capa"){horizontal=Math.floor(Math.random()*60+360);vertical=Math.floor(Math.random()*50+300);}
+
+horizontal+=Math.floor(Math.random()*11-5);
+vertical+=Math.floor(Math.random()*11-5);
+
+if(tipo==="alta"||tipo==="capa") vertical-=10;
+
+if(cel.includes("A10")||cel.includes("Redmi 9A")){
+horizontal-=25;
+vertical-=20;
+dpiMouse-=200;
+}
+
+// 🔥 VELOCIDADE MOUSE
+let velMouse;
+if(tipo==="baixa") velMouse=Math.floor(Math.random()*10+30);
+if(tipo==="media") velMouse=Math.floor(Math.random()*10+45);
+if(tipo==="alta") velMouse=Math.floor(Math.random()*10+60);
+if(tipo==="capa") velMouse=Math.floor(Math.random()*10+70);
+
+html+=`
+🎯 Geral:0<br>
+🎯 RedDot:0<br>
+🎯 2x:0<br>
+🎯 4x:0<br>
+🎯 AWM:0<br>
+🎯 Olhadinha:0<br><br>
+
+🖱️ DPI Mouse:${dpiMouse}<br>
+➡️ Horizontal:${horizontal}<br>
+➡️ Vertical:${vertical}<br>
+⚡ Velocidade Mouse:${velMouse}<br>
+`;
 }
 
 resultado.innerHTML=html;
