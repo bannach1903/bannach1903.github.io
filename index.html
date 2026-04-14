@@ -7,7 +7,13 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
-.container{padding:20px;max-width:500px;margin:auto;}
+.container{
+padding:20px;
+max-width:500px;
+margin:auto;
+border-radius:15px;
+box-shadow:0 0 20px rgba(255,0,0,0.3);
+}
 h2{color:red;text-shadow:0 0 10px #ff0000;}
 select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
 button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
@@ -17,7 +23,7 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 
 <body>
 
-<!-- 🔐 LOGIN -->
+<!-- LOGIN -->
 <div id="login" style="position:fixed;width:100%;height:100%;background:#0f0f0f;display:flex;justify-content:center;align-items:center;flex-direction:column;">
 <h1 style="color:red;">SENSI PRO 🔥</h1>
 <input id="senha" type="password" placeholder="Digite a senha">
@@ -27,22 +33,33 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <div class="container">
 <h2>🔥 GERADOR PRO EXTREMO 2026 🔥</h2>
 
+<!-- 🔍 BUSCA -->
+<input type="text" id="buscar" placeholder="🔍 Buscar celular...">
+
+<select id="modo">
+<option value="mobile">📱 Mobile</option>
+<option value="mobilador">🖱️ Mobilador</option>
+</select>
+
 <select id="celular"></select>
 
 <select id="sensi">
 <option value="baixa">Baixa (Precisão)</option>
 <option value="media">Média (Equilibrada)</option>
 <option value="alta">Alta (Rush/Capa)</option>
+<option value="capa">🔥 Capa Fixa</option>
 </select>
 
-<button onclick="gerar()">GERAR</button>
+<button onclick="gerar()">GERAR 🔥</button>
+<button onclick="gerar()">GERAR NOVAMENTE 🔥</button>
+<button onclick="copiar()">COPIAR 📋</button>
 
 <div class="resultado" id="resultado"></div>
 </div>
 
 <script>
 
-// 🔐 LOGIN
+// LOGIN
 const SENHA = "sensipro";
 function entrar(){
 let s = document.getElementById("senha").value;
@@ -53,71 +70,57 @@ alert("Senha incorreta");
 }
 }
 
-// 📱 CELULARES
+// CELULARES (ORIGINAL)
 const marcas = {
-
-"Samsung":[
-"A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54",
-"S20 FE","S21","S22","S23","S24"
-],
-
-"Motorola":[
-"G22","G23","G31","G32","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30","Edge 40"
-],
-
-"Xiaomi / Redmi":[
-"Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C",
-"Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12",
-"Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"
-],
-
-"POCO":[
-"M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"
-],
-
-"Realme":[
-"C30","C31","C35","C51","C53","C55",
-"Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"
-],
-
-"iPhone":[
-"XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"
-]
-
+"Samsung":["A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54","S20 FE","S21","S22","S23","S24"],
+"Motorola":["G22","G23","G31","G32","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30","Edge 40"],
+"Xiaomi / Redmi":["Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C","Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12","Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"],
+"POCO":["M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"],
+"Realme":["C30","C31","C35","C51","C53","C55","Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"],
+"iPhone":["XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"]
 };
 
 const select = document.getElementById("celular");
 
-// criar lista
 for(let marca in marcas){
-let group = document.createElement("optgroup");
-group.label = marca;
+let group=document.createElement("optgroup");
+group.label=marca;
 
 marcas[marca].forEach(modelo=>{
-let option = document.createElement("option");
-
-// ✅ CORREÇÃO DO REDMI DUPLICADO
-if(marca === "Xiaomi / Redmi"){
-  option.textContent = modelo;
-}else{
-  option.textContent = marca + " " + modelo;
-}
-
+let option=document.createElement("option");
+option.textContent = (marca==="Xiaomi / Redmi") ? modelo : marca+" "+modelo;
 group.appendChild(option);
 });
 
 select.appendChild(group);
 }
 
-// 🎯 GERADOR COMPLETO
+// 🔍 BUSCA
+buscar.addEventListener("input", function(){
+let filtro=this.value.toLowerCase();
+let options=celular.getElementsByTagName("option");
+
+for(let i=0;i<options.length;i++){
+let txt=options[i].textContent.toLowerCase();
+options[i].style.display = txt.includes(filtro) ? "" : "none";
+}
+});
+
+// GERADOR ORIGINAL + MELHORIAS
 function gerar(){
 
-let cel = select.value;
-let tipo = document.getElementById("sensi").value;
+let cel = celular.value;
+let tipo = sensi.value;
+let modo = document.getElementById("modo").value;
 
 let base = 170;
 
-// ajuste por marca
+// 🔥 ANTI LAG FPS
+if(cel.includes("A10") || cel.includes("Redmi 9A")){
+base -= 10;
+}
+
+// ajuste marca
 if(cel.includes("Samsung")) base+=5;
 if(cel.includes("Motorola")) base+=0;
 if(cel.includes("Redmi")) base-=5;
@@ -125,83 +128,82 @@ if(cel.includes("POCO")) base-=10;
 if(cel.includes("Realme")) base-=8;
 if(cel.includes("iPhone")) base-=15;
 
-// 🎯 ESTILO REAL
-let geral, red, x2, x4, awm, olha;
+let html=`📱 ${cel}<br>🎮 ${tipo.toUpperCase()}<br><br>`;
+
+// MOBILE
+if(modo==="mobile"){
+
+let geral,red,x2,x4,awm,olha;
 
 if(tipo==="baixa"){
-  geral = base - 10;
-  red   = base - 25;
-  x2    = base - 40;
-  x4    = base - 55;
-  awm   = base - 75;
-  olha  = base;
+geral=base-10;red=base-25;x2=base-40;x4=base-55;awm=base-75;olha=base;
 }
-
 if(tipo==="media"){
-  geral = base;
-  red   = base - 10;
-  x2    = base - 25;
-  x4    = base - 40;
-  awm   = base - 60;
-  olha  = base + 10;
+geral=base;red=base-10;x2=base-25;x4=base-40;awm=base-60;olha=base+10;
 }
-
 if(tipo==="alta"){
-  geral = base + 10;
-  red   = base + 5;
-  x2    = base - 10;
-  x4    = base - 25;
-  awm   = base - 45;
-  olha  = base + 25;
+geral=base+10;red=base+5;x2=base-10;x4=base-25;awm=base-45;olha=base+25;
+}
+if(tipo==="capa"){
+geral=base+15;red=base+20;x2=base+5;x4=base-10;awm=base-30;olha=base+35;
 }
 
-// 🔥 BOTÃO E VELOCIDADE
+// botão
 let botao=55,vel=50;
-
 if(cel.includes("Samsung")){botao=60;vel=55;}
 if(cel.includes("Motorola")){botao=58;vel=52;}
 if(cel.includes("Redmi")||cel.includes("POCO")){botao=50;vel=48;}
 if(cel.includes("Realme")){botao=52;vel=50;}
 if(cel.includes("iPhone")){botao=45;vel=40;}
 
-// 🎯 DPI POR ESTILO
-let dpi = 700;
+// DPI
+let dpi;
+if(tipo==="baixa") dpi=Math.floor(Math.random()*(600-390)+390);
+if(tipo==="media") dpi=Math.floor(Math.random()*(800-600)+600);
+if(tipo==="alta"||tipo==="capa") dpi=Math.floor(Math.random()*(1440-800)+800);
 
-if(tipo==="baixa"){
-  dpi = Math.floor(Math.random()*(600-390)+390);
-}
-
-if(tipo==="media"){
-  dpi = Math.floor(Math.random()*(800-600)+600);
-}
-
-if(tipo==="alta"){
-  dpi = Math.floor(Math.random()*(1440-800)+800);
-}
-
-// 📱 RESULTADO
-let html=`
-📱 ${cel}<br>
-🎮 Estilo: ${tipo.toUpperCase()}<br><br>
-
-🎯 Geral: ${geral}<br>
-🎯 RedDot: ${red}<br>
-🎯 2x: ${x2}<br>
-🎯 4x: ${x4}<br>
-🎯 AWM: ${awm}<br>
-🎯 Olhadinha: ${olha}<br><br>
-
-🔥 Botão: ${botao}%<br>
-⚡ Velocidade: ${vel}<br>
+html+=`
+🎯 Geral:${geral}<br>
+🎯 RedDot:${red}<br>
+🎯 2x:${x2}<br>
+🎯 4x:${x4}<br>
+🎯 AWM:${awm}<br>
+🎯 Olhadinha:${olha}<br><br>
+🔥 Botão:${botao}%<br>
+⚡ Velocidade:${vel}<br>
 `;
 
-if(!cel.includes("iPhone")){
-html+=`📱 DPI: ${dpi}`;
+if(!cel.includes("iPhone")) html+=`📱 DPI:${dpi}`;
 }
 
-document.getElementById("resultado").innerHTML=html;
-
+// MOBILADOR (mantido)
+if(modo==="mobilador"){
+let dpiMouse=[800,1000,1200][Math.floor(Math.random()*3)];
+html+=`🖱️ DPI:${dpiMouse}<br>🎮 Sensi:0`;
 }
+
+resultado.innerHTML=html;
+
+// 💾 SALVAR
+localStorage.setItem("ultima_sensi", html);
+}
+
+// 📋 COPIAR
+function copiar(){
+navigator.clipboard.writeText(resultado.innerText);
+alert("Copiado!");
+}
+
+// 🔄 CARREGAR
+window.onload=function(){
+let salvo=localStorage.getItem("ultima_sensi");
+if(salvo) resultado.innerHTML=salvo;
+}
+
+// ⚡ AUTO
+celular.addEventListener("change",gerar);
+sensi.addEventListener("change",gerar);
+modo.addEventListener("change",gerar);
 
 </script>
 </body>
