@@ -7,13 +7,7 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0f0f0f;color:white;text-align:center;}
-.container{
-padding:20px;
-max-width:500px;
-margin:auto;
-border-radius:15px;
-box-shadow:0 0 20px rgba(255,0,0,0.3);
-}
+.container{padding:20px;max-width:500px;margin:auto;}
 h2{color:red;text-shadow:0 0 10px #ff0000;}
 select,input{width:90%;margin:10px;padding:10px;border-radius:10px;border:none;background:#1a1a1a;color:white;}
 button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;background:red;color:white;font-weight:bold;}
@@ -33,7 +27,6 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <div class="container">
 <h2>🔥 GERADOR PRO EXTREMO 2026 🔥</h2>
 
-<!-- 🔍 BUSCA -->
 <input type="text" id="buscar" placeholder="🔍 Buscar celular...">
 
 <select id="modo">
@@ -44,9 +37,9 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 <select id="celular"></select>
 
 <select id="sensi">
-<option value="baixa">Baixa (Precisão)</option>
-<option value="media">Média (Equilibrada)</option>
-<option value="alta">Alta (Rush/Capa)</option>
+<option value="baixa">Baixa</option>
+<option value="media">Média</option>
+<option value="alta">Alta</option>
 <option value="capa">🔥 Capa Fixa</option>
 </select>
 
@@ -62,22 +55,56 @@ button{width:90%;padding:15px;margin:10px;border:none;border-radius:10px;backgro
 // LOGIN
 const SENHA = "sensipro";
 function entrar(){
-let s = document.getElementById("senha").value;
-if(s === SENHA){
-document.getElementById("login").style.display="none";
+if(senha.value === SENHA){
+login.style.display="none";
 }else{
 alert("Senha incorreta");
 }
 }
 
-// CELULARES (ORIGINAL)
+// VARIAÇÃO
+function variacao(valor){
+return valor + Math.floor(Math.random()*11 - 5);
+}
+
+function limitar(v){
+if(v > 200) return 200;
+if(v < 0) return 0;
+return v;
+}
+
+// CELULARES
 const marcas = {
-"Samsung":["A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54","S20 FE","S21","S22","S23","S24"],
-"Motorola":["G22","G23","G31","G32","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30","Edge 40"],
-"Xiaomi / Redmi":["Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C","Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12","Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"],
-"POCO":["M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"],
-"Realme":["C30","C31","C35","C51","C53","C55","Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"],
-"iPhone":["XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"]
+
+"Samsung":[
+"A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54",
+"S20 FE","S21","S22","S23","S24"
+],
+
+"Motorola":[
+"G22","G23","G31","G32","G35 5G","G41","G42","G52","G53","G54","G60","G73",
+"Edge 20","Edge 30 Neo","Edge 40"
+],
+
+"Xiaomi / Redmi":[
+"Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C",
+"Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12",
+"Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"
+],
+
+"POCO":[
+"M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"
+],
+
+"Realme":[
+"C30","C31","C35","C51","C53","C55",
+"Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"
+],
+
+"iPhone":[
+"XR","XS","11","11 Pro","12","12 Pro","13","13 Pro","14","14 Pro","15","15 Pro"
+]
+
 };
 
 const select = document.getElementById("celular");
@@ -95,38 +122,46 @@ group.appendChild(option);
 select.appendChild(group);
 }
 
-// 🔍 BUSCA
-buscar.addEventListener("input", function(){
-let filtro=this.value.toLowerCase();
-let options=celular.getElementsByTagName("option");
+// BUSCA
+const buscarInput = document.getElementById("buscar");
+const selectCelular = document.getElementById("celular");
 
-for(let i=0;i<options.length;i++){
-let txt=options[i].textContent.toLowerCase();
-options[i].style.display = txt.includes(filtro) ? "" : "none";
-}
+buscarInput.addEventListener("input", function(){
+let filtro = this.value.toLowerCase();
+let options = selectCelular.querySelectorAll("option");
+
+options.forEach(opt => {
+let texto = opt.textContent.toLowerCase();
+opt.style.display = texto.includes(filtro) ? "" : "none";
+});
 });
 
-// GERADOR ORIGINAL + MELHORIAS
+// GERADOR
 function gerar(){
 
-let cel = celular.value;
-let tipo = sensi.value;
-let modo = document.getElementById("modo").value;
+let cel=celular.value;
+let tipo=sensi.value;
+let modo=document.getElementById("modo").value;
 
-let base = 170;
+let base=170;
 
-// 🔥 ANTI LAG FPS
-if(cel.includes("A10") || cel.includes("Redmi 9A")){
-base -= 10;
-}
-
-// ajuste marca
+// ajustes
 if(cel.includes("Samsung")) base+=5;
 if(cel.includes("Motorola")) base+=0;
 if(cel.includes("Redmi")) base-=5;
 if(cel.includes("POCO")) base-=10;
 if(cel.includes("Realme")) base-=8;
 if(cel.includes("iPhone")) base-=15;
+
+// anti lag
+if(cel.includes("A10")||cel.includes("Redmi 9A")){
+base -= 10;
+}
+
+// ajuste específico G35
+if(cel.includes("G35")){
+base += 2;
+}
 
 let html=`📱 ${cel}<br>🎮 ${tipo.toUpperCase()}<br><br>`;
 
@@ -148,7 +183,15 @@ if(tipo==="capa"){
 geral=base+15;red=base+20;x2=base+5;x4=base-10;awm=base-30;olha=base+35;
 }
 
-// botão
+// variação real
+geral=limitar(variacao(geral));
+red=limitar(variacao(red));
+x2=limitar(variacao(x2));
+x4=limitar(variacao(x4));
+awm=limitar(variacao(awm));
+olha=limitar(variacao(olha));
+
+// botão e velocidade
 let botao=55,vel=50;
 if(cel.includes("Samsung")){botao=60;vel=55;}
 if(cel.includes("Motorola")){botao=58;vel=52;}
@@ -176,34 +219,20 @@ html+=`
 if(!cel.includes("iPhone")) html+=`📱 DPI:${dpi}`;
 }
 
-// MOBILADOR (mantido)
+// MOBILADOR
 if(modo==="mobilador"){
 let dpiMouse=[800,1000,1200][Math.floor(Math.random()*3)];
 html+=`🖱️ DPI:${dpiMouse}<br>🎮 Sensi:0`;
 }
 
 resultado.innerHTML=html;
-
-// 💾 SALVAR
-localStorage.setItem("ultima_sensi", html);
 }
 
-// 📋 COPIAR
+// COPIAR
 function copiar(){
 navigator.clipboard.writeText(resultado.innerText);
 alert("Copiado!");
 }
-
-// 🔄 CARREGAR
-window.onload=function(){
-let salvo=localStorage.getItem("ultima_sensi");
-if(salvo) resultado.innerHTML=salvo;
-}
-
-// ⚡ AUTO
-celular.addEventListener("change",gerar);
-sensi.addEventListener("change",gerar);
-modo.addEventListener("change",gerar);
 
 </script>
 </body>
