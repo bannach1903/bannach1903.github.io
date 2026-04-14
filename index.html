@@ -62,7 +62,7 @@ alert("Senha incorreta");
 // CELULARES
 const marcas = {
 "Samsung":["A10","A11","A12","A13","A14","A15","A20","A21","A22","A23","A24","A30","A31","A32","A33","A34","A50","A51","A52","A53","A54","S20 FE","S21","S22","S23","S24"],
-"Motorola":["G22","G23","G31","G32","G35 5G","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30 Neo","Edge 40"],
+"Motorola":["G22","G23","G31","G32","G35 5G","G41","G42","G52","G53","G54","G60","G73","Edge 20","Edge 30 Neo","Edge 40","G05"],
 "Xiaomi / Redmi":["Redmi 9A","Redmi 10A","Redmi 12","Redmi 13C","Redmi Note 9","Redmi Note 10","Redmi Note 11","Redmi Note 12","Redmi Note 13 4G","Redmi Note 13 5G","Redmi Note 14"],
 "POCO":["M3","M4","M5","X3 Pro","X4 GT","X5","X6","X6 Pro","F3","F4","F5"],
 "Realme":["C30","C31","C35","C51","C53","C55","Realme 8","Realme 9","Realme 10","Realme 11","Realme GT","GT Neo"],
@@ -91,7 +91,6 @@ let modo=document.getElementById("modo").value;
 
 let base=170;
 
-// ajustes
 if(cel.includes("Samsung")) base+=5;
 if(cel.includes("Redmi")) base-=5;
 if(cel.includes("POCO")) base-=10;
@@ -121,7 +120,6 @@ x4=variacao(x4);
 awm=variacao(awm);
 olha=variacao(olha);
 
-// 🔥 BOTÃO + VELOCIDADE INTELIGENTE
 let botao=55;
 let vel;
 
@@ -181,7 +179,6 @@ vertical-=20;
 dpiMouse-=200;
 }
 
-// 🔥 VELOCIDADE MOUSE
 let velMouse;
 if(tipo==="baixa") velMouse=Math.floor(Math.random()*10+30);
 if(tipo==="media") velMouse=Math.floor(Math.random()*10+45);
